@@ -1,0 +1,23 @@
+/* Light Theme */
+
+body {
+    background-color: #f5f5f7;
+    color: #333333;
+}
+
+a {
+    color: #404040;
+}
+
+a:hover {
+    color: #404040;
+}
+
+.header h3 a,
+.header h3 a:hover {
+    color: #333333;
+}
+
+.tab-content {
+    background-color: #fff;
+}

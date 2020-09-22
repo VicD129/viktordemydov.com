@@ -1,0 +1,28 @@
+/* Dark Theme */
+
+body {
+    background-color: #242424;
+    color: #e9e9e9;
+}
+
+a {
+    color: #e9e9e9;
+}
+
+a:hover {
+    color: #242424;
+}
+
+.header-wrapper h3 a,
+.header > h3 span {
+    color: #242424;
+}
+
+.nav-link.active {
+    background-color: #101010 !important;
+    color: #fff !important;
+}
+
+.tab-content {
+    background-color: #101010;
+}
