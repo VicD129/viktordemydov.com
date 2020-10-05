@@ -14,7 +14,9 @@ a:hover {
 }
 
 .header-wrapper h3 a,
-.header > h3 span {
+.header > h3 span,
+.header-wrapper h1 a,
+.header > h1 span {
     color: #242424;
 }
 
