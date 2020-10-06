@@ -1,6 +1,6 @@
 :root {
-    --dark-mode-toggle-light-icon: url(moon.svg);
-    --dark-mode-toggle-dark-icon: url(sun.svg);
+    --dark-mode-toggle-light-icon: url("../img/moon.svg");
+    --dark-mode-toggle-dark-icon: url("../img/sun.svg");
 }
 
 body {
@@ -11,6 +11,11 @@ body {
 .header-wrapper {
     display: flex;
     justify-content: space-between;
+}
+
+#dark-mode-toggle-1 {
+    display: flex;
+    align-items: center;
 }
 
 .header button {
