@@ -62,7 +62,7 @@ a:hover {
     flex-direction: column;
     flex-basis: 100%;
     justify-content: space-between;
-    margin-bottom: 150px;
+    margin-bottom: 100px;
 }
 
 .header > h1,
