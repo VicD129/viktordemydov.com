@@ -3,6 +3,9 @@ module.exports = {
 };
 
 module.exports = function(eleventyConfig) {
+    eleventyConfig.addPassthroughCopy({
+        "./node_modules/bootstrap/dist/css/bootstrap.min.js": "./css/bootstrap.min.js",
+      });
     eleventyConfig.addPassthroughCopy("css");
     eleventyConfig.addPassthroughCopy("svg");
     eleventyConfig.addPassthroughCopy("img");
