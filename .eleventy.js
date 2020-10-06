@@ -4,7 +4,7 @@ module.exports = {
 
 module.exports = function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy({
-        "./node_modules/bootstrap/dist/css/bootstrap.min.js": "./css/bootstrap.min.js",
+        "./node_modules/bootstrap/dist/css/bootstrap.min.css": "./css/bootstrap.min.css",
       });
     eleventyConfig.addPassthroughCopy("css");
     eleventyConfig.addPassthroughCopy("svg");
