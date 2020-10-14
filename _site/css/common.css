@@ -1,6 +1,6 @@
 :root {
-    --dark-mode-toggle-light-icon: url("../img/moon.svg");
-    --dark-mode-toggle-dark-icon: url("../img/sun.svg");
+    --dark-mode-toggle-light-icon: url("../../img/moon.svg");
+    --dark-mode-toggle-dark-icon: url("../../img/sun.svg");
 }
 
 body {
