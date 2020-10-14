@@ -15,8 +15,8 @@
     "@11ty/eleventy": "^0.11.0"
   },
   "dependencies": {
-    "bootstrap": "^5.0.0-alpha1",
+    "bootstrap": "^5.0.0-alpha2",
     "dark-mode-toggle": "^0.7.3",
-    "popper.js": "^1.14.3"
+    "popper.js": "^1.16.1"
   }
 }
