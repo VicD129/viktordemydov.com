@@ -86,6 +86,10 @@
 
         <script type="module" src="/js/dark-mode-toggle.min.mjs"></script>
         <script>
+            const darkModeToggle = document.querySelector('dark-mode-toggle');
+            darkModeToggle.setAttribute('permanent', '');
+        </script>
+        <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker
