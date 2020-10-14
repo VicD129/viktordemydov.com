@@ -1,6 +1,7 @@
 :root {
     --dark-mode-toggle-light-icon: url("../../img/moon.svg");
     --dark-mode-toggle-dark-icon: url("../../img/sun.svg");
+    --brand-color: #e5c100;
 }
 
 body {
@@ -16,6 +17,14 @@ body {
 #dark-mode-toggle-1 {
     display: flex;
     align-items: center;
+}
+
+.brand-color {
+    color: var(--brand-color) !important;
+}
+
+.brand-bg {
+    background-color: var(--brand-color) !important;
 }
 
 .header button {
@@ -49,7 +58,7 @@ a {
 
 a:hover {
     text-decoration: underline;
-    background-color: #ffc107!important;
+    background-color: var(--brand-color) !important;
 }
 
 .wrapper {
