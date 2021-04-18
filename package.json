@@ -12,11 +12,21 @@
   "author": "Viktor Demydov",
   "license": "MIT",
   "devDependencies": {
-    "@11ty/eleventy": "^0.11.0"
+    "@11ty/eleventy": "^0.12.1"
   },
   "dependencies": {
-    "bootstrap": "^5.0.0-alpha2",
+    "bootstrap": "^5.0.0-beta3",
     "dark-mode-toggle": "^0.7.3",
     "popper.js": "^1.16.1"
-  }
+  },
+  "main": ".eleventy.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VicD129/viktordemydov.com.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/VicD129/viktordemydov.com/issues"
+  },
+  "homepage": "https://github.com/VicD129/viktordemydov.com#readme"
 }
