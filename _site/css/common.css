@@ -77,7 +77,7 @@ a:hover {
     flex-direction: column;
     flex-basis: 100%;
     justify-content: space-between;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
 }
 
 .header > h1,
@@ -130,6 +130,10 @@ dark-mode-toggle::part(toggleLabel):focus {
 
 .work {
     margin-bottom: 250px;
+}
+
+.work .card a:hover {
+    border-radius: 10px;
 }
 
 .nav-tabs {
