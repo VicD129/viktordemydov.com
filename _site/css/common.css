@@ -1,6 +1,4 @@
 :root {
-    --dark-mode-toggle-light-icon: url("../../img/moon.svg");
-    --dark-mode-toggle-dark-icon: url("../../img/sun.svg");
     --brand-color: #e5c100;
 }
 
@@ -12,11 +10,6 @@ body {
 .header-wrapper {
     display: flex;
     justify-content: space-between;
-}
-
-#dark-mode-toggle-1 {
-    display: flex;
-    align-items: center;
 }
 
 .brand-color {
@@ -59,6 +52,14 @@ a {
 a:hover {
     text-decoration: underline;
     background-color: var(--brand-color) !important;
+}
+
+a.no-hover:hover {
+    background-color: transparent !important;
+}
+
+a.text-secondary:hover {
+    color: #333333 !important;
 }
 
 .wrapper {
@@ -112,16 +113,6 @@ a:hover {
     border-radius: 50%;
     -webkit-box-shadow: 0 1px 8px #cdcdcd;
     box-shadow: 0 1px 8px #cdcdcd;
-}
-
-dark-mode-toggle::part(toggleLabel)::before {
-    vertical-align: baseline !important;
-    margin-inline-end: 0;
-}
-
-dark-mode-toggle::part(toggleCheckbox):focus,
-dark-mode-toggle::part(toggleLabel):focus {
-    outline: none;
 }
 
 .header button:hover {
