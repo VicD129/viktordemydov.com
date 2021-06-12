@@ -58,10 +58,6 @@ a.no-hover:hover {
     background-color: transparent !important;
 }
 
-a.text-secondary:hover {
-    color: #333333 !important;
-}
-
 .wrapper {
     display: grid;
     grid-template-columns: minmax(auto, 500px);
