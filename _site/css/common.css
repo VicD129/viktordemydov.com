@@ -9,7 +9,7 @@ body {
 
 .header-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .brand-color {
