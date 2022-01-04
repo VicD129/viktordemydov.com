@@ -13,6 +13,10 @@ a:hover {
     color: #404040;
 }
 
+.header {
+    background-color: #fff;
+}
+
 .header-wrapper {
     background-color: #333333;
 }
