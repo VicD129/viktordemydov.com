@@ -1,5 +1,9 @@
 :root {
     --brand-color: #e5c100;
+    --abi-color: #f26d1f;
+    --pegasus-color: #9b3831;
+    --havalo-color: #2a512a;
+    --tourhunter-color: #5095e8;
 }
 
 body {
@@ -49,9 +53,10 @@ a {
     text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
-    background-color: var(--brand-color) !important;
+a:hover,
+a:focus {
+    text-decoration: none;
+    background-color: var(--brand-color);
 }
 
 a.no-hover:hover {
@@ -119,10 +124,6 @@ a.no-hover:hover {
     margin-bottom: 250px;
 }
 
-.work .card a:hover {
-    border-radius: 10px;
-}
-
 .nav-tabs {
     border-bottom: none;
 }
@@ -165,4 +166,32 @@ a.no-hover:hover {
 
 .contacts a {
     margin-right: 8px;
+}
+
+.card.abi-bg a:hover,
+.card.abi-bg a:focus {
+    background-color: var(--abi-color) !important;
+    color: #fff;
+    text-decoration: none;
+}
+
+.card.pegasus-bg a:hover,
+.card.pegasus-bg a:focus {
+    background-color: var(--pegasus-color) !important;
+    color: #fff;
+    text-decoration: none;
+}
+
+.card.havalo-bg a:hover,
+.card.havalo-bg a:focus {
+    background-color: var(--havalo-color) !important;
+    color: #fff;
+    text-decoration: none;
+}
+
+.card.tourhunter-bg a:hover,
+.card.tourhunter-bg a:focus {
+    background-color: var(--tourhunter-color) !important;
+    color: #fff;
+    text-decoration: none;
 }
