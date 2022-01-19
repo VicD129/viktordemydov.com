@@ -14,7 +14,7 @@ a:hover {
 }
 
 .header {
-    background-color: #fff;
+    background-color: var(--brand-color);
 }
 
 .header-wrapper {
