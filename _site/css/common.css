@@ -2,7 +2,6 @@
     --brand-color: #e5c100;
     --abi-color: #f26d1f;
     --pegasus-color: #9b3831;
-    --havalo-color: #2a512a;
     --tourhunter-color: #5095e8;
 }
 
@@ -179,13 +178,6 @@ a.no-hover:hover {
 .card.pegasus-bg a:hover,
 .card.pegasus-bg a:focus {
     background-color: var(--pegasus-color) !important;
-    color: #fff;
-    text-decoration: none;
-}
-
-.card.havalo-bg a:hover,
-.card.havalo-bg a:focus {
-    background-color: var(--havalo-color) !important;
     color: #fff;
     text-decoration: none;
 }
