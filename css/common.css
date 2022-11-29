@@ -120,6 +120,10 @@ a.no-hover:hover {
     cursor: pointer;
 }
 
+.no-hover:hover {
+    background-color: none;
+}
+
 .work {
     margin-bottom: 250px;
 }
