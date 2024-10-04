@@ -1,5 +1,5 @@
 module.exports = {
-  htmlTemplateEngine: "njk"
+  htmlTemplateEngine: "false"
 };
 
 module.exports = function(eleventyConfig) {
