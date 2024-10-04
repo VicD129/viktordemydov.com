@@ -12,11 +12,10 @@
   "author": "Viktor Demydov",
   "license": "MIT",
   "devDependencies": {
-    "@11ty/eleventy": "^2.0.1"
+    "@11ty/eleventy": "^3.0.0"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3",
-    "popper.js": "^1.16.1"
+    "bootstrap": "^5.3.3"
   },
   "main": ".eleventy.js",
   "repository": {
