@@ -14,7 +14,7 @@ a:hover {
 }
 
 .header {
-    background-color: var(--brand-color);
+    background: linear-gradient(to bottom, var(--brand-color), #f5f5f7);
 }
 
 .header h3 a {

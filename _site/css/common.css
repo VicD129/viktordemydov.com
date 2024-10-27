@@ -127,8 +127,15 @@ a.no-hover:hover {
     background-color: none;
 }
 
-.work {
-    margin-bottom: 250px;
+.work,
+.certifications {
+    margin-bottom: 150px;
+}
+
+.work > h3,
+.certifications > h3,
+.contacts > h3 {
+    font-weight: 700;
 }
 
 .nav-tabs {
@@ -173,6 +180,10 @@ a.no-hover:hover {
 
 .contacts a {
     margin-right: 8px;
+}
+
+.card-title {
+    font-weight: bold;
 }
 
 .card.abi-bg a:hover,

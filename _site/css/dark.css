@@ -18,7 +18,7 @@ a.no-hover:hover {
 }
 
 .header {
-    background-color: #111;
+    background: linear-gradient(to bottom, #777, #000);
 }
 
 .header-wrapper h1 a,
