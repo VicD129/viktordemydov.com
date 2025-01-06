@@ -12,7 +12,8 @@
   "author": "Viktor Demydov",
   "license": "MIT",
   "devDependencies": {
-    "@11ty/eleventy": "^3.0.0"
+    "@11ty/eleventy": "^3.0.0",
+    "bootstrap": "^5.3.3"
   },
   "dependencies": {
     "bootstrap": "^5.3.3"
