@@ -1,14 +1,8 @@
-module.exports = {
-  htmlTemplateEngine: 'false',
-};
-
-module.exports = function (eleventyConfig) {
+export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({
     './node_modules/bootstrap/dist/css/bootstrap.min.css':
       './css/bootstrap.min.css',
   });
   eleventyConfig.addPassthroughCopy('css');
-  eleventyConfig.addPassthroughCopy('svg');
   eleventyConfig.addPassthroughCopy('img');
-  eleventyConfig.addPassthroughCopy('js');
-};
+}
