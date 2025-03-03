@@ -1,7 +1,7 @@
 {
   "name": "viktordemydov.com",
   "type": "module",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Personal website of Viktor Demydov",
   "scripts": {
     "build": "eleventy",
@@ -13,8 +13,7 @@
   "author": "Viktor Demydov",
   "license": "MIT",
   "dependencies": {
-    "@11ty/eleventy": "^3.0.0",
-    "bootstrap": "^5.3.3"
+    "@11ty/eleventy": "^3.0.0"
   },
   "main": ".eleventy.js",
   "repository": {
