@@ -13,7 +13,7 @@
   "author": "Viktor Demydov",
   "license": "MIT",
   "dependencies": {
-    "@11ty/eleventy": "^3.0.0"
+    "@11ty/eleventy": "^3.1.0"
   },
   "main": ".eleventy.js",
   "repository": {
