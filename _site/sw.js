@@ -1,13 +1,18 @@
 const cacheName = 'viktor-portfolio-v1';
 const cacheAssets = [
   '/',
+  '/fonts/Inter-VariableFont_opsz,wght.ttf',
   '/css/style.css',
   '/img/photo_me.webp',
   '/img/Screenshot 2024-08-25 at 12.38.01.webp',
   '/img/Screenshot 2024-02-19 at 22.59.46.webp',
+  '/img/Screenshot 2023-05-22 at 16.52.54.webp',
   '/img/Screenshot 2021-06-09 at 19.33.24.webp',
   '/img/Screenshot 2020-10-12 at 21.17.34.webp',
+  '/img/Screenshot 2020-10-12 at 20.18.31.webp',
+  '/img/Screenshot 2020-10-12 at 20.16.44.webp',
   '/img/Screenshot 2020-09-12 at 12.01.31.webp',
+  '/img/Screenshot 2020-09-12 at 12.00.50.webp',
   '/img/certificate-1.webp',
   '/img/certificate-2.webp',
   '/manifest.json'
@@ -16,7 +21,7 @@ const cacheAssets = [
 // Call Install Event
 self.addEventListener('install', e => {
   console.log('Service Worker: Installed');
-  
+
   e.waitUntil(
     caches
       .open(cacheName)
@@ -49,7 +54,7 @@ self.addEventListener('activate', e => {
 // Call Fetch Event - Cache First Strategy
 self.addEventListener('fetch', e => {
   console.log('Service Worker: Fetching');
-  
+
   e.respondWith(
     caches
       .match(e.request)
