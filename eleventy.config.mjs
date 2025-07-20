@@ -1,5 +1,6 @@
 export default function (eleventyConfig) {
   // Copy static assets
+  eleventyConfig.addPassthroughCopy('fonts');
   eleventyConfig.addPassthroughCopy('css');
   eleventyConfig.addPassthroughCopy('img');
   eleventyConfig.addPassthroughCopy('manifest.json');
@@ -7,10 +8,10 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy('*.png');
   eleventyConfig.addPassthroughCopy('*.ico');
   eleventyConfig.addPassthroughCopy('*.xml');
-  
+
   // Watch for changes in CSS and rebuild
   eleventyConfig.addWatchTarget('./css/');
-  
+
   // Set custom directories for input, output, includes, and data
   return {
     dir: {
