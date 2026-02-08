@@ -1,4 +1,4 @@
-const cacheName = 'viktor-portfolio-v2';
+const cacheName = 'viktor-portfolio-v1.4';
 const cacheAssets = [
   '/',
   '/fonts/DMSans-Regular.woff2',
