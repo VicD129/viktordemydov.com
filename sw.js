@@ -1,7 +1,10 @@
-const cacheName = 'viktor-portfolio-v1';
+const cacheName = 'viktor-portfolio-v2';
 const cacheAssets = [
   '/',
-  '/fonts/Inter-VariableFont_opsz,wght.ttf',
+  '/fonts/DMSans-Regular.woff2',
+  '/fonts/DMSans-Medium.woff2',
+  '/fonts/DMSans-SemiBold.woff2',
+  '/fonts/DMSans-ExtraLight.woff2',
   '/css/style.css',
   '/img/photo_me.webp',
   '/img/Screenshot 2024-08-25 at 12.38.01.webp',
