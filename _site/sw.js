@@ -1,3 +1,5 @@
+const isLocalhost = location.hostname === 'localhost';
+
 const cacheName = 'viktor-portfolio-v1.4';
 const cacheAssets = [
   '/',
@@ -23,8 +25,12 @@ const cacheAssets = [
 
 // Call Install Event
 self.addEventListener('install', e => {
-  console.log('Service Worker: Installed');
+  if (isLocalhost) {
+    self.skipWaiting();
+    return;
+  }
 
+  console.log('Service Worker: Installed');
   e.waitUntil(
     caches
       .open(cacheName)
@@ -56,7 +62,7 @@ self.addEventListener('activate', e => {
 
 // Call Fetch Event - Cache First Strategy
 self.addEventListener('fetch', e => {
-  console.log('Service Worker: Fetching');
+  if (isLocalhost) return;
 
   e.respondWith(
     caches
