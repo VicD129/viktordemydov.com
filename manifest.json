@@ -2,19 +2,10 @@
     "short_name": "Viktor Demydov",
     "name": "Viktor Demydov - UI/UX Designer and Developer",
     "description": "Portfolio of Viktor Demydov, UI/UX Designer and Developer",
-    "icons": [{
-        "src": "/android-chrome-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-    },{
-        "src": "/android-chrome-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-    }],
     "start_url": "/",
     "background_color": "#f5f5f7",
     "display": "standalone",
     "theme_color": "#e5c100",
-    "categories": ["portfolio", "design", "developer"],
+    "categories": ["portfolio", "ux/ui design", "ui developer"],
     "lang": "en"
 }
