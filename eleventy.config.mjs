@@ -4,6 +4,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy('css');
   eleventyConfig.addPassthroughCopy('img');
   eleventyConfig.addPassthroughCopy('manifest.json');
+  eleventyConfig.addPassthroughCopy('robots.txt');
   eleventyConfig.addPassthroughCopy('*.png');
   eleventyConfig.addPassthroughCopy('*.ico');
   eleventyConfig.addPassthroughCopy('*.xml');

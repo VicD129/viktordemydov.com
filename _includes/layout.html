@@ -10,7 +10,7 @@ title: Viktor Demydov
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta
       name="description"
-      content="Viktor Demydov - UI/UX Designer and Developer"
+      content="{{ description | default: 'Viktor Demydov - UI/UX Designer and Developer' }}"
     />
     <meta
       name="keywords"
@@ -32,21 +32,36 @@ title: Viktor Demydov
     <meta name="apple-mobile-web-app-title" content="vicd129" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://viktordemydov.com{{ page.url }}" />
+
     <!-- Open Graph meta tags -->
     <meta property="og:title" content="{{ title }}" />
-    <meta property="og:description" content="Viktor Demydov - UI/UX Designer and Developer" />
+    <meta property="og:description" content="{{ description | default: 'Viktor Demydov - UI/UX Designer and Developer' }}" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://viktordemydov.com" />
+    <meta property="og:url" content="https://viktordemydov.com{{ page.url }}" />
     <meta property="og:image" content="https://viktordemydov.com/img/photo_me.webp" />
     <meta property="og:site_name" content="Viktor Demydov" />
 
     <!-- Twitter Card meta tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{ title }}" />
-    <meta name="twitter:description" content="Viktor Demydov - UI/UX Designer and Developer" />
+    <meta name="twitter:description" content="{{ description | default: 'Viktor Demydov - UI/UX Designer and Developer' }}" />
     <meta name="twitter:image" content="https://viktordemydov.com/img/photo_me.webp" />
 
     <title>{{ title }}</title>
+
+    <!-- JSON-LD structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Viktor Demydov",
+      "jobTitle": "UI/UX Designer and Developer",
+      "url": "https://viktordemydov.com",
+      "sameAs": ["https://www.linkedin.com/in/viktor-demydov-1b71896a"]
+    }
+    </script>
 
     <!-- Preload critical resources -->
     <link rel="preload" href="/css/style.css" as="style" />

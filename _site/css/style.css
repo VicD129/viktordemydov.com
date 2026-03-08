@@ -143,6 +143,13 @@ h6 {
   letter-spacing: 0.0125rem;
 }
 
+.section-label {
+  font-size: 1.66rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.005rem;
+}
+
 .display-1 {
   font-size: 6.5rem;
   font-weight: 400;
