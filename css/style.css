@@ -691,7 +691,6 @@ a.no-hover:hover {
 .chat-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
   background-color: var(--brand-color);
   color: #1a1a1a;
   display: flex;
@@ -723,28 +722,10 @@ a.no-hover:hover {
   background-color: #343a40;
   color: #fff;
   padding: 0.6rem 0.85rem;
-  border-radius: 1.1rem;
   max-width: 85%;
   font-size: 0.95rem;
   line-height: 1.45;
   margin-left: 2.55rem;
-}
-
-.chat-bubble:first-of-type {
-  border-top-left-radius: 1.1rem;
-}
-
-.chat-bubble:last-of-type {
-  border-bottom-left-radius: 0.3rem;
-}
-
-.chat-bubble:not(:first-of-type):not(:last-of-type) {
-  border-bottom-left-radius: 0.3rem;
-  border-top-left-radius: 0.3rem;
-}
-
-.chat-bubble:only-of-type {
-  border-radius: 1.1rem;
 }
 
 @media (prefers-color-scheme: dark) {
