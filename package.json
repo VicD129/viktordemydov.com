@@ -12,9 +12,6 @@
   },
   "author": "Viktor Demydov",
   "license": "MIT",
-  "dependencies": {
-    "@11ty/eleventy": "^3.1.0"
-  },
   "main": ".eleventy.js",
   "repository": {
     "type": "git",
@@ -24,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/VicD129/viktordemydov.com/issues"
   },
-  "homepage": "https://github.com/VicD129/viktordemydov.com#readme"
+  "homepage": "https://github.com/VicD129/viktordemydov.com#readme",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.5"
+  }
 }
