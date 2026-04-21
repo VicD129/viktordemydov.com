@@ -305,3 +305,4 @@ There is currently no test suite and no CI/CD pipeline. All builds are run local
 8. **Update `sitemap.xml`** when adding new pages.
 9. **Keep dependencies minimal.** The project intentionally has only one dependency (`@11ty/eleventy`). Avoid adding new packages unless strictly necessary.
 10. **Follow existing front matter pattern** for all new pages.
+11. **Do not mention Claude** at git commit message.
