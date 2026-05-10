@@ -20,6 +20,10 @@ const cacheAssets = [
   '/img/Screenshot 2020-09-12 at 12.00.50.webp',
   '/img/certificate-1.webp',
   '/img/certificate-2.webp',
+  '/img/tourhunter_calendar.webp',
+  '/img/tourhunter_vouchers.webp',
+  '/img/clcokworx_assignment_page.avif',
+  '/img/hobbydb_product_page.avif',
   '/manifest.json'
 ];
 
