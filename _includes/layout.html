@@ -152,7 +152,8 @@ title: Viktor Demydov
       var ctx = canvas.getContext('2d');
       var DOT_COUNT = 180;
       var dots = [];
-      var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
+      var dark = darkMQ.matches;
 
       function dotColor() {
         return dark ? '#e9e9e9' : '#333333';
@@ -185,7 +186,7 @@ title: Viktor Demydov
         generateDots();
       }
 
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+      darkMQ.addEventListener('change', function (e) {
         dark = e.matches;
         dots.forEach(function (d) { d.alpha = randomAlpha(); });
       });
