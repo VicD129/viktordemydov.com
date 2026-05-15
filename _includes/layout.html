@@ -229,6 +229,7 @@ title: Viktor Demydov
 
         var color = dotColor();
         var now = Date.now() * 0.003;
+        ctx.fillStyle = color;
 
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
@@ -252,7 +253,6 @@ title: Viktor Demydov
 
           ctx.beginPath();
           ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-          ctx.fillStyle = color;
           ctx.globalAlpha = d.alpha;
           ctx.fill();
         }
