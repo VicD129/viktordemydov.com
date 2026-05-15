@@ -181,10 +181,16 @@ title: Viktor Demydov
         dots.forEach(function (d) { d.x = d.ox; d.y = d.oy; });
       }
 
+      var lastResizeWidth = 0;
+
       function resize() {
-        canvas.width = window.innerWidth;
+        var w = window.innerWidth;
+        canvas.width = w;
         canvas.height = window.innerHeight;
-        generateDots();
+        if (w !== lastResizeWidth) {
+          lastResizeWidth = w;
+          generateDots();
+        }
       }
 
       var mouse = { x: -9999, y: -9999 };
