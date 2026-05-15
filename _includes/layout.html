@@ -193,6 +193,32 @@ title: Viktor Demydov
 
       window.addEventListener('resize', resize);
       resize();
+
+      var mouse = { x: -9999, y: -9999 };
+      var prevMouse = { x: -9999, y: -9999 };
+      var vx = 0;
+      var vy = 0;
+      var momentum = 0;
+      var MOMENTUM_RISE = 0.12;
+      var MOMENTUM_DECAY = 0.96;
+
+      function updateMomentum() {
+        vx = mouse.x - prevMouse.x;
+        vy = mouse.y - prevMouse.y;
+        var speed = Math.sqrt(vx * vx + vy * vy);
+        if (speed > 1) {
+          momentum = Math.min(1, momentum + MOMENTUM_RISE * Math.min(speed / 15, 1));
+        } else {
+          momentum *= MOMENTUM_DECAY;
+        }
+        prevMouse.x = mouse.x;
+        prevMouse.y = mouse.y;
+      }
+
+      window.addEventListener('mousemove', function (e) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
     })();
     </script>
   </body>
