@@ -186,11 +186,6 @@ title: Viktor Demydov
         generateDots();
       }
 
-      darkMQ.addEventListener('change', function (e) {
-        dark = e.matches;
-        dots.forEach(function (d) { d.alpha = randomAlpha(); });
-      });
-
       var mouse = { x: -9999, y: -9999 };
       var prevMouse = { x: -9999, y: -9999 };
       var vx = 0;
@@ -277,6 +272,10 @@ title: Viktor Demydov
         }
         ctx.globalAlpha = 1;
       } else {
+        darkMQ.addEventListener('change', function (e) {
+          dark = e.matches;
+          dots.forEach(function (d) { d.alpha = randomAlpha(); });
+        });
         window.addEventListener('resize', resize);
         resize();
         draw();
