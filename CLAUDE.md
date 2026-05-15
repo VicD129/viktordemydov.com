@@ -6,7 +6,7 @@ This document describes the codebase structure, development workflows, and conve
 
 ## Project Overview
 
-**viktordemydov.com** is a personal portfolio static website for Viktor Demydov, a UI/UX Designer and Developer. It is built with [Eleventy (11ty)](https://www.11ty.dev/) latest version
+**viktordemydov.com** is a personal portfolio static website for Viktor Demydov, a UI/UX Designer and Developer. It is built with [Eleventy (11ty)](https://www.11ty.dev/)
 
 - **Type:** Static site generator (no backend, no database)
 - **URL:** https://viktordemydov.com
@@ -26,7 +26,7 @@ This document describes the codebase structure, development workflows, and conve
 | Images | WebP format |
 | PWA | Web App Manifest + Service Worker (`sw.js`) |
 | SEO | JSON-LD structured data, Open Graph, Twitter Card |
-| JavaScript | None (pure static HTML) |
+| JavaScript | Inline IIFE only (starfield background in `layout.html`) |
 
 ---
 
@@ -216,6 +216,7 @@ The master layout handles:
 - Site-wide header (hero title, Ukraine support button)
 - `{{ content }}` Liquid placeholder for page-specific content
 - Footer (LinkedIn link, email)
+- Starfield background canvas (`<canvas id="bg-canvas">`) and its IIFE script
 
 **Do not duplicate** any of the above in individual page files — put it in the layout only.
 
@@ -279,6 +280,45 @@ When adding or updating pages:
 
 ---
 
+## Starfield Background
+
+An animated Canvas 2D starfield runs on every page. It is self-contained in `_includes/layout.html` — one `<canvas>` element and one inline `<script>` IIFE. No external files, no dependencies.
+
+### Structure
+
+| Part | Location | Purpose |
+|---|---|---|
+| `<canvas id="bg-canvas">` | First child of `<body>` in `layout.html` | Rendering surface |
+| `#bg-canvas` CSS rule | `css/style.css` (after `body {}`) | `position: fixed`, full-screen, `z-index: -1`, `pointer-events: none` |
+| `<script>` IIFE | Before `</body>` in `layout.html` | All starfield logic |
+
+### Key constants (inside the IIFE)
+
+| Constant | Value | Effect |
+|---|---|---|
+| `DOT_COUNT` | `180` | Number of dots |
+| `INFLUENCE` | `180` | Cursor influence radius in px |
+| `MAX_DISP` | `12` | Max dot displacement in px |
+| `MOMENTUM_RISE` | `0.12` | How fast momentum builds on fast movement |
+| `MOMENTUM_DECAY` | `0.96` | How fast momentum fades when cursor slows |
+
+### How it works
+
+- **Dot generation:** `generateDots()` places dots randomly within the viewport. Each dot stores origin `(ox, oy)` and current `(x, y)` position.
+- **Dark mode:** `darkMQ` (stored `matchMedia` result) drives dot color — `#333333` in light mode, `#e9e9e9` in dark mode. The change listener only registers in the animated path.
+- **Animation loop:** `draw()` runs via `requestAnimationFrame`. Each frame: clears canvas → calls `updateMomentum()` → displaces each dot radially outward from cursor (wave formula: `sin(dist * 0.05 − time)`) → lerps dot back to origin when outside influence.
+- **Reduced motion:** `prefers-reduced-motion: reduce` skips the rAF loop entirely and draws 180 static dots once.
+
+### Modifying the starfield
+
+- Adjust **density**: change `DOT_COUNT`
+- Adjust **reach**: change `INFLUENCE`
+- Adjust **strength**: change `MAX_DISP`
+- Adjust **feel**: change `MOMENTUM_RISE` / `MOMENTUM_DECAY` (higher rise = snappier; higher decay = slower fade)
+- Do **not** split the script into a separate `.js` file — inline-only is intentional
+
+---
+
 ## Build Output (`_site/`)
 
 - Generated automatically by Eleventy — **never edit files in `_site/` directly**
@@ -295,7 +335,7 @@ There is currently no test suite and no CI/CD pipeline. All builds are run local
 
 ## Key Constraints for AI Assistants
 
-1. **Do not add JavaScript** unless explicitly requested. The site intentionally has no client-side JS.
+1. **Do not add JavaScript** unless explicitly requested. The only existing JS is the starfield IIFE in `layout.html` — do not add more without a clear reason.
 2. **Do not add new CSS files.** All styles go in `css/style.css`.
 3. **Do not edit `_site/`** — it is build output.
 4. **Do not hardcode pixel values** in CSS; use CSS custom properties and the 8-point grid.

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta
       name="description"
-      content="Viktor Demydov - UI/UX Designer and Developer"
+      content="Viktor Demydov - Design Engineer. I design interfaces and build them."
     />
     <meta
       name="keywords"
@@ -34,7 +34,7 @@
 
     <!-- Open Graph meta tags -->
     <meta property="og:title" content="Viktor Demydov" />
-    <meta property="og:description" content="Viktor Demydov - UI/UX Designer and Developer" />
+    <meta property="og:description" content="Viktor Demydov - Design Engineer. I design interfaces and build them." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://viktordemydov.com/" />
     <meta property="og:image" content="https://viktordemydov.com/img/photo_me.webp" />
@@ -43,7 +43,7 @@
     <!-- Twitter Card meta tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Viktor Demydov" />
-    <meta name="twitter:description" content="Viktor Demydov - UI/UX Designer and Developer" />
+    <meta name="twitter:description" content="Viktor Demydov - Design Engineer. I design interfaces and build them." />
     <meta name="twitter:image" content="https://viktordemydov.com/img/photo_me.webp" />
 
     <title>Viktor Demydov</title>
@@ -54,7 +54,7 @@
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Viktor Demydov",
-      "jobTitle": "UI/UX Designer and Developer",
+      "jobTitle": "Design Engineer",
       "url": "https://viktordemydov.com",
       "sameAs": ["https://www.linkedin.com/in/viktor-demydov-1b71896a"]
     }
@@ -75,6 +75,7 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <header class="header">
       <h1 class="text-center mb-1">
         <a href="/" class="display-hero no-hover">
@@ -88,7 +89,7 @@
           href="https://u24.gov.ua/"
           target="_blank"
           rel="noreferrer noopener"
-          class="btn btn-danger btn-lg px-4 no-hover"
+          class="btn btn-danger btn-lg px-4"
           style="width: 250px"
         >
           Join UNITED24
@@ -110,7 +111,7 @@
               fetchpriority="high" />
             <div class="card-body">
               <p class="card-desc">
-                <b>UI/UX Engineer</b>
+                <b>Design Engineer</b>
                 <span>Jul 2024 - Now</span>
               </p>
               <h3 class="card-title">
@@ -307,5 +308,156 @@
         </h3>
       </div>
     </footer>
+    <script>
+    (function () {
+      var canvas = document.getElementById('bg-canvas');
+      var ctx = canvas.getContext('2d');
+      var DOT_COUNT = 300;
+      var dots = [];
+      var darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
+      var dark = darkMQ.matches;
+
+      function dotColor() {
+        return dark ? '#e9e9e9' : '#333333';
+      }
+
+      function randomAlpha() {
+        return dark
+          ? 0.12 + Math.random() * 0.16
+          : 0.15 + Math.random() * 0.20;
+      }
+
+      function generateDots() {
+        dots = [];
+        var pageH = document.documentElement.scrollHeight;
+        for (var i = 0; i < DOT_COUNT; i++) {
+          dots.push({
+            ox: Math.random() * canvas.width,
+            oy: Math.random() * pageH,
+            x: 0,
+            y: 0,
+            r: 0.8 + Math.random() * 1.2,
+            alpha: randomAlpha()
+          });
+        }
+        dots.forEach(function (d) { d.x = d.ox; d.y = d.oy; });
+      }
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        generateDots();
+      }
+
+      var mouse = { x: -9999, y: -9999 };
+      var prevMouse = { x: -9999, y: -9999 };
+      var vx = 0;
+      var vy = 0;
+      var momentum = 0;
+      var MOMENTUM_RISE = 0.12;
+      var MOMENTUM_DECAY = 0.96;
+
+      function updateMomentum() {
+        vx = mouse.x - prevMouse.x;
+        vy = mouse.y - prevMouse.y;
+        var speed = Math.sqrt(vx * vx + vy * vy);
+        if (speed > 1) {
+          momentum = Math.min(1, momentum + MOMENTUM_RISE * Math.min(speed / 15, 1));
+        } else {
+          momentum *= MOMENTUM_DECAY;
+        }
+        prevMouse.x = mouse.x;
+        prevMouse.y = mouse.y;
+      }
+
+      window.addEventListener('mousemove', function (e) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      var INFLUENCE = 180;
+      var MAX_DISP = 12;
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        updateMomentum();
+
+        var scrollY = window.scrollY;
+        var docMouseX = mouse.x + window.scrollX;
+        var docMouseY = mouse.y + scrollY;
+        var color = dotColor();
+        var now = Date.now() * 0.003;
+        ctx.fillStyle = color;
+
+        ctx.save();
+        ctx.translate(0, -scrollY);
+
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+
+          if (d.oy < scrollY - 20 || d.oy > scrollY + canvas.height + 20) {
+            d.x += (d.ox - d.x) * 0.08;
+            d.y += (d.oy - d.y) * 0.08;
+            continue;
+          }
+
+          var dx = d.ox - docMouseX;
+          var dy = d.oy - docMouseY;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < INFLUENCE && dist > 0 && momentum > 0.01) {
+            var falloff = (1 - dist / INFLUENCE);
+            falloff = falloff * falloff;
+            var wave = Math.sin(dist * 0.05 - now) * 0.4 + 0.6;
+            var force = falloff * momentum * MAX_DISP * wave;
+            var nx = dx / dist;
+            var ny = dy / dist;
+            d.x += (d.ox + nx * force - d.x) * 0.14;
+            d.y += (d.oy + ny * force - d.y) * 0.14;
+          } else {
+            d.x += (d.ox - d.x) * 0.08;
+            d.y += (d.oy - d.y) * 0.08;
+          }
+
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.globalAlpha = d.alpha;
+          ctx.fill();
+        }
+
+        ctx.restore();
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var darkStatic = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var staticColor = darkStatic ? '#e9e9e9' : '#333333';
+        for (var s = 0; s < DOT_COUNT; s++) {
+          ctx.beginPath();
+          ctx.arc(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height,
+            0.8 + Math.random() * 1.2,
+            0, Math.PI * 2
+          );
+          ctx.fillStyle = staticColor;
+          ctx.globalAlpha = darkStatic ? 0.12 + Math.random() * 0.16 : 0.15 + Math.random() * 0.20;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      } else {
+        darkMQ.addEventListener('change', function (e) {
+          dark = e.matches;
+          dots.forEach(function (d) { d.alpha = randomAlpha(); });
+        });
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
+      }
+    })();
+    </script>
   </body>
 </html>

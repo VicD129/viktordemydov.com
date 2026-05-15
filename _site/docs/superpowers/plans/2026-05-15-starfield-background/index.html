@@ -1,0 +1,380 @@
+<h1>Starfield Background Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Add a subtle animated starfield background to all pages — ~180 random dots with a cursor-driven bow-wave distortion that makes the cursor feel like a rocket flying through space.</p>
+<p><strong>Architecture:</strong> A <code>&lt;canvas id=&quot;bg-canvas&quot;&gt;</code> sits fixed behind all content in <code>layout.html</code>. An inline IIFE script (also in <code>layout.html</code>) runs the Canvas 2D particle system: dot generation, mouse/velocity tracking, momentum-based radial displacement with wave ripple, and a <code>requestAnimationFrame</code> loop. CSS in <code>style.css</code> handles canvas positioning only.</p>
+<p><strong>Tech Stack:</strong> Vanilla JS (Canvas 2D API), CSS custom properties, no new dependencies.</p>
+<hr>
+<h2>File Map</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_includes/layout.html</code></td>
+<td>Add <code>&lt;canvas id=&quot;bg-canvas&quot;&gt;</code> after <code>&lt;body&gt;</code>, add <code>&lt;script&gt;</code> IIFE before <code>&lt;/body&gt;</code></td>
+</tr>
+<tr>
+<td><code>css/style.css</code></td>
+<td>Add <code>#bg-canvas</code> positioning rule after <code>body {}</code> block</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3>Task 1: Add canvas element and CSS positioning</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>
+<p>Modify: <code>_includes/layout.html</code> — add canvas element</p>
+</li>
+<li>
+<p>Modify: <code>css/style.css</code> — add positioning rule</p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Add canvas element to layout.html</strong></p>
+</li>
+</ul>
+<p>In <code>_includes/layout.html</code>, add this line immediately after the <code>&lt;body&gt;</code> opening tag (line 80):</p>
+<pre><code class="language-html">  &lt;body&gt;
+    &lt;canvas id=&quot;bg-canvas&quot; aria-hidden=&quot;true&quot;&gt;&lt;/canvas&gt;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Add CSS rule to style.css</strong></li>
+</ul>
+<p>In <code>css/style.css</code>, add this block immediately after the closing <code>}</code> of the <code>body {}</code> rule (after line 97):</p>
+<pre><code class="language-css">#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Verify in browser</strong></li>
+</ul>
+<p>Run <code>npm start</code> and open <code>http://localhost:8080</code>. Open DevTools → Elements and confirm <code>&lt;canvas id=&quot;bg-canvas&quot;&gt;</code> is the first child of <code>&lt;body&gt;</code>. Confirm it doesn't intercept any clicks. Canvas is invisible at this point — that's correct.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add _includes/layout.html css/style.css
+git commit -m &quot;feat: add bg-canvas element and CSS positioning&quot;
+</code></pre>
+<hr>
+<h3>Task 2: Add the IIFE script skeleton, dot generation, and dark mode detection</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>
+<p>Modify: <code>_includes/layout.html</code> — add script block before <code>&lt;/body&gt;</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Add the script block</strong></p>
+</li>
+</ul>
+<p>In <code>_includes/layout.html</code>, add the following immediately before <code>&lt;/body&gt;</code>:</p>
+<pre><code class="language-html">    &lt;script&gt;
+    (function () {
+      var canvas = document.getElementById('bg-canvas');
+      var ctx = canvas.getContext('2d');
+      var DOT_COUNT = 180;
+      var dots = [];
+      var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      function dotColor() {
+        return dark ? '#e9e9e9' : '#333333';
+      }
+
+      function randomAlpha() {
+        return dark
+          ? 0.12 + Math.random() * 0.16
+          : 0.15 + Math.random() * 0.20;
+      }
+
+      function generateDots() {
+        dots = [];
+        for (var i = 0; i &lt; DOT_COUNT; i++) {
+          dots.push({
+            ox: Math.random() * canvas.width,
+            oy: Math.random() * canvas.height,
+            x: 0,
+            y: 0,
+            r: 0.8 + Math.random() * 1.2,
+            alpha: randomAlpha()
+          });
+        }
+        dots.forEach(function (d) { d.x = d.ox; d.y = d.oy; });
+      }
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        generateDots();
+      }
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        dark = e.matches;
+        dots.forEach(function (d) { d.alpha = randomAlpha(); });
+      });
+
+      window.addEventListener('resize', resize);
+      resize();
+    })();
+    &lt;/script&gt;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Verify dots are generated</strong></li>
+</ul>
+<p>With <code>npm start</code> running, open DevTools → Console and run:</p>
+<pre><code class="language-javascript">// Should log 180 dot objects with ox, oy, r, alpha properties
+document.getElementById('bg-canvas').__dots
+</code></pre>
+<p><em>(Note: this won't work yet since dots aren't exposed — but confirm no JS errors in the console at this point.)</em></p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add _includes/layout.html
+git commit -m &quot;feat: starfield dot generation and dark mode detection&quot;
+</code></pre>
+<hr>
+<h3>Task 3: Add mouse tracking and momentum</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>
+<p>Modify: <code>_includes/layout.html</code> — extend script with mouse + momentum state</p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Add mouse/velocity/momentum variables and mousemove listener</strong></p>
+</li>
+</ul>
+<p>Inside the IIFE in <code>layout.html</code>, add these variables and listener <strong>after</strong> the <code>resize()</code> call and <strong>before</strong> the closing <code>})();</code>:</p>
+<pre><code class="language-javascript">      var mouse = { x: -9999, y: -9999 };
+      var prevMouse = { x: -9999, y: -9999 };
+      var vx = 0;
+      var vy = 0;
+      var momentum = 0;
+      var MOMENTUM_RISE = 0.12;
+      var MOMENTUM_DECAY = 0.96;
+
+      window.addEventListener('mousemove', function (e) {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Add the updateMomentum function</strong></li>
+</ul>
+<p>Add this function inside the IIFE, before the mousemove listener:</p>
+<pre><code class="language-javascript">      function updateMomentum() {
+        vx = mouse.x - prevMouse.x;
+        vy = mouse.y - prevMouse.y;
+        var speed = Math.sqrt(vx * vx + vy * vy);
+        if (speed &gt; 1) {
+          momentum = Math.min(1, momentum + MOMENTUM_RISE * Math.min(speed / 15, 1));
+        } else {
+          momentum *= MOMENTUM_DECAY;
+        }
+        prevMouse.x = mouse.x;
+        prevMouse.y = mouse.y;
+      }
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Verify in browser</strong></li>
+</ul>
+<p>No visual change expected yet. Confirm zero console errors. Move the mouse quickly — momentum is not visible yet but state is being computed.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add _includes/layout.html
+git commit -m &quot;feat: starfield mouse tracking and momentum state&quot;
+</code></pre>
+<hr>
+<h3>Task 4: Add the animation loop with dot displacement and drawing</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>
+<p>Modify: <code>_includes/layout.html</code> — add draw loop</p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Add the draw function and start the loop</strong></p>
+</li>
+</ul>
+<p>Add the <code>draw</code> function and the initial <code>requestAnimationFrame</code> call inside the IIFE, after <code>updateMomentum</code> and the mousemove listener:</p>
+<pre><code class="language-javascript">      var INFLUENCE = 180;
+      var MAX_DISP = 12;
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        updateMomentum();
+
+        var color = dotColor();
+        var now = Date.now() * 0.003;
+
+        for (var i = 0; i &lt; dots.length; i++) {
+          var d = dots[i];
+          var dx = d.ox - mouse.x;
+          var dy = d.oy - mouse.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist &lt; INFLUENCE &amp;&amp; dist &gt; 0 &amp;&amp; momentum &gt; 0.01) {
+            var falloff = (1 - dist / INFLUENCE);
+            falloff = falloff * falloff;
+            var wave = Math.sin(dist * 0.05 - now) * 0.4 + 0.6;
+            var force = falloff * momentum * MAX_DISP * wave;
+            var nx = dx / dist;
+            var ny = dy / dist;
+            d.x += (d.ox + nx * force - d.x) * 0.14;
+            d.y += (d.oy + ny * force - d.y) * 0.14;
+          } else {
+            d.x += (d.ox - d.x) * 0.08;
+            d.y += (d.oy - d.y) * 0.08;
+          }
+
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fillStyle = color;
+          ctx.globalAlpha = d.alpha;
+          ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+
+      draw();
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Verify the effect in browser</strong></li>
+</ul>
+<p>Open <code>http://localhost:8080</code>. You should see:</p>
+<ul>
+<li>
+<p>Faint dots scattered across the background</p>
+</li>
+<li>
+<p>Moving the mouse quickly causes nearby dots to push away from the cursor with a wave ripple</p>
+</li>
+<li>
+<p>Slowing or stopping the mouse lets dots drift back to their original positions</p>
+</li>
+<li>
+<p>The effect works on all pages (navigate to a project page to confirm)</p>
+</li>
+<li>
+<p>[ ] <strong>Step 3: Check dark mode</strong></p>
+</li>
+</ul>
+<p>Toggle your OS dark mode. Dots should switch from dark gray to light gray without a page reload.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add _includes/layout.html
+git commit -m &quot;feat: starfield animation loop with bow-wave cursor effect&quot;
+</code></pre>
+<hr>
+<h3>Task 5: Add reduced-motion fallback</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>
+<p>Modify: <code>_includes/layout.html</code> — guard the IIFE with a reduced-motion check</p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Wrap the animated path in a reduced-motion guard</strong></p>
+</li>
+</ul>
+<p>The IIFE currently ends with (from Task 2):</p>
+<pre><code class="language-javascript">      window.addEventListener('resize', resize);
+      resize();
+    })();
+</code></pre>
+<p>And <code>draw();</code> was appended just before <code>})();</code> in Task 4.</p>
+<p>Make three edits:</p>
+<ol>
+<li>Delete the two lines <code>window.addEventListener('resize', resize);</code> and <code>resize();</code> that appear before the Task 3 additions.</li>
+<li>Delete the <code>draw();</code> line that appears just before <code>})();</code>.</li>
+<li>Add the following block at the very bottom, just before <code>})();</code>:</li>
+</ol>
+<pre><code class="language-javascript">      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var darkStatic = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var staticColor = darkStatic ? '#e9e9e9' : '#333333';
+        for (var s = 0; s &lt; DOT_COUNT; s++) {
+          ctx.beginPath();
+          ctx.arc(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height,
+            0.8 + Math.random() * 1.2,
+            0, Math.PI * 2
+          );
+          ctx.fillStyle = staticColor;
+          ctx.globalAlpha = darkStatic ? 0.12 + Math.random() * 0.16 : 0.15 + Math.random() * 0.20;
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      } else {
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
+      }
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Verify reduced motion</strong></li>
+</ul>
+<p>In DevTools → Rendering → Emulate CSS media feature <code>prefers-reduced-motion: reduce</code>. Reload. Dots should appear statically with no animation loop running. Confirm in DevTools Performance that no <code>requestAnimationFrame</code> is firing.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add _includes/layout.html
+git commit -m &quot;feat: static starfield fallback for prefers-reduced-motion&quot;
+</code></pre>
+<hr>
+<h3>Task 6: Final browser verification</h3>
+<ul>
+<li>[ ] <strong>Step 1: Light mode — homepage</strong></li>
+</ul>
+<p>Open <code>http://localhost:8080</code> in light mode. Confirm:</p>
+<ul>
+<li>
+<p>Dots are barely visible dark gray on the light background</p>
+</li>
+<li>
+<p>Moving the mouse briskly creates a clear but subtle bow-wave distortion</p>
+</li>
+<li>
+<p>Dots return to rest when mouse stops</p>
+</li>
+<li>
+<p>No content is obscured</p>
+</li>
+<li>
+<p>[ ] <strong>Step 2: Dark mode — homepage</strong></p>
+</li>
+</ul>
+<p>Toggle OS to dark mode. Confirm:</p>
+<ul>
+<li>
+<p>Dots switch to muted light gray on the dark <code>#171717</code> background</p>
+</li>
+<li>
+<p>Cursor effect works identically</p>
+</li>
+<li>
+<p>[ ] <strong>Step 3: Project pages</strong></p>
+</li>
+</ul>
+<p>Navigate to <code>/projects/clockworx-comeback/</code>. Confirm the starfield appears behind the project page content with no z-index conflicts.</p>
+<ul>
+<li>[ ] <strong>Step 4: Mobile / touch</strong></li>
+</ul>
+<p>On a mobile device or DevTools touch emulation: confirm dots render statically (no mouse = no animation, or minimal idle state) and no JS errors.</p>
+<ul>
+<li>[ ] <strong>Step 5: Performance check</strong></li>
+</ul>
+<p>DevTools → Performance → Record 3 seconds of mouse movement. Confirm the frame rate stays at 60fps. If it drops significantly, reduce <code>DOT_COUNT</code> to 120.</p>

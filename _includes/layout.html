@@ -150,7 +150,7 @@ title: Viktor Demydov
     (function () {
       var canvas = document.getElementById('bg-canvas');
       var ctx = canvas.getContext('2d');
-      var DOT_COUNT = 180;
+      var DOT_COUNT = 300;
       var dots = [];
       var darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
       var dark = darkMQ.matches;
@@ -167,10 +167,11 @@ title: Viktor Demydov
 
       function generateDots() {
         dots = [];
+        var pageH = document.documentElement.scrollHeight;
         for (var i = 0; i < DOT_COUNT; i++) {
           dots.push({
             ox: Math.random() * canvas.width,
-            oy: Math.random() * canvas.height,
+            oy: Math.random() * pageH,
             x: 0,
             y: 0,
             r: 0.8 + Math.random() * 1.2,
@@ -219,14 +220,27 @@ title: Viktor Demydov
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         updateMomentum();
 
+        var scrollY = window.scrollY;
+        var docMouseX = mouse.x + window.scrollX;
+        var docMouseY = mouse.y + scrollY;
         var color = dotColor();
         var now = Date.now() * 0.003;
         ctx.fillStyle = color;
 
+        ctx.save();
+        ctx.translate(0, -scrollY);
+
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
-          var dx = d.ox - mouse.x;
-          var dy = d.oy - mouse.y;
+
+          if (d.oy < scrollY - 20 || d.oy > scrollY + canvas.height + 20) {
+            d.x += (d.ox - d.x) * 0.08;
+            d.y += (d.oy - d.y) * 0.08;
+            continue;
+          }
+
+          var dx = d.ox - docMouseX;
+          var dy = d.oy - docMouseY;
           var dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < INFLUENCE && dist > 0 && momentum > 0.01) {
@@ -249,6 +263,7 @@ title: Viktor Demydov
           ctx.fill();
         }
 
+        ctx.restore();
         ctx.globalAlpha = 1;
         requestAnimationFrame(draw);
       }
