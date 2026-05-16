@@ -41,13 +41,16 @@ viktordemydov.com/
 ├── manifest.json               # PWA manifest
 ├── sw.js                       # Self-destruct service worker (NOT registered — kill switch only)
 ├── robots.txt                  # SEO directives
-├── sitemap.xml                 # XML sitemap (update manually when adding pages)
+├── sitemap.liquid              # Sitemap template — /sitemap.xml is generated every build
 │
 ├── _data/
 │   └── assets.js               # Global data — cssVersion (style.css mtime) for cache-busting
 │
 ├── _includes/
-│   └── layout.html             # Master layout — all pages inherit this
+│   ├── layout.html             # Master layout — all pages inherit this
+│   ├── icon-arrow-up-right.html # Shared arrow SVG partials — use via {% include %}
+│   ├── icon-arrow-right.html
+│   └── icon-arrow-left.html
 │
 ├── css/
 │   └── style.css               # All styles (single file, no preprocessor)
@@ -112,6 +115,9 @@ Key settings:
 - **Default HTML engine:** Liquid
 - **Pass-through copies:** `fonts/`, `css/`, `img/`, `manifest.json`, `sw.js`, `robots.txt`, `*.png`, `*.ico`, `*.xml`
 - **Watch targets:** `css/` (triggers live reload)
+- **Custom filter:** `fileMtime` — returns a template's source mtime as `YYYY-MM-DD`; used by `sitemap.liquid` for `<lastmod>`
+- **`.eleventyignore`:** excludes `CLAUDE.md`, `README.md`, and `docs/` from the build so internal docs are neither published nor leaked into the generated sitemap
+- **Sitemap:** `/sitemap.xml` is generated from `sitemap.liquid` (loops `collections.all`) on every build — never hand-edit it
 
 ---
 
@@ -131,9 +137,12 @@ layout: layout.html
 <!-- page content here -->
 ```
 
-2. Add a project card to `index.html` in the "Top Projects" section.
-3. Add a `<url>` entry to `sitemap.xml`.
-4. Add a brand color variable to `css/style.css` if needed (see Color Conventions below).
+2. Add a project card to `index.html` in the "Top Projects" section. Use the icon
+   partials (`{% include "icon-arrow-right.html" %}`) — do not paste raw SVG.
+3. Add a brand color variable to `css/style.css` if needed (see Color Conventions below).
+
+The sitemap needs no manual update — `sitemap.liquid` regenerates `/sitemap.xml`
+from `collections.all` on every build.
 
 ---
 
@@ -209,6 +218,14 @@ border) layered over the starfield. There is no `.bg-dark` — it was replaced b
 - Use `loading="lazy"` on non-hero images
 - Use `fetchpriority="high"` on hero/LCP images
 - Prefer WebP or AVIF for all images
+
+### Icon partials
+
+The three arrow SVGs live in `_includes/`: `icon-arrow-up-right.html`,
+`icon-arrow-right.html`, `icon-arrow-left.html`. Insert them with
+`{% include "icon-arrow-up-right.html" %}` (etc.). **Never paste raw arrow
+`<svg>` markup into a page** — reuse the partial so a single edit propagates
+everywhere.
 
 ### Front Matter Fields
 
@@ -286,6 +303,11 @@ When adding or updating pages:
 - Format: **WebP or AVIF**
 - Location: `img/`
 - Naming: descriptive kebab-case (e.g., `photo_me.webp`, `certificate-1.webp`)
+- Every `src="/img/..."` must reference a file that actually exists in `img/`.
+  Broken references ship silently — verify the file is present (or produce it)
+  before pointing markup at it; prefer AVIF/WebP rather than leaving a stray PNG.
+- Deleted images are recoverable from git history:
+  `git show <rev>^:img/<file> > img/<file>`
 
 ### Fonts
 
@@ -358,7 +380,7 @@ The site **must not** serve stale HTML/CSS after a deploy.
 ## Build Output (`_site/`)
 
 - Generated automatically by Eleventy — **never edit files in `_site/` directly**
-- Not committed to git (excluded via `.gitignore`)
+- Not committed to git (excluded via `.gitignore`). If it ever shows as tracked, run `git rm -r --cached _site` (do not delete the directory)
 - Mirrors the source structure with processed output
 
 ---
@@ -378,8 +400,9 @@ There is currently no test suite and no CI/CD pipeline. All builds are run local
 5. **Do not change the font stack** — DM Sans is the intentional brand font.
 6. **Dark mode only** — use the `:root` theme variables; never add a light theme or `@media (prefers-color-scheme: ...)` blocks.
 7. **Use WebP or AVIF** for new images.
-8. **Update `sitemap.xml`** when adding new pages.
+8. **Do not hand-edit `sitemap.xml`** — it is generated from `sitemap.liquid` every build. Internal docs (`README.md`, `docs/`) are excluded via `.eleventyignore`.
 9. **Keep dependencies minimal.** The project intentionally has only one dependency (`@11ty/eleventy`). Avoid adding new packages unless strictly necessary.
 10. **Follow existing front matter pattern** for all new pages.
 11. **Do not mention Claude** at git commit message.
 12. **No service worker registration.** `sw.js` is a kill switch only — never re-add a registration script. Bust CSS cache via the `?v={{ assets.cssVersion }}` token, not a SW. See the Caching section.
+13. **Never `git commit` or `git push` without explicit user approval.** Finish and verify the work, then stop and ask — committing proactively is not wanted.
