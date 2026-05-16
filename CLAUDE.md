@@ -23,7 +23,7 @@ This document describes the codebase structure, development workflows, and conve
 | Templating | Liquid (default), Nunjucks also supported |
 | Styling | Plain CSS (no preprocessor) |
 | Fonts | DM Sans (self-hosted WOFF2) |
-| Images | WebP format |
+| Images | WebP or AVIF |
 | PWA | Web App Manifest only (no service worker — `sw.js` is a self-destruct kill switch) |
 | SEO | JSON-LD structured data, Open Graph, Twitter Card |
 | JavaScript | Inline IIFE only (starfield background in `layout.html`) |
@@ -50,7 +50,7 @@ viktordemydov.com/
 │   └── layout.html             # Master layout — all pages inherit this
 │
 ├── css/
-│   └── style.css               # All styles (744 lines, single file, no preprocessor)
+│   └── style.css               # All styles (single file, no preprocessor)
 │
 ├── fonts/                      # Self-hosted DM Sans WOFF2 files
 │   ├── DMSans-ExtraLight.woff2 # weight 200
@@ -58,7 +58,7 @@ viktordemydov.com/
 │   ├── DMSans-Medium.woff2     # weight 500
 │   └── DMSans-SemiBold.woff2   # weight 600
 │
-├── img/                        # All images in WebP format
+├── img/                        # All images in WebP or AVIF format
 │
 ├── projects/                   # One .html file per portfolio project
 │   ├── clockworx-comeback.html
@@ -157,7 +157,7 @@ Defined at `:root` — always use variables, never hardcode values:
 --brand-color: #e5c100;         /* site-wide brand yellow */
 
 /* project accent colors */
---clockworx-color: #9b3831;
+--pegasus-color: #9b3831;       /* Clockworx accent (class: pegasus-bg) */
 --abi-color: #f26d1f;
 --mvr-color: #f6de41;
 --tourhunter-color: #5095e8;
@@ -208,7 +208,7 @@ border) layered over the starfield. There is no `.bg-dark` — it was replaced b
 - All images must have descriptive `alt` text
 - Use `loading="lazy"` on non-hero images
 - Use `fetchpriority="high"` on hero/LCP images
-- Prefer WebP format for all images
+- Prefer WebP or AVIF for all images
 
 ### Front Matter Fields
 
@@ -274,7 +274,7 @@ When adding or updating pages:
 - [ ] Twitter Card tags
 - [ ] JSON-LD Person schema (managed in `layout.html` — update if personal info changes)
 - [ ] Add URL to `sitemap.xml` with `<lastmod>` and `<priority>`
-- [ ] All images in WebP format with meaningful `alt` text
+- [ ] All images in WebP or AVIF format with meaningful `alt` text
 - [ ] Hero image has `fetchpriority="high"`; secondary images have `loading="lazy"`
 
 ---
@@ -283,7 +283,7 @@ When adding or updating pages:
 
 ### Images
 
-- Format: **WebP only**
+- Format: **WebP or AVIF**
 - Location: `img/`
 - Naming: descriptive kebab-case (e.g., `photo_me.webp`, `certificate-1.webp`)
 
@@ -313,7 +313,7 @@ An animated Canvas 2D starfield runs on every page. It is self-contained in `_in
 
 | Constant | Value | Effect |
 |---|---|---|
-| `DOT_COUNT` | `180` | Number of dots |
+| `DOT_COUNT` | `300` | Number of dots |
 | `INFLUENCE` | `180` | Cursor influence radius in px |
 | `MAX_DISP` | `12` | Max dot displacement in px |
 | `MOMENTUM_RISE` | `0.12` | How fast momentum builds on fast movement |
@@ -321,11 +321,11 @@ An animated Canvas 2D starfield runs on every page. It is self-contained in `_in
 
 ### How it works
 
-- **Dot generation:** `generateDots()` places dots randomly within the viewport. Each dot stores origin `(ox, oy)` and current `(x, y)` position.
+- **Dot generation:** `generateDots()` places dots randomly across the full page — x within `canvas.width`, y within `document.documentElement.scrollHeight`. Each dot stores origin `(ox, oy)` and current `(x, y)` position. Dots are only regenerated when the viewport **width** changes. `draw()` translates the canvas by `-scrollY` and skips dots outside the current viewport.
 - **Sizes:** each dot's base radius (`0.8 + random * 1.2`) is multiplied by `sizeMultiplier()`, which returns three tiers — `1` (~60%, small/current), `2` (~30%, 2× bigger), `4` (~10%, 4× bigger). Used in both `generateDots()` and the reduced-motion static fallback so they stay in sync.
 - **Color:** dots are always `#e9e9e9` (dark-mode-only site). No `matchMedia`/theme listener.
 - **Animation loop:** `draw()` runs via `requestAnimationFrame`. Each frame: clears canvas → calls `updateMomentum()` → displaces each dot radially outward from cursor (wave formula: `sin(dist * 0.05 − time)`) → lerps dot back to origin when outside influence.
-- **Reduced motion:** `prefers-reduced-motion: reduce` skips the rAF loop entirely and draws 180 static dots once.
+- **Reduced motion:** `prefers-reduced-motion: reduce` skips the rAF loop entirely and draws `DOT_COUNT` static dots once.
 
 ### Modifying the starfield
 
@@ -377,7 +377,7 @@ There is currently no test suite and no CI/CD pipeline. All builds are run local
 4. **Do not hardcode pixel values** in CSS; use CSS custom properties and the 8-point grid.
 5. **Do not change the font stack** — DM Sans is the intentional brand font.
 6. **Dark mode only** — use the `:root` theme variables; never add a light theme or `@media (prefers-color-scheme: ...)` blocks.
-7. **Always use WebP** for new images.
+7. **Use WebP or AVIF** for new images.
 8. **Update `sitemap.xml`** when adding new pages.
 9. **Keep dependencies minimal.** The project intentionally has only one dependency (`@11ty/eleventy`). Avoid adding new packages unless strictly necessary.
 10. **Follow existing front matter pattern** for all new pages.

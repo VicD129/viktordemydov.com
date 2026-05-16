@@ -1,4 +1,11 @@
+import { statSync } from 'node:fs';
+
 export default function (eleventyConfig) {
+  // Last-modified date (YYYY-MM-DD) of a template's source file — used by the sitemap
+  eleventyConfig.addFilter('fileMtime', (inputPath) =>
+    statSync(inputPath).mtime.toISOString().slice(0, 10)
+  );
+
   // Copy static assets
   eleventyConfig.addPassthroughCopy('fonts');
   eleventyConfig.addPassthroughCopy('css');
