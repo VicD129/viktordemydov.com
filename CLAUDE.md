@@ -165,8 +165,8 @@ Use the **8-point grid system**. Spacing values must be multiples of 8px. Use CS
 
 ### Theming
 
-- **Light mode:** default (background `#f5f5f7`)
-- **Dark mode:** `@media (prefers-color-scheme: dark)` — all components must have dark mode styles
+- **Dark mode only.** The site renders a single dark palette regardless of OS preference (background `#171717`, text `#e9e9e9`). Theme values live in `:root` in `css/style.css`.
+- Do **not** add `@media (prefers-color-scheme: ...)` blocks or a light theme — light mode was intentionally removed. Use the `:root` theme variables for all colors.
 
 ### Class Naming
 
@@ -305,7 +305,7 @@ An animated Canvas 2D starfield runs on every page. It is self-contained in `_in
 ### How it works
 
 - **Dot generation:** `generateDots()` places dots randomly within the viewport. Each dot stores origin `(ox, oy)` and current `(x, y)` position.
-- **Dark mode:** `darkMQ` (stored `matchMedia` result) drives dot color — `#333333` in light mode, `#e9e9e9` in dark mode. The change listener only registers in the animated path.
+- **Color:** dots are always `#e9e9e9` (dark-mode-only site). No `matchMedia`/theme listener.
 - **Animation loop:** `draw()` runs via `requestAnimationFrame`. Each frame: clears canvas → calls `updateMomentum()` → displaces each dot radially outward from cursor (wave formula: `sin(dist * 0.05 − time)`) → lerps dot back to origin when outside influence.
 - **Reduced motion:** `prefers-reduced-motion: reduce` skips the rAF loop entirely and draws 180 static dots once.
 
@@ -340,7 +340,7 @@ There is currently no test suite and no CI/CD pipeline. All builds are run local
 3. **Do not edit `_site/`** — it is build output.
 4. **Do not hardcode pixel values** in CSS; use CSS custom properties and the 8-point grid.
 5. **Do not change the font stack** — DM Sans is the intentional brand font.
-6. **Always include dark mode styles** for any new CSS components.
+6. **Dark mode only** — use the `:root` theme variables; never add a light theme or `@media (prefers-color-scheme: ...)` blocks.
 7. **Always use WebP** for new images.
 8. **Update `sitemap.xml`** when adding new pages.
 9. **Keep dependencies minimal.** The project intentionally has only one dependency (`@11ty/eleventy`). Avoid adding new packages unless strictly necessary.

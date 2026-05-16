@@ -14,16 +14,7 @@
       content="vicd129,Viktor Demydov,UI,UX,Designer,HTML,CSS,Developer"
     />
     <meta name="author" content="Viktor Demydov" />
-    <meta
-      name="theme-color"
-      content="#e5c100"
-      media="(prefers-color-scheme: light)"
-    />
-    <meta
-      name="theme-color"
-      content="#777777"
-      media="(prefers-color-scheme: dark)"
-    />
+    <meta name="theme-color" content="#777777" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="vicd129" />
@@ -339,17 +330,13 @@
       var ctx = canvas.getContext('2d');
       var DOT_COUNT = 300;
       var dots = [];
-      var darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
-      var dark = darkMQ.matches;
 
       function dotColor() {
-        return dark ? '#e9e9e9' : '#333333';
+        return '#e9e9e9';
       }
 
       function randomAlpha() {
-        return dark
-          ? 0.12 + Math.random() * 0.16
-          : 0.15 + Math.random() * 0.20;
+        return 0.12 + Math.random() * 0.16;
       }
 
       function generateDots() {
@@ -368,10 +355,16 @@
         dots.forEach(function (d) { d.x = d.ox; d.y = d.oy; });
       }
 
+      var lastResizeWidth = 0;
+
       function resize() {
-        canvas.width = window.innerWidth;
+        var w = window.innerWidth;
+        canvas.width = w;
         canvas.height = window.innerHeight;
-        generateDots();
+        if (w !== lastResizeWidth) {
+          lastResizeWidth = w;
+          generateDots();
+        }
       }
 
       var mouse = { x: -9999, y: -9999 };
@@ -458,8 +451,6 @@
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        var darkStatic = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var staticColor = darkStatic ? '#e9e9e9' : '#333333';
         for (var s = 0; s < DOT_COUNT; s++) {
           ctx.beginPath();
           ctx.arc(
@@ -468,16 +459,12 @@
             0.8 + Math.random() * 1.2,
             0, Math.PI * 2
           );
-          ctx.fillStyle = staticColor;
-          ctx.globalAlpha = darkStatic ? 0.12 + Math.random() * 0.16 : 0.15 + Math.random() * 0.20;
+          ctx.fillStyle = '#e9e9e9';
+          ctx.globalAlpha = 0.12 + Math.random() * 0.16;
           ctx.fill();
         }
         ctx.globalAlpha = 1;
       } else {
-        darkMQ.addEventListener('change', function (e) {
-          dark = e.matches;
-          dots.forEach(function (d) { d.alpha = randomAlpha(); });
-        });
         window.addEventListener('resize', resize);
         resize();
         draw();

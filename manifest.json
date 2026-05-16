@@ -3,9 +3,9 @@
     "name": "Viktor Demydov - UI/UX Designer and Developer",
     "description": "Portfolio of Viktor Demydov, UI/UX Designer and Developer",
     "start_url": "/",
-    "background_color": "#f5f5f7",
+    "background_color": "#171717",
     "display": "standalone",
-    "theme_color": "#e5c100",
+    "theme_color": "#777777",
     "categories": ["portfolio", "ux/ui design", "ui developer"],
     "lang": "en"
 }
