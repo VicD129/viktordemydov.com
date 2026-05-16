@@ -305,6 +305,7 @@ An animated Canvas 2D starfield runs on every page. It is self-contained in `_in
 ### How it works
 
 - **Dot generation:** `generateDots()` places dots randomly within the viewport. Each dot stores origin `(ox, oy)` and current `(x, y)` position.
+- **Sizes:** each dot's base radius (`0.8 + random * 1.2`) is multiplied by `sizeMultiplier()`, which returns three tiers — `1` (~60%, small/current), `2` (~30%, 2× bigger), `4` (~10%, 4× bigger). Used in both `generateDots()` and the reduced-motion static fallback so they stay in sync.
 - **Color:** dots are always `#e9e9e9` (dark-mode-only site). No `matchMedia`/theme listener.
 - **Animation loop:** `draw()` runs via `requestAnimationFrame`. Each frame: clears canvas → calls `updateMomentum()` → displaces each dot radially outward from cursor (wave formula: `sin(dist * 0.05 − time)`) → lerps dot back to origin when outside influence.
 - **Reduced motion:** `prefers-reduced-motion: reduce` skips the rAF loop entirely and draws 180 static dots once.
@@ -314,6 +315,7 @@ An animated Canvas 2D starfield runs on every page. It is self-contained in `_in
 - Adjust **density**: change `DOT_COUNT`
 - Adjust **reach**: change `INFLUENCE`
 - Adjust **strength**: change `MAX_DISP`
+- Adjust **size mix**: change the thresholds/return values in `sizeMultiplier()`
 - Adjust **feel**: change `MOMENTUM_RISE` / `MOMENTUM_DECAY` (higher rise = snappier; higher decay = slower fade)
 - Do **not** split the script into a separate `.js` file — inline-only is intentional
 
