@@ -181,6 +181,19 @@ card--featured     → modifier (when needed)
 
 Utility classes follow a short-hand pattern: `mb-*` (margin-bottom), `mt-*`, `ms-*`, `p-*`.
 
+### Frosted-glass surface (`.bg-glass`)
+
+`.bg-glass` is the single source of truth for the frosted-glass panel surface
+(semi-transparent fill + `backdrop-filter: blur()` with `-webkit-` prefix + subtle
+border) layered over the starfield. There is no `.bg-dark` — it was replaced by
+`.bg-glass`.
+
+- Add `bg-glass` in markup to any block that should read as a glass panel.
+- `.chat-bubble` carries **only** layout/typography. To give a chat bubble the glass
+  surface, add `bg-glass` alongside it: `class="chat-bubble bg-glass"`. Do **not**
+  put surface/background styles back on `.chat-bubble`.
+- Keep `backdrop-filter` and `-webkit-backdrop-filter` together so Safari renders the blur.
+
 ---
 
 ## HTML / Templating Conventions
