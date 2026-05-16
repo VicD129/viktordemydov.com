@@ -24,7 +24,7 @@ This document describes the codebase structure, development workflows, and conve
 | Styling | Plain CSS (no preprocessor) |
 | Fonts | DM Sans (self-hosted WOFF2) |
 | Images | WebP format |
-| PWA | Web App Manifest + Service Worker (`sw.js`) |
+| PWA | Web App Manifest only (no service worker — `sw.js` is a self-destruct kill switch) |
 | SEO | JSON-LD structured data, Open Graph, Twitter Card |
 | JavaScript | Inline IIFE only (starfield background in `layout.html`) |
 
@@ -39,8 +39,12 @@ viktordemydov.com/
 ├── eleventy.config.mjs         # Eleventy build configuration
 ├── package.json                # npm scripts and single dependency
 ├── manifest.json               # PWA manifest
+├── sw.js                       # Self-destruct service worker (NOT registered — kill switch only)
 ├── robots.txt                  # SEO directives
 ├── sitemap.xml                 # XML sitemap (update manually when adding pages)
+│
+├── _data/
+│   └── assets.js               # Global data — cssVersion (style.css mtime) for cache-busting
 │
 ├── _includes/
 │   └── layout.html             # Master layout — all pages inherit this
@@ -106,7 +110,7 @@ Key settings:
 - **Includes:** `_includes/`
 - **Template formats:** `html`, `md`, `njk`, `liquid`
 - **Default HTML engine:** Liquid
-- **Pass-through copies:** `fonts/`, `css/`, `img/`, `manifest.json`, `robots.txt`, `*.png`, `*.ico`, `*.xml`
+- **Pass-through copies:** `fonts/`, `css/`, `img/`, `manifest.json`, `sw.js`, `robots.txt`, `*.png`, `*.ico`, `*.xml`
 - **Watch targets:** `css/` (triggers live reload)
 
 ---
@@ -334,6 +338,23 @@ An animated Canvas 2D starfield runs on every page. It is self-contained in `_in
 
 ---
 
+## Caching
+
+The site **must not** serve stale HTML/CSS after a deploy.
+
+- **No service worker.** A cache-first SW once shipped here and pinned returning
+  visitors to old assets forever. `sw.js` is now a **self-destruct kill switch**: on
+  activate it deletes all caches, calls `self.registration.unregister()`, and reloads
+  open tabs. It is intentionally **not registered** anywhere — do **not** re-add a
+  `navigator.serviceWorker.register('/sw.js')` script to `layout.html`. Keep `sw.js`
+  served (it is in Eleventy passthrough) so old installed workers can fetch it and die.
+- **CSS cache-busting.** `_data/assets.js` exports `cssVersion` from `style.css`'s
+  mtime. `layout.html` references the stylesheet as `/css/style.css?v={{ assets.cssVersion }}`
+  (both the `preload` and the `stylesheet` link). The token changes only when
+  `style.css` actually changes — keep both references in sync and do not hardcode it.
+- Host is GitHub Pages (no custom HTTP headers), so the query-string version is the
+  cache-busting mechanism. Do not reintroduce SW caching as a substitute.
+
 ## Build Output (`_site/`)
 
 - Generated automatically by Eleventy — **never edit files in `_site/` directly**
@@ -361,3 +382,4 @@ There is currently no test suite and no CI/CD pipeline. All builds are run local
 9. **Keep dependencies minimal.** The project intentionally has only one dependency (`@11ty/eleventy`). Avoid adding new packages unless strictly necessary.
 10. **Follow existing front matter pattern** for all new pages.
 11. **Do not mention Claude** at git commit message.
+12. **No service worker registration.** `sw.js` is a kill switch only — never re-add a registration script. Bust CSS cache via the `?v={{ assets.cssVersion }}` token, not a SW. See the Caching section.

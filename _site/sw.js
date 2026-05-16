@@ -1,85 +1,21 @@
-const isLocalhost = location.hostname === 'localhost';
+// Self-destruct service worker.
+// The site no longer uses a service worker. This kill switch retires any
+// worker still installed in returning visitors' browsers: it wipes all
+// caches, unregisters itself, and reloads open tabs from the network.
+// Do NOT re-add a registration script for this file.
 
-const cacheName = 'viktor-portfolio-v1.5';
-const cacheAssets = [
-  '/',
-  '/fonts/DMSans-Regular.woff2',
-  '/fonts/DMSans-Medium.woff2',
-  '/fonts/DMSans-SemiBold.woff2',
-  '/fonts/DMSans-ExtraLight.woff2',
-  '/css/style.css',
-  '/img/photo_me.webp',
-  '/img/Screenshot 2024-08-25 at 12.38.01.webp',
-  '/img/Screenshot 2024-02-19 at 22.59.46.webp',
-  '/img/Screenshot 2023-05-22 at 16.52.54.webp',
-  '/img/Screenshot 2021-06-09 at 19.33.24.webp',
-  '/img/Screenshot 2020-10-12 at 21.17.34.webp',
-  '/img/Screenshot 2020-10-12 at 20.18.31.webp',
-  '/img/Screenshot 2020-10-12 at 20.16.44.webp',
-  '/img/Screenshot 2020-09-12 at 12.01.31.webp',
-  '/img/Screenshot 2020-09-12 at 12.00.50.webp',
-  '/img/certificate-1.webp',
-  '/img/certificate-2.webp',
-  '/img/tourhunter_calendar.webp',
-  '/img/tourhunter_vouchers.webp',
-  '/img/clcokworx_assignment_page.avif',
-  '/img/hobbydb_product_page.avif',
-  '/manifest.json'
-];
-
-// Call Install Event
-self.addEventListener('install', e => {
-  if (isLocalhost) {
-    self.skipWaiting();
-    return;
-  }
-
-  console.log('Service Worker: Installed');
-  e.waitUntil(
-    caches
-      .open(cacheName)
-      .then(cache => {
-        console.log('Service Worker: Caching Files');
-        cache.addAll(cacheAssets);
-      })
-      .then(() => self.skipWaiting())
-  );
+self.addEventListener('install', () => {
+  self.skipWaiting();
 });
 
-// Call Activate Event
 self.addEventListener('activate', e => {
-  console.log('Service Worker: Activated');
-  // Remove unwanted caches
   e.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cache => {
-          if (cache !== cacheName) {
-            console.log('Service Worker: Clearing Old Cache');
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
-  );
-});
-
-// Call Fetch Event - Cache First Strategy
-self.addEventListener('fetch', e => {
-  if (isLocalhost) return;
-
-  e.respondWith(
-    caches
-      .match(e.request)
-      .then(response => {
-        // Return cached version or fetch from network
-        return response || fetch(e.request);
-      })
-      .catch(() => {
-        // Return offline page if both cache and network fail
-        if (e.request.destination === 'document') {
-          return caches.match('/');
-        }
-      })
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+      await self.registration.unregister();
+      const clients = await self.clients.matchAll({ type: 'window' });
+      clients.forEach(client => client.navigate(client.url));
+    })()
   );
 });
