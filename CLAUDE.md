@@ -407,6 +407,21 @@ There is currently no test suite and no CI/CD pipeline. All builds are run local
 
 ---
 
+## Workflow for Changes
+
+Non-trivial work follows this sequence — do not skip steps or reorder them:
+
+1. **Brainstorm** — explore the idea, intent, constraints, and 2–3 solution options before any code.
+2. **Plan / spec** — write the agreed design to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` (excluded from the build via `.eleventyignore`).
+3. **Implementation** — build it, then verify (`npm run build`, syntax-check inline JS).
+4. **Code review** — dispatch a reviewer; fix Critical/Important findings before continuing.
+5. **Update `CLAUDE.md`** — record any new knowledge, constants, or conventions the change introduced.
+6. **Commit** — only after the above, and only with explicit user approval (see constraint 13).
+
+Trivial fixes (typos, single-line tweaks) may collapse steps 1–2, but review, the doc update, and the approval gate still apply.
+
+---
+
 ## Key Constraints for AI Assistants
 
 1. **Do not add JavaScript** unless explicitly requested. The only existing JS is the starfield IIFE in `layout.html` — do not add more without a clear reason.
@@ -422,3 +437,4 @@ There is currently no test suite and no CI/CD pipeline. All builds are run local
 11. **Do not mention Claude** at git commit message.
 12. **No service worker registration.** `sw.js` is a kill switch only — never re-add a registration script. Bust CSS cache via the `?v={{ assets.cssVersion }}` token, not a SW. See the Caching section.
 13. **Never `git commit` or `git push` without explicit user approval.** Finish and verify the work, then stop and ask — committing proactively is not wanted.
+14. **Follow the Workflow for Changes** (brainstorm → plan/spec → implementation → code review → update `CLAUDE.md` → commit). See the section above.
