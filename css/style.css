@@ -48,6 +48,8 @@
     --space-6: 3rem; /* 48px */
     --space-7: 5rem; /* 80px */
     --space-8: 10rem; /* 160px */
+    --space-9: 12rem; /* 192px */
+    --space-10: 15rem; /* 240px */
 
     /* Theme variables */
     --bg-color: #171717;
@@ -308,6 +310,14 @@ h6 {
     margin-top: var(--space-7) !important;
 }
 
+.mt-9 {
+    margin-top: var(--space-9) !important;
+}
+
+.mt-10 {
+    margin-top: var(--space-10) !important;
+}
+
 .ms-3 {
     margin-left: var(--space-3) !important;
 }
@@ -422,7 +432,7 @@ a.no-hover:hover {
     display: grid;
     grid-template-columns: minmax(auto, 900px);
     justify-content: center;
-    margin: 0 var(--space-2) var(--space-7);
+    margin: var(--space-10) var(--space-2) var(--space-7);
 }
 
 /* Header */
@@ -481,6 +491,18 @@ a.no-hover:hover {
 }
 
 /* Cards */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+}
+
+@media (max-width: 575px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .card {
     position: relative;
     display: flex;
@@ -506,7 +528,12 @@ a.no-hover:hover {
     padding: var(--space-4);
     display: flex;
     flex-direction: column;
-    justify-content: space-start;
+    justify-content: flex-start;
+}
+
+/* Modifier — must follow .card-body in source order to override via cascade */
+.card-body--end {
+    justify-content: flex-end;
 }
 
 .card-img-top {
@@ -572,7 +599,6 @@ a.no-hover:hover {
 }
 
 .work > h3,
-.certifications > h3,
 .contacts > h3 {
     font-weight: 600;
 }

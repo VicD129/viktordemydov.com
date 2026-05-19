@@ -137,8 +137,7 @@ layout: layout.html
 <!-- page content here -->
 ```
 
-2. Add a project card to `index.html` in the "Top Projects" section. Use the icon
-   partials (`{% include "icon-arrow-right.html" %}`) — do not paste raw SVG.
+2. Add a project card to `index.html` in the "Top Projects" section — insert it as a direct child of `div.projects-grid`, **before** the LinkedIn CTA card (last item). Use the icon partials (`{% include "icon-arrow-right.html" %}`) — do not paste raw SVG.
 3. Add a brand color variable to `css/style.css` if needed (see Color Conventions below).
 
 The sitemap needs no manual update — `sitemap.liquid` regenerates `/sitemap.xml`
@@ -156,11 +155,16 @@ Defined at `:root` — always use variables, never hardcode values:
 
 ```css
 /* spacing — 8-point grid */
---space-1: 8px;
---space-2: 16px;
---space-3: 24px;
---space-4: 32px;
-/* ...and so on */
+--space-1:  0.25rem; /*   4px */
+--space-2:  0.5rem;  /*   8px */
+--space-3:  1rem;    /*  16px */
+--space-4:  1.5rem;  /*  24px */
+--space-5:  2rem;    /*  32px */
+--space-6:  3rem;    /*  48px */
+--space-7:  5rem;    /*  80px */
+--space-8:  10rem;   /* 160px */
+--space-9:  12rem;   /* 192px */
+--space-10: 15rem;   /* 240px — used for inter-section gaps on the home page */
 
 /* brand colors */
 --brand-color: #e5c100;         /* site-wide brand yellow */
@@ -193,6 +197,18 @@ card--featured     → modifier (when needed)
 ```
 
 Utility classes follow a short-hand pattern: `mb-*` (margin-bottom), `mt-*`, `ms-*`, `p-*`.
+
+### Project / Certification grid (`.projects-grid`)
+
+`.projects-grid` is a CSS Grid class used on the home page for both the "Top Projects" cards and the "Latest Certifications" cards. It produces a two-column layout with equal horizontal and vertical gap (`var(--space-3)`), collapsing to a single full-width column below 576px.
+
+- Use `.projects-grid` as the direct parent of `.card` elements — do **not** wrap cards in `col-sm-6` or any other column div.
+- The 6th card in the projects grid is the LinkedIn CTA. Its `.card-body` carries `.card-body--end` to pin the text to the card bottom.
+- The certifications section follows the same structure: `h2` as a direct `<main>` child, then `div.container-fluid > div.projects-grid > cards`.
+
+### `.card-body--end` modifier
+
+Pins a `.card-body`'s content to the bottom by overriding `justify-content` to `flex-end`. Works because `.card-body` sets `display: flex; flex-direction: column`. The rule must appear **after** `.card-body` in `style.css` — it relies on source order, not extra specificity.
 
 ### Frosted-glass surface (`.bg-glass`)
 
