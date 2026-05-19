@@ -321,7 +321,7 @@ When adding or updating pages:
 
 ## Starfield Background
 
-An animated Canvas 2D starfield runs on every page. It is self-contained in `_includes/layout.html` — one `<canvas>` element and one inline `<script>` IIFE. No external files, no dependencies.
+An animated Canvas 2D starfield runs on every page. It is self-contained in `_includes/layout.html` — one `<canvas>` element and one inline `<script>` IIFE. No external files, no dependencies. Beyond the dots it also renders a **planet limb + atmosphere glow** at the page bottom, **drifting nebula** blobs, an occasional **meteor**, per-star **twinkle**, and depth **parallax**.
 
 ### Structure
 
@@ -340,22 +340,38 @@ An animated Canvas 2D starfield runs on every page. It is self-contained in `_in
 | `MAX_DISP` | `12` | Max dot displacement in px |
 | `MOMENTUM_RISE` | `0.12` | How fast momentum builds on fast movement |
 | `MOMENTUM_DECAY` | `0.96` | How fast momentum fades when cursor slows |
+| `GLOW` | `'150,180,255'` | Shared cool RGB for atmosphere, nebula, meteor (restrained, low-alpha — keeps the monochrome feel) |
+| `HORIZON` | `56` | px of planet limb visible above the page bottom |
+| `ATMO` | `90` | Atmosphere rim thickness in px |
+| `NEBULA_COUNT` | `3` | Number of drifting nebula blobs |
+| `METEOR_MIN` / `METEOR_MAX` | `15000` / `30000` | ms between meteors (randomized in range) |
+| `PARALLAX` | `0.015` | Cursor depth-parallax strength |
+| `TWINKLE` | `0.35` | Star twinkle alpha depth (`0` = no twinkle) |
 
 ### How it works
 
-- **Dot generation:** `generateDots()` places dots randomly across the full page — x within `canvas.width`, y within `document.documentElement.scrollHeight`. Each dot stores origin `(ox, oy)` and current `(x, y)` position. Dots are only regenerated when the viewport **width** changes. `draw()` translates the canvas by `-scrollY` and skips dots outside the current viewport.
-- **Sizes:** each dot's base radius (`0.8 + random * 1.2`) is multiplied by `sizeMultiplier()`, which returns three tiers — `1` (~60%, small/current), `2` (~30%, 2× bigger), `4` (~10%, 4× bigger). Used in both `generateDots()` and the reduced-motion static fallback so they stay in sync.
-- **Color:** dots are always `#e9e9e9` (dark-mode-only site). No `matchMedia`/theme listener.
-- **Animation loop:** `draw()` runs via `requestAnimationFrame`. Each frame: clears canvas → calls `updateMomentum()` → displaces each dot radially outward from cursor (wave formula: `sin(dist * 0.05 − time)`) → lerps dot back to origin when outside influence.
-- **Reduced motion:** `prefers-reduced-motion: reduce` skips the rAF loop entirely and draws `DOT_COUNT` static dots once.
+- **Dot generation:** `generateDots()` places dots randomly across the full page — x within `canvas.width`, y within `document.documentElement.scrollHeight`. Each dot stores origin `(ox, oy)`, current `(x, y)`, a `depth`, a `big` flag, and twinkle phase/speed. Dots are only regenerated when the viewport **width** changes. `draw()` translates the canvas by `-scrollY` and skips dots outside the current viewport.
+- **Sizes & depth:** `sizeTier()` returns `[radiusMultiplier, depth]` — `[1, 0.25]` (~60%, small/far), `[2, 0.55]` (~30%, mid), `[4, 1.0]` (~10%, big/near). Base radius `0.8 + random * 1.2` is multiplied by the tier. `big = tier[0] === 4`. Used by `generateDots()` **and** the reduced-motion fallback so they stay in sync.
+- **Twinkle:** each non-`big` dot modulates its `globalAlpha` by `(1 − TWINKLE) + TWINKLE·sin(t·twSpeed + twPhase)`. The biggest/nearest dots (`d.big`) deliberately do **not** twinkle (steady alpha).
+- **Parallax:** cursor displacement force is scaled by `d.depth` and dots get a small horizontal cursor-parallax offset (`pmx · PARALLAX · (depth − 0.35)`). This is **cursor**-parallax only — no scroll-parallax (avoids document-space cull popping).
+- **Nebula:** `generateNebula()` creates `NEBULA_COUNT` slow-drifting viewport-fixed blobs. Each blob's soft radial gradient is baked once into an offscreen sprite via `makeBlob()`; `drawNebula()` just `drawImage`s it (no per-frame gradient allocation). Regenerated on every resize.
+- **Planet limb + atmosphere:** `buildPlanet()` bakes the visible `HORIZON+ATMO` cap (cool atmosphere rim + near-black body with an upper-left terminator) into one offscreen sprite, rebuilt only when canvas **width** changes. `drawPlanet(bottomY)` blits it with its bottom edge at `bottomY`. In the animation loop it is drawn inside a `translate(0,-scrollY)` block at `pageH` so it sits at the **page bottom** (scroll down to reach it) and tracks the document end.
+- **Meteor:** every `METEOR_MIN`–`METEOR_MAX` ms a single streak with a fading gradient tail crosses the upper sky (viewport space, behind the planet). The meteor gradient is the only per-frame gradient and only while a meteor is active.
+- **Color:** dots are always `#e9e9e9`; atmosphere/nebula/meteor use the single `GLOW` RGB at low alpha (dark-mode-only site). No `matchMedia`/theme listener.
+- **Animation loop:** `draw(ts)` runs via `requestAnimationFrame` with a clamped delta (`min(ts−lastTs, 60)`) so meteor speed/cadence are framerate-independent. Draw order each frame: clear → nebula → dots (twinkle + parallax) → meteor → planet. `pageH` (`document.documentElement.scrollHeight`) is refreshed every 20 frames, not every frame, to avoid a per-frame reflow while still catching lazy-image page growth.
+- **Reduced motion:** `prefers-reduced-motion: reduce` skips the rAF loop entirely and draws one static frame — nebula + `DOT_COUNT` static dots + the planet (anchored to the viewport bottom, since this path never scrolls). No twinkle, no meteor.
 
 ### Modifying the starfield
 
 - Adjust **density**: change `DOT_COUNT`
 - Adjust **reach**: change `INFLUENCE`
 - Adjust **strength**: change `MAX_DISP`
-- Adjust **size mix**: change the thresholds/return values in `sizeMultiplier()`
+- Adjust **size mix / depth**: change the thresholds/return values in `sizeTier()` (`[radiusMultiplier, depth]`)
 - Adjust **feel**: change `MOMENTUM_RISE` / `MOMENTUM_DECAY` (higher rise = snappier; higher decay = slower fade)
+- Adjust **twinkle / parallax**: change `TWINKLE` (`0` disables) / `PARALLAX`
+- Adjust **planet**: change `HORIZON` (how much limb shows) / `ATMO` (rim thickness); the `w * 0.9` in `buildPlanet()` controls limb curvature (flatter on wide screens)
+- Adjust **atmosphere/nebula/meteor color**: change the single `GLOW` RGB; meteor cadence via `METEOR_MIN`/`METEOR_MAX`, count via `NEBULA_COUNT`
+- After editing `buildPlanet()` / `makeBlob()` or anything gradient-related, remember those sprites are cached — they rebuild on resize (nebula: every resize; planet: width change only)
 - Do **not** split the script into a separate `.js` file — inline-only is intentional
 
 ---
