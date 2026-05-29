@@ -6,7 +6,7 @@ This document describes the codebase structure, development workflows, and conve
 
 ## Project Overview
 
-**viktordemydov.com** is a personal portfolio static website for Viktor Demydov, a Product Designer & Design Engineer. It is built with [Eleventy (11ty)](https://www.11ty.dev/)
+**viktordemydov.com** is a personal portfolio static website for Viktor Demydov, a Product Designer & Design Engineer. It is built with [Eleventy (11ty)](https://www.11ty.dev/) v3.1.5.
 
 - **Type:** Static site generator (no backend, no database)
 - **URL:** https://viktordemydov.com
@@ -19,7 +19,7 @@ This document describes the codebase structure, development workflows, and conve
 
 | Layer | Technology |
 |---|---|
-| Static Site Generator | Eleventy (11ty) v3.1.0 |
+| Static Site Generator | Eleventy (11ty) v3.1.5 |
 | Templating | Liquid (default), Nunjucks also supported |
 | Styling | Plain CSS (no preprocessor) |
 | Fonts | DM Sans (self-hosted WOFF2) |
@@ -174,6 +174,15 @@ Defined at `:root` — always use variables, never hardcode values:
 --abi-color: #f26d1f;
 --mvr-color: #f6de41;
 --tourhunter-color: #5095e8;
+
+/* theme (dark-mode only) */
+--bg-color: #171717;            /* page background */
+--text-color: #e9e9e9;          /* body text */
+--link-color: #e9e9e9;
+--link-hover-color: #242424;
+--header-gradient-start: #777;
+--header-gradient-end: #171717;
+--card-bg: #101010;             /* card / tab-content surface */
 ```
 
 ### Spacing
@@ -182,7 +191,7 @@ Use the **8-point grid system**. Spacing values must be multiples of 8px. Use CS
 
 ### Theming
 
-- **Dark mode only.** The site renders a single dark palette regardless of OS preference (background `#171717`, text `#e9e9e9`). Theme values live in `:root` in `css/style.css`.
+- **Dark mode only.** The site renders a single dark palette regardless of OS preference. Use the named theme variables — `--bg-color` (`#171717`), `--text-color` (`#e9e9e9`), `--link-color`, `--link-hover-color`, `--card-bg`, `--header-gradient-start`/`--header-gradient-end` — rather than hardcoding hex values. They live in `:root` in `css/style.css`.
 - Do **not** add `@media (prefers-color-scheme: ...)` blocks or a light theme — light mode was intentionally removed. Use the `:root` theme variables for all colors.
 
 ### Class Naming
@@ -197,6 +206,19 @@ card--featured     → modifier (when needed)
 ```
 
 Utility classes follow a short-hand pattern: `mb-*` (margin-bottom), `mt-*`, `ms-*`, `p-*`.
+
+### Class inventory
+
+A quick map of the class families in `style.css` so existing classes get reused instead
+of reinvented (not an exhaustive per-rule reference — read the file for specifics):
+
+- **Typography:** `.display-1`, `.display-hero`, `.section-label`, `.fw-bold` / `.fw-semibold` / `.fw-medium` / `.fw-normal` / `.fw-extralight`, `.text-center` / `.text-right` / `.text-italic` / `.text-secondary`, `.small`
+- **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`
+- **Spacing utilities:** `.mb-0`–`.mb-8`, `.mt-3`–`.mt-10`, `.ms-3`, `.p-0` / `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale
+- **Sections:** `.work`, `.work-item`, `.work-header`, `.side-projects`, `.contacts`
+- **Nav / tabs:** `.nav-tabs`, `.nav-link` (`.active`), `.tab-content`
+- **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar`, `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (pair with `.bg-glass` for the surface — see below)
+- **Card brand modifiers:** `.abi-bg`, `.pegasus-bg`, `.mvr-bg`, `.tourhunter-bg`, `.brand-bg`
 
 ### Project / Certification grid (`.projects-grid`)
 
