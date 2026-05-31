@@ -183,6 +183,7 @@ Defined at `:root` — always use variables, never hardcode values:
 --header-gradient-start: #777;
 --header-gradient-end: #171717;
 --card-bg: #101010;             /* card / tab-content surface */
+--status-color: #4ade80;        /* "Open to work" green */
 ```
 
 ### Spacing
@@ -216,6 +217,8 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 - **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`
 - **Spacing utilities:** `.mb-0`–`.mb-8`, `.mt-3`–`.mt-10`, `.ms-3`, `.p-0` / `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.side-projects`, `.contacts`
+- **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__links` (right-side group), `.site-nav__link`
+- **Hero:** `.hero-status` — "Open to work" badge rendered below the hero subtitle; color uses `var(--status-color)`
 - **Nav / tabs:** `.nav-tabs`, `.nav-link` (`.active`), `.tab-content`
 - **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar`, `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (pair with `.bg-glass` for the surface — see below)
 - **Card brand modifiers:** `.abi-bg`, `.pegasus-bg`, `.mvr-bg`, `.tourhunter-bg`, `.brand-bg`
@@ -231,6 +234,14 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 ### `.card-body--end` modifier
 
 Pins a `.card-body`'s content to the bottom by overriding `justify-content` to `flex-end`. Works because `.card-body` sets `display: flex; flex-direction: column`. The rule must appear **after** `.card-body` in `style.css` — it relies on source order, not extra specificity.
+
+### Fixed nav and scroll offsets
+
+`body { padding-top: var(--space-7) }` (80px) reserves space for the fixed `.site-nav` bar on every page. Do not remove it.
+
+Any `<h2 id="…">` or `<footer id="…">` used as an anchor target must have `scroll-margin-top: var(--space-7)` so the heading clears the fixed bar when jumped to. This is handled by the rule `h2[id], footer[id] { scroll-margin-top: var(--space-7) }` in `style.css` — extend it if new anchor targets are added at other element types.
+
+The `.site-nav` uses its own dark glass styles (`rgba(23,23,23,0.85)` + blur) directly rather than the `.bg-glass` utility, so its surface can be tuned independently.
 
 ### Frosted-glass surface (`.bg-glass`)
 
@@ -285,7 +296,8 @@ The master layout handles:
 - `<head>` meta tags (SEO, Open Graph, Twitter Card, viewport)
 - JSON-LD structured data (schema.org `Person`)
 - CSS and font preloads for performance
-- Site-wide header (hero title, Ukraine support button)
+- Fixed site-wide nav bar (`<nav class="site-nav">`) — avatar, name, and anchor links to `/#projects`, `/#certifications`, `/#contacts`; constrained to 900px via `.site-nav__inner`
+- Site-wide header (hero subtitle + "Open to work" status badge)
 - `{{ content }}` Liquid placeholder for page-specific content
 - Footer (LinkedIn link, email)
 - Starfield background canvas (`<canvas id="bg-canvas">`) and its IIFE script
@@ -395,7 +407,7 @@ An animated Canvas 2D starfield runs on every page. It is self-contained in `_in
 - **Nebula:** `generateNebula()` creates `NEBULA_COUNT` slow-drifting viewport-fixed blobs. Each blob's soft radial gradient is baked once into an offscreen sprite via `makeBlob()`; `drawNebula()` just `drawImage`s it (no per-frame gradient allocation). Regenerated on every resize.
 - **Planet limb + atmosphere:** `buildPlanet()` bakes the visible `HORIZON+ATMO` cap (cool atmosphere rim + near-black body with an upper-left terminator) into one offscreen sprite, rebuilt only when canvas **width** changes. `drawPlanet(bottomY)` blits it with its bottom edge at `bottomY`. In the animation loop it is drawn inside a `translate(0,-scrollY)` block at `pageH` so it sits at the **page bottom** (scroll down to reach it) and tracks the document end.
 - **Meteor:** every `METEOR_MIN`–`METEOR_MAX` ms a single streak with a fading gradient tail crosses the upper sky (viewport space, behind the planet). The meteor gradient is the only per-frame gradient and only while a meteor is active.
-- **Color:** dots are always `#e9e9e9`; atmosphere/nebula/meteor use the single `GLOW` RGB at low alpha (dark-mode-only site). No `matchMedia`/theme listener.
+- **Color:** dots are `#888888` (intentionally dark/subtle); atmosphere/nebula/meteor use the single `GLOW` RGB at low alpha (dark-mode-only site). No `matchMedia`/theme listener.
 - **Animation loop:** `draw(ts)` runs via `requestAnimationFrame` with a clamped delta (`min(ts−lastTs, 60)`) so meteor speed/cadence are framerate-independent. Draw order each frame: clear → nebula → dots (twinkle + parallax) → meteor → planet. `pageH` (`document.documentElement.scrollHeight`) is refreshed every 20 frames, not every frame, to avoid a per-frame reflow while still catching lazy-image page growth.
 - **Reduced motion:** `prefers-reduced-motion: reduce` skips the rAF loop entirely and draws one static frame — nebula + `DOT_COUNT` static dots + the planet (anchored to the viewport bottom, since this path never scrolls). No twinkle, no meteor.
 

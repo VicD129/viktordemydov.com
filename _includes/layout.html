@@ -70,12 +70,26 @@ title: Viktor Demydov
   </head>
   <body>
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <nav class="site-nav" aria-label="Site navigation">
+      <div class="site-nav__inner">
+        <a href="/" class="site-nav__home">
+          <img src="/img/photo_me.webp" alt="Viktor Demydov" class="site-nav__avatar" />
+          <span class="site-nav__brand">Viktor Demydov</span>
+        </a>
+        <div class="site-nav__links">
+          <a href="/#projects" class="site-nav__link">Projects</a>
+          <a href="/#certifications" class="site-nav__link">Certifications</a>
+          <a href="/#contacts" class="site-nav__link">Contacts</a>
+        </div>
+      </div>
+    </nav>
     <header class="header">
       <h1 class="text-center mb-1">
         <a href="/" class="display-hero no-hover">
-            Viktor Demydov <br><br> <small>Senior Product Designer <br>& Design Engineer</small>
+            <small>Senior Product Designer <br>& Design Engineer</small>
         </a>
       </h1>
+      <p class="hero-status text-center">Open to work</p>
 
     </header>
     <main class="content" style="grid-template-columns: minmax(auto, 900px)">
@@ -83,7 +97,7 @@ title: Viktor Demydov
       {{ content }}
 
     </main>
-    <footer class="footer">
+    <footer class="footer" id="contacts">
       <div class="contacts ms-3">
         <h2>Write to me</h2>
         <h3>
@@ -132,7 +146,7 @@ title: Viktor Demydov
       }
 
       function dotColor() {
-        return '#e9e9e9';
+        return '#888888';
       }
 
       function randomAlpha() {
@@ -427,7 +441,7 @@ title: Viktor Demydov
             (0.8 + Math.random() * 1.2) * sizeTier()[0],
             0, Math.PI * 2
           );
-          ctx.fillStyle = '#e9e9e9';
+          ctx.fillStyle = '#888888';
           ctx.globalAlpha = 0.12 + Math.random() * 0.16;
           ctx.fill();
         }
