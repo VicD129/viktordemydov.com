@@ -6,7 +6,7 @@ This document describes the codebase structure, development workflows, and conve
 
 ## Project Overview
 
-**viktordemydov.com** is a personal portfolio static website for Viktor Demydov, a Product Designer & Design Engineer. It is built with [Eleventy (11ty)](https://www.11ty.dev/) v3.1.5.
+**viktordemydov.com** is a personal portfolio static website for Viktor Demydov, a Senior Product Designer & Design Engineer. It is built with [Eleventy (11ty)](https://www.11ty.dev/) v3.1.5.
 
 - **Type:** Static site generator (no backend, no database)
 - **URL:** https://viktordemydov.com
