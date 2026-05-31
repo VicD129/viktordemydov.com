@@ -217,7 +217,7 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 - **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`
 - **Spacing utilities:** `.mb-0`–`.mb-8`, `.mt-3`–`.mt-10`, `.ms-3`, `.p-0` / `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.side-projects`, `.contacts`
-- **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__links` (right-side group), `.site-nav__link`
+- **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: home + sep + text links), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__sep` (1px decorative vertical divider), `.site-nav__link` (text nav link), `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`, hover via global `a:hover`)
 - **Hero:** `.hero-status` — "Open to work" badge rendered below the hero subtitle; color uses `var(--status-color)`
 - **Nav / tabs:** `.nav-tabs`, `.nav-link` (`.active`), `.tab-content`
 - **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar`, `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (pair with `.bg-glass` for the surface — see below)
@@ -239,7 +239,7 @@ Pins a `.card-body`'s content to the bottom by overriding `justify-content` to `
 
 `body { padding-top: var(--space-7) }` (80px) reserves space for the fixed `.site-nav` bar on every page. Do not remove it.
 
-Any `<h2 id="…">` or `<footer id="…">` used as an anchor target must have `scroll-margin-top: var(--space-7)` so the heading clears the fixed bar when jumped to. This is handled by the rule `h2[id], footer[id] { scroll-margin-top: var(--space-7) }` in `style.css` — extend it if new anchor targets are added at other element types.
+Any `<h2 id="…">` used as an anchor target must have `scroll-margin-top: var(--space-7)` so the heading clears the fixed bar when jumped to. This is handled by the rule `h2[id], footer[id] { scroll-margin-top: var(--space-7) }` in `style.css` — extend it if new anchor targets are added at other element types.
 
 The `.site-nav` uses its own dark glass styles (`rgba(23,23,23,0.85)` + blur) directly rather than the `.bg-glass` utility, so its surface can be tuned independently.
 
@@ -296,7 +296,7 @@ The master layout handles:
 - `<head>` meta tags (SEO, Open Graph, Twitter Card, viewport)
 - JSON-LD structured data (schema.org `Person`)
 - CSS and font preloads for performance
-- Fixed site-wide nav bar (`<nav class="site-nav">`) — avatar, name, and anchor links to `/#projects`, `/#certifications`, `/#contacts`; constrained to 900px via `.site-nav__inner`
+- Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name + separator + "Projects" anchor; right side: icon-only links (email, LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
 - Site-wide header (hero subtitle + "Open to work" status badge)
 - `{{ content }}` Liquid placeholder for page-specific content
 - Footer (LinkedIn link, email)

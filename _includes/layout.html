@@ -72,14 +72,18 @@ title: Viktor Demydov
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <nav class="site-nav" aria-label="Site navigation">
       <div class="site-nav__inner">
-        <a href="/" class="site-nav__home">
-          <img src="/img/photo_me.webp" alt="Viktor Demydov" class="site-nav__avatar" />
-          <span class="site-nav__brand">Viktor Demydov</span>
-        </a>
-        <div class="site-nav__links">
+        <div class="site-nav__left">
+          <a href="/" class="site-nav__home">
+            <img src="/img/photo_me.webp" alt="Viktor Demydov" class="site-nav__avatar" />
+            <span class="site-nav__brand">Viktor Demydov</span>
+          </a>
+          <span class="site-nav__sep" aria-hidden="true"></span>
           <a href="/#projects" class="site-nav__link">Projects</a>
-          <a href="/#certifications" class="site-nav__link">Certifications</a>
-          <a href="/#contacts" class="site-nav__link">Contacts</a>
+        </div>
+        <div class="site-nav__links">
+          <a href="mailto:vicd129@gmail.com" class="site-nav__icon-link" aria-label="Email">{% include "icon-email.html" %}</a>
+          <a href="https://www.linkedin.com/in/viktor-demydov-1b71896a" class="site-nav__icon-link" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">{% include "icon-linkedin.html" %}</a>
+          <a href="https://github.com/VicD129" class="site-nav__icon-link" target="_blank" rel="noreferrer noopener" aria-label="GitHub">{% include "icon-github.html" %}</a>
         </div>
       </div>
     </nav>
@@ -97,7 +101,7 @@ title: Viktor Demydov
       {{ content }}
 
     </main>
-    <footer class="footer" id="contacts">
+    <footer class="footer">
       <div class="contacts ms-3">
         <h2>Write to me</h2>
         <h3>
