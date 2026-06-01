@@ -500,6 +500,28 @@ a.no-hover:hover {
     margin-top: var(--space-2);
 }
 
+/* "Download CV" button in the hero, below the status badge.
+   Pair with .bg-glass in markup for the surface (same as the cards);
+   radius matches .card (0.25rem). */
+.hero-cv {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 0.25rem;
+}
+
+.hero-cv:hover,
+.hero-cv:focus {
+    background-color: var(--brand-color) !important;
+    border-color: var(--brand-color);
+    color: var(--link-hover-color);
+    border-radius: 0.25rem;
+}
+
 /* Anchor targets need to clear the fixed nav on jump */
 h2[id],
 footer[id] {

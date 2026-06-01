@@ -16,6 +16,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy('*.png');
   eleventyConfig.addPassthroughCopy('*.ico');
   eleventyConfig.addPassthroughCopy('*.xml');
+  eleventyConfig.addPassthroughCopy('*.pdf');
 
   // Watch for changes in CSS and rebuild
   eleventyConfig.addWatchTarget('./css/');

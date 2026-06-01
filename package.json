@@ -8,7 +8,8 @@
     "watch": "eleventy --watch",
     "serve": "eleventy --serve",
     "start": "eleventy --serve",
-    "debug": "DEBUG=* eleventy"
+    "debug": "DEBUG=* eleventy",
+    "build:cv": "'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --no-pdf-header-footer --user-data-dir=\"$(mktemp -d)\" --print-to-pdf=Viktor-Demydov-CV.pdf \"file://$PWD/cv/cv.html\""
   },
   "author": "Viktor Demydov",
   "license": "MIT",

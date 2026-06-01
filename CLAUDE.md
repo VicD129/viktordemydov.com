@@ -48,9 +48,10 @@ viktordemydov.com/
 │
 ├── _includes/
 │   ├── layout.html             # Master layout — all pages inherit this
-│   ├── icon-arrow-up-right.html # Shared arrow SVG partials — use via {% include %}
+│   ├── icon-arrow-up-right.html # Shared SVG partials — use via {% include %}
 │   ├── icon-arrow-right.html
-│   └── icon-arrow-left.html
+│   ├── icon-arrow-left.html
+│   └── icon-download.html      # download glyph — used by the hero "Download CV" button
 │
 ├── css/
 │   └── style.css               # All styles (single file, no preprocessor)
@@ -69,6 +70,11 @@ viktordemydov.com/
 │   ├── mvr.html
 │   ├── myabiportal.html
 │   └── tourhunter.html
+│
+├── cv/                         # Résumé PDF source (excluded from build via .eleventyignore)
+│   └── cv.html                 # rendered to /Viktor-Demydov-CV.pdf via `npm run build:cv`
+│
+├── Viktor-Demydov-CV.pdf       # Built résumé — served at the site root (hero "Download CV")
 │
 └── _site/                      # BUILD OUTPUT — auto-generated, never edit manually
 ```
@@ -97,6 +103,7 @@ npm install
 | `npm run watch` | Watch for changes, rebuild without serving |
 | `npm run build` | One-time production build into `_site/` |
 | `npm run debug` | Verbose debug mode (`DEBUG=* eleventy`) |
+| `npm run build:cv` | Render `cv/cv.html` → `Viktor-Demydov-CV.pdf` via headless Chrome (see [CV / Résumé PDF](#cv--résumé-pdf)) |
 
 ### Development Server
 
@@ -113,10 +120,10 @@ Key settings:
 - **Includes:** `_includes/`
 - **Template formats:** `html`, `md`, `njk`, `liquid`
 - **Default HTML engine:** Liquid
-- **Pass-through copies:** `fonts/`, `css/`, `img/`, `manifest.json`, `sw.js`, `robots.txt`, `*.png`, `*.ico`, `*.xml`
+- **Pass-through copies:** `fonts/`, `css/`, `img/`, `manifest.json`, `sw.js`, `robots.txt`, `*.png`, `*.ico`, `*.xml`, `*.pdf` (the latter serves the root-level `Viktor-Demydov-CV.pdf`)
 - **Watch targets:** `css/` (triggers live reload)
 - **Custom filter:** `fileMtime` — returns a template's source mtime as `YYYY-MM-DD`; used by `sitemap.liquid` for `<lastmod>`
-- **`.eleventyignore`:** excludes `CLAUDE.md`, `README.md`, and `docs/` from the build so internal docs are neither published nor leaked into the generated sitemap
+- **`.eleventyignore`:** excludes `CLAUDE.md`, `README.md`, `docs/`, and `cv/` from the build so internal docs and the CV source are neither published as routes nor leaked into the generated sitemap
 - **Sitemap:** `/sitemap.xml` is generated from `sitemap.liquid` (loops `collections.all`) on every build — never hand-edit it
 
 ---
@@ -218,7 +225,7 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 - **Spacing utilities:** `.mb-0`–`.mb-8`, `.mt-3`–`.mt-10`, `.ms-3`, `.p-0` / `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.side-projects`, `.contacts`
 - **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: home + sep + text links), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__sep` (1px decorative vertical divider), `.site-nav__link` (text nav link), `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`, hover via global `a:hover`)
-- **Hero:** `.hero-status` — "Open to work" badge rendered below the hero subtitle; color uses `var(--status-color)`
+- **Hero:** `.hero-status` — "Open to work" badge below the hero subtitle (color `var(--status-color)`); `.hero-cv` — the "Download CV" button below it (carries layout/typography only — **pair with `.bg-glass`** for the surface; `0.25rem` radius matching `.card`; fills brand-yellow on hover)
 - **Nav / tabs:** `.nav-tabs`, `.nav-link` (`.active`), `.tab-content`
 - **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar`, `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (pair with `.bg-glass` for the surface — see below)
 - **Card brand modifiers:** `.abi-bg`, `.pegasus-bg`, `.mvr-bg`, `.tourhunter-bg`, `.brand-bg`
@@ -270,11 +277,12 @@ border) layered over the starfield. There is no `.bg-dark` — it was replaced b
 
 ### Icon partials
 
-The three arrow SVGs live in `_includes/`: `icon-arrow-up-right.html`,
-`icon-arrow-right.html`, `icon-arrow-left.html`. Insert them with
-`{% include "icon-arrow-up-right.html" %}` (etc.). **Never paste raw arrow
-`<svg>` markup into a page** — reuse the partial so a single edit propagates
-everywhere.
+The SVG glyphs live in `_includes/`: the arrows `icon-arrow-up-right.html`,
+`icon-arrow-right.html`, `icon-arrow-left.html`; `icon-download.html` (the hero
+"Download CV" button); and the social glyphs `icon-email.html`, `icon-linkedin.html`,
+`icon-github.html`. Insert them with `{% include "icon-arrow-up-right.html" %}` (etc.).
+**Never paste raw `<svg>` markup into a page** — reuse the partial so a single edit
+propagates everywhere.
 
 ### Front Matter Fields
 
@@ -297,7 +305,7 @@ The master layout handles:
 - JSON-LD structured data (schema.org `Person`)
 - CSS and font preloads for performance
 - Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name + separator + "Projects" anchor; right side: icon-only links (email, LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
-- Site-wide header (hero subtitle + "Open to work" status badge)
+- Site-wide header (hero subtitle + "Open to work" status badge + a "Download CV" button — `.hero-cv.bg-glass`, linking to `/Viktor-Demydov-CV.pdf` with the `download` attribute)
 - `{{ content }}` Liquid placeholder for page-specific content
 - Footer (LinkedIn link, email) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial)
 - Starfield background canvas (`<canvas id="bg-canvas">`) and its IIFE script
@@ -366,6 +374,43 @@ When adding or updating pages:
 - Naming: `FontFamily-Weight.woff2` (e.g., `DMSans-Medium.woff2`)
 - Declared in `css/style.css` via `@font-face` with `font-display: swap`
 - Preloaded in `_includes/layout.html` for performance
+
+---
+
+## CV / Résumé PDF
+
+The downloadable résumé (`Viktor-Demydov-CV.pdf`, served at the site root and linked from
+the hero) is **generated from `cv/cv.html`** — a standalone, self-contained HTML source
+(inline `<style>`, on-brand dark, A4, **single page**, DM Sans referenced via relative
+`../fonts/*.woff2`). It is **not** an Eleventy page: `cv/` is in `.eleventyignore`, so it is
+never published as a route or added to the sitemap. It lives in a **git-tracked** folder
+(unlike `docs/`, which is git-ignored) so the PDF's source is version-controlled.
+
+### Building
+
+```bash
+npm run build:cv
+```
+
+Renders `cv/cv.html` → `Viktor-Demydov-CV.pdf` via **headless Chrome**
+(`--headless=new --no-pdf-header-footer --print-to-pdf`, into a throwaway `--user-data-dir`).
+No new npm/runtime dependency — it reuses the locally installed Chrome (macOS standard path).
+The output is a real **selectable-text PDF** (ATS-parseable); DM Sans is subset/embedded
+automatically. The `*.pdf` Eleventy passthrough then copies it into `_site/`.
+
+### Editing rules
+
+- Edit copy/layout in `cv/cv.html`, then **always re-run `npm run build:cv`** and **commit
+  both** the source and the regenerated `Viktor-Demydov-CV.pdf` (the PDF is a committed
+  artifact, since GitHub Pages serves it).
+- **Keep it one page.** The left "Experience" column is the height limiter — bumping the
+  base font/spacing overflows to a 2nd page fast. Verify after each change:
+  `pdfinfo Viktor-Demydov-CV.pdf` → `Pages: 1`; `pdftotext Viktor-Demydov-CV.pdf -` →
+  complete, selectable text. (`pdfinfo`/`pdftotext`/`pdftoppm` come from poppler — a dev
+  tool, **not** a project dependency.)
+- Don't add a separate `@media print` screen variant — the file is rendered straight to PDF,
+  so its on-screen styles *are* the print styles (full-bleed dark via `@page { margin: 0 }`
+  + `print-color-adjust: exact`).
 
 ---
 

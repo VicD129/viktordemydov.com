@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Viktor Demydov — CV</title>
+    <!--
+      Standalone source for Viktor-Demydov-CV.pdf. NOT an Eleventy page (lives under
+      docs/, which is in .eleventyignore). Rendered to PDF via headless Chrome:
+        npm run build:cv
+      On-brand dark, A4, single page. Fonts resolve relative to this file's location.
+    -->
+    <style>
+      @font-face {
+        font-family: "DM Sans";
+        src: url("../fonts/DMSans-ExtraLight.woff2") format("woff2");
+        font-weight: 200;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "DM Sans";
+        src: url("../fonts/DMSans-Regular.woff2") format("woff2");
+        font-weight: 400;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "DM Sans";
+        src: url("../fonts/DMSans-Medium.woff2") format("woff2");
+        font-weight: 500;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "DM Sans";
+        src: url("../fonts/DMSans-SemiBold.woff2") format("woff2");
+        font-weight: 600;
+        font-display: swap;
+      }
+
+      :root {
+        --bg: #171717;
+        --fg: #e9e9e9;
+        --soft: #cfcfcf;
+        --muted: #9aa0a6;
+        --brand: #e5c100;
+        --rule: rgba(229, 193, 0, 0.32);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      html {
+        background: var(--bg);
+      }
+
+      body {
+        font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        width: 210mm;
+        min-height: 297mm;
+        padding: 13mm 14mm 12mm;
+        font-size: 9.6pt;
+        line-height: 1.45;
+        -webkit-font-smoothing: antialiased;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* ---- header ---- */
+      .name {
+        font-size: 27pt;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        color: var(--brand);
+        line-height: 1.05;
+      }
+      .tagline {
+        font-size: 11.5pt;
+        font-weight: 500;
+        margin-top: 1.5mm;
+      }
+      .subtag {
+        font-size: 9.6pt;
+        color: var(--muted);
+        margin-top: 0.5mm;
+      }
+      .contact {
+        font-size: 8.6pt;
+        color: var(--soft);
+        margin-top: 2.5mm;
+        letter-spacing: 0.01em;
+      }
+      .contact .sep {
+        color: var(--brand);
+        margin: 0 1.5mm;
+      }
+
+      .rule {
+        height: 1px;
+        background: var(--rule);
+        margin: 4mm 0 3.5mm;
+      }
+
+      .summary {
+        font-size: 9.6pt;
+        color: var(--soft);
+        line-height: 1.5;
+        margin-bottom: 5mm;
+      }
+
+      /* ---- two-column body ---- */
+      .body {
+        display: grid;
+        grid-template-columns: 1.72fr 1fr;
+        gap: 9mm;
+        align-items: start;
+      }
+
+      .label {
+        font-size: 8.7pt;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--brand);
+        border-bottom: 1px solid var(--rule);
+        padding-bottom: 1.4mm;
+        margin-bottom: 3mm;
+      }
+      section + section {
+        margin-top: 5mm;
+      }
+
+      /* ---- experience ---- */
+      .role {
+        margin-bottom: 3.6mm;
+      }
+      .role-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 5mm;
+      }
+      .role-title {
+        font-size: 10.5pt;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .role-dates {
+        font-size: 8.4pt;
+        color: var(--muted);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .role-org {
+        font-size: 9.5pt;
+        font-weight: 500;
+        color: var(--brand);
+        margin: 0.4mm 0 1.6mm;
+      }
+      .points {
+        list-style: none;
+      }
+      .points li {
+        position: relative;
+        padding-left: 4mm;
+        color: var(--soft);
+        margin-bottom: 0.8mm;
+      }
+      .points li::before {
+        content: "–";
+        position: absolute;
+        left: 0;
+        color: var(--brand);
+      }
+
+      .compact {
+        font-size: 9.3pt;
+        margin-bottom: 1.8mm;
+      }
+      .compact b {
+        font-weight: 600;
+      }
+      .compact .compact-org {
+        color: var(--brand);
+        font-weight: 500;
+      }
+      .compact .meta {
+        color: var(--muted);
+      }
+      .earlier {
+        font-size: 9pt;
+        color: var(--muted);
+        margin-top: 1.5mm;
+        line-height: 1.5;
+      }
+
+      /* ---- sidebar ---- */
+      .skill-group {
+        margin-bottom: 2.6mm;
+      }
+      .skill-cat {
+        display: block;
+        font-weight: 600;
+        font-size: 9.2pt;
+      }
+      .skill-group p {
+        font-size: 8.9pt;
+        color: var(--soft);
+        line-height: 1.4;
+      }
+
+      .mini {
+        list-style: none;
+        font-size: 9pt;
+      }
+      .mini li {
+        margin-bottom: 1.3mm;
+        color: var(--soft);
+      }
+      .mini li span {
+        color: var(--muted);
+      }
+
+      .edu-item {
+        font-size: 9pt;
+        margin-bottom: 2mm;
+      }
+      .edu-item .deg {
+        font-weight: 500;
+      }
+      .edu-item .school {
+        color: var(--muted);
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="name">Viktor Demydov</div>
+      <div class="tagline">Design Engineer · Senior Product Designer</div>
+      <div class="subtag">11+ years — I design in Figma and ship in code</div>
+      <div class="contact">
+        viktordemydov.com<span class="sep">·</span>vicd129@gmail.com<span
+          class="sep"
+          >·</span
+        >linkedin.com/in/vicd129<span class="sep">·</span>github.com/VicD129<span
+          class="sep"
+          >·</span
+        >Ukraine — Remote (Worldwide)
+      </div>
+    </header>
+
+    <div class="rule"></div>
+
+    <p class="summary">
+      Design Engineer &amp; Senior Product Designer with 11+ years across startups
+      and global brands, working at the rare intersection of design and engineering.
+      I design in Figma and ship the real thing in code (HTML, Sass/CSS, JavaScript),
+      so what I prototype is what users get — nothing lost in handoff. I build and
+      code design systems end-to-end, ground UX decisions in research over opinion,
+      and have shipped everything from AI-powered features to a Chrome extension and
+      responsive web apps.
+    </p>
+
+    <div class="body">
+      <main>
+        <section>
+          <div class="label">Experience</div>
+
+          <div class="role">
+            <div class="role-head">
+              <span class="role-title">Design Engineer</span>
+              <span class="role-dates">Jul 2024 – Present · Remote (UK)</span>
+            </div>
+            <div class="role-org">Clockworx Business Orchestration Solutions</div>
+            <ul class="points">
+              <li>
+                Designing and shipping UI for the Business Orchestration platform
+                and a new US e-commerce product.
+              </li>
+              <li>
+                Building AI-powered features and design-system tooling directly in
+                code.
+              </li>
+            </ul>
+          </div>
+
+          <div class="role">
+            <div class="role-head">
+              <span class="role-title">Senior UI/UX Designer</span>
+              <span class="role-dates">Apr 2023 – Jul 2024 · Remote (Sweden)</span>
+            </div>
+            <div class="role-org">Develit AB</div>
+            <ul class="points">
+              <li>
+                Designed a nationwide government Motor Vehicle Registration platform
+                from scratch — verification, registration and warehouse-management
+                flows, plus its design system.
+              </li>
+            </ul>
+          </div>
+
+          <div class="role">
+            <div class="role-head">
+              <span class="role-title">Product Designer</span>
+              <span class="role-dates">Feb 2021 – Dec 2022 · Belgium</span>
+            </div>
+            <div class="role-org">
+              AB InBev B2B E-commerce — via SoftServe Business Systems
+            </div>
+            <ul class="points">
+              <li>
+                Sole UX/UI designer on AB InBev's Western-Europe B2B portal; built
+                the design system and led PLP, cart and checkout redesigns.
+              </li>
+              <li>
+                Work helped drive the platform's highest-ever CSAT score and its
+                fastest growth.
+              </li>
+            </ul>
+          </div>
+
+          <div class="role">
+            <div class="role-head">
+              <span class="role-title">UI/UX Engineer</span>
+              <span class="role-dates">Nov 2019 – Dec 2020 · Remote (UK)</span>
+            </div>
+            <div class="role-org">
+              Clockworx — via Pegasus: IT Value Acceleration Services
+            </div>
+            <ul class="points">
+              <li>
+                Refreshed and simplified a complex enterprise platform's UX;
+                re-architected its CSS/Sass for faster load and easier theming.
+              </li>
+            </ul>
+          </div>
+
+          <div class="role">
+            <div class="role-head">
+              <span class="role-title">UI/UX Developer</span>
+              <span class="role-dates">Jan 2016 – Nov 2019 · Phuket, Thailand</span>
+            </div>
+            <div class="role-org">TourHunter</div>
+            <ul class="points">
+              <li>
+                Designed and front-end-built a tourism booking platform and
+                marketplace.
+              </li>
+            </ul>
+          </div>
+
+          <div class="compact">
+            <b>UX/Product Designer</b> —
+            <span class="compact-org">Freterium</span>
+            <span class="meta">· Feb – Mar 2023 · TMS / logistics platform (contract)</span>
+          </div>
+          <div class="compact">
+            <b>UI/UX Engineer</b> — <span class="compact-org">Lyfegen</span>
+            <span class="meta">· Dec 2020 – Jan 2021 · healthcare payers platform (contract)</span>
+          </div>
+
+          <p class="earlier">
+            Earlier: Web Designer &amp; Developer, Upwork (2015).
+          </p>
+        </section>
+      </main>
+
+      <aside>
+        <section>
+          <div class="label">Skills</div>
+          <div class="skill-group">
+            <span class="skill-cat">Design</span>
+            <p>
+              Product Design, UI/UX, Design Systems, Figma, Prototyping, Wireframing,
+              Interaction Design, Responsive Design, Accessibility, Design Tokens
+            </p>
+          </div>
+          <div class="skill-group">
+            <span class="skill-cat">Engineering</span>
+            <p>HTML, CSS / Sass, JavaScript, Git, Chrome Extensions</p>
+          </div>
+          <div class="skill-group">
+            <span class="skill-cat">Strategy &amp; Research</span>
+            <p>
+              UX Strategy, User Research, Usability Testing, Analytics, AI Interfaces
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <div class="label">Languages</div>
+          <ul class="mini">
+            <li>Ukrainian <span>— Native</span></li>
+            <li>English <span>— Professional working</span></li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="label">Certifications</div>
+          <ul class="mini">
+            <li>UX Strategy</li>
+            <li>Design Patterns for AI Interfaces</li>
+            <li>Creating &amp; Promotion of the City Brand</li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="label">Education</div>
+          <div class="edu-item">
+            <div class="deg">
+              Specialist's &amp; Bachelor's — Language Interpretation &amp;
+              Translation
+            </div>
+            <div class="school">
+              Kryvyi Rih Institute, Kremenchuk University of Economics, IT &amp;
+              Management · 2007–2012
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </body>
+</html>
