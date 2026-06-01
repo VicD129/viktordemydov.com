@@ -224,7 +224,7 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 - **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`
 - **Spacing utilities:** `.mb-0`–`.mb-8`, `.mt-3`–`.mt-10`, `.ms-3`, `.p-0` / `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.side-projects`, `.contacts`
-- **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: home + sep + text links), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__sep` (1px decorative vertical divider), `.site-nav__link` (text nav link), `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`, hover via global `a:hover`)
+- **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: just the home link), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`, hover via global `a:hover`)
 - **Hero:** `.hero-status` — "Open to work" badge below the hero subtitle (color `var(--status-color)`); `.hero-cv` — the "Download CV" button below it (carries layout/typography only — **pair with `.bg-glass`** for the surface; `0.25rem` radius matching `.card`; fills brand-yellow on hover)
 - **Nav / tabs:** `.nav-tabs`, `.nav-link` (`.active`), `.tab-content`
 - **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar`, `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (pair with `.bg-glass` for the surface — see below)
@@ -304,7 +304,7 @@ The master layout handles:
 - `<head>` meta tags (SEO, Open Graph, Twitter Card, viewport)
 - JSON-LD structured data (schema.org `Person`)
 - CSS and font preloads for performance
-- Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name + separator + "Projects" anchor; right side: icon-only links (email, LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
+- Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name (home link); right side: icon-only links (email, LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
 - Site-wide header (hero subtitle + "Open to work" status badge + a "Download CV" button — `.hero-cv.bg-glass`, linking to `/Viktor-Demydov-CV.pdf` with the `download` attribute)
 - `{{ content }}` Liquid placeholder for page-specific content
 - Footer (LinkedIn link, email) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial)
