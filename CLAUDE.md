@@ -299,7 +299,7 @@ The master layout handles:
 - Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name + separator + "Projects" anchor; right side: icon-only links (email, LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
 - Site-wide header (hero subtitle + "Open to work" status badge)
 - `{{ content }}` Liquid placeholder for page-specific content
-- Footer (LinkedIn link, email)
+- Footer (LinkedIn link, email) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial)
 - Starfield background canvas (`<canvas id="bg-canvas">`) and its IIFE script
 
 **Do not duplicate** any of the above in individual page files — put it in the layout only.
