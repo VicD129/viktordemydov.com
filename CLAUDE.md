@@ -226,6 +226,7 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.side-projects`, `.contacts`
 - **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: just the home link), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`, hover via global `a:hover`)
 - **Hero:** `.hero-status` — "Open to work" badge below the hero subtitle (color `var(--status-color)`); `.hero-cv` — the "Download CV" button below it (carries layout/typography only — **pair with `.bg-glass`** for the surface; `0.25rem` radius matching `.card`; fills brand-yellow on hover)
+- **Skills ticker:** `.skills-ticker` — an animated scrolling pill marquee in the **hero** (in `layout.html`, between the `.hero-status` badge and the `.hero-cv` button, so it shows on **every page**); `.skills-track` — the flex track that scrolls; `.skill` — a single pill (`50rem` radius). The skill list is a single Liquid `{% assign skills = "…" | split: "," %}` array in `layout.html`, looped **twice** into the track (the second copy `aria-hidden="true"`) so the `skills-scroll` keyframe can translate `-50%` for a seamless loop. **Deliberate `.bg-glass` exception:** `.skill` carries its own translucent surface (same `rgba(255,255,255,0.06)` fill / `0.1` border / `#fff` as `.bg-glass`) **without** `backdrop-filter`, because a marquee of ~36 moving blurs re-blurs every frame over the starfield and janks. Pauses on hover; under `prefers-reduced-motion` the duplicate pills hide and the track becomes a static centered wrap. Scroll speed = the `40s` duration on `.skills-track`. Keep the list in sync with the CV skills in `cv/cv.html` (see the CV section). (Remote availability is signalled by the hero `.hero-status` badge — "Open to work (Remote)".)
 - **Nav / tabs:** `.nav-tabs`, `.nav-link` (`.active`), `.tab-content`
 - **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar`, `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (pair with `.bg-glass` for the surface — see below)
 - **Card brand modifiers:** `.abi-bg`, `.pegasus-bg`, `.mvr-bg`, `.tourhunter-bg`, `.brand-bg`
@@ -305,7 +306,7 @@ The master layout handles:
 - JSON-LD structured data (schema.org `Person`)
 - CSS and font preloads for performance
 - Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name (home link); right side: icon-only links (email, LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
-- Site-wide header (hero subtitle + "Open to work" status badge + a "Download CV" button — `.hero-cv.bg-glass`, linking to `/Viktor-Demydov-CV.pdf` with the `download` attribute)
+- Site-wide header (hero subtitle + "Open to work (Remote)" status badge + the animated `.skills-ticker` skills marquee + a "Download CV" button — `.hero-cv.bg-glass`, linking to `/Viktor-Demydov-CV.pdf` with the `download` attribute)
 - `{{ content }}` Liquid placeholder for page-specific content
 - Footer (LinkedIn link, email) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial)
 - Starfield background canvas (`<canvas id="bg-canvas">`) and its IIFE script
@@ -411,6 +412,10 @@ automatically. The `*.pdf` Eleventy passthrough then copies it into `_site/`.
 - Don't add a separate `@media print` screen variant — the file is rendered straight to PDF,
   so its on-screen styles *are* the print styles (full-bleed dark via `@page { margin: 0 }`
   + `print-color-adjust: exact`).
+- **Keep the skills in sync with the hero ticker.** The CV's "Skills" section (grouped
+  Design / Engineering / Strategy & Research) and the hero `.skills-ticker` list (the
+  Liquid `skills` array in `layout.html`) describe the same skill set — when one changes,
+  update the other (and the summary prose if it names a skill being removed).
 
 ---
 

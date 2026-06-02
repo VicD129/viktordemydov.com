@@ -91,7 +91,14 @@ title: Viktor Demydov
             <small>Senior Product Designer <br>& Design Engineer</small>
         </a>
       </h1>
-      <p class="hero-status text-center">Open to work</p>
+      <p class="hero-status text-center">Open to work (Remote)</p>
+      {% assign skills = "Product Design,UI/UX,Design Systems,Figma,Prototyping,Wireframing,Interaction Design,Responsive Design,Accessibility,Design Tokens,HTML,CSS / Sass,Git,UX Strategy,Product-led Growth,User Research,Analytics,AI Interfaces,Claude Code" | split: "," %}
+      <div class="skills-ticker">
+        <ul class="skills-track">
+          {%- for skill in skills -%}<li class="skill">{{ skill }}</li>{%- endfor -%}
+          {%- for skill in skills -%}<li class="skill" aria-hidden="true">{{ skill }}</li>{%- endfor -%}
+        </ul>
+      </div>
       <p class="text-center mb-0">
         <a href="/Viktor-Demydov-CV.pdf" class="hero-cv bg-glass" download
           >Download CV

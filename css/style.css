@@ -500,14 +500,14 @@ a.no-hover:hover {
     margin-top: var(--space-2);
 }
 
-/* "Download CV" button in the hero, below the status badge.
+/* "Download CV" button in the hero, below the skills ticker.
    Pair with .bg-glass in markup for the surface (same as the cards);
-   radius matches .card (0.25rem). */
+   radius matches .card (0.25rem). The gap above it is owned by the
+   ticker's margin-bottom, so this element carries no margin-top. */
 .hero-cv {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    margin-top: var(--space-3);
     padding: var(--space-2) var(--space-4);
     font-size: 0.95rem;
     font-weight: 500;
@@ -799,6 +799,82 @@ footer[id] {
 
 .bg-glass p + p {
     margin-top: var(--space-2);
+}
+
+/* Skills ticker — animated scrolling pill marquee in the hero
+   (between the "Open to work" badge and the "Download CV" button).
+   The track holds two identical copies of the skill list; it scrolls by
+   exactly -50% so the loop is seamless. Edges fade via a mask gradient.
+   Deliberately NOT .bg-glass: a moving marquee of ~36 backdrop-filter
+   blurs re-blurs every frame over the animated starfield and janks, so
+   .skill carries a matching translucent surface (same fill/border/color
+   as .bg-glass) without the live blur. */
+.skills-ticker {
+    width: 100%;
+    max-width: 600px;
+    margin: var(--space-3) auto var(--space-5);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent);
+}
+
+.skills-track {
+    display: flex;
+    flex-wrap: nowrap;
+    width: max-content;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    animation: skills-scroll 40s linear infinite;
+}
+
+.skills-ticker:hover .skills-track {
+    animation-play-state: paused;
+}
+
+.skill {
+    flex-shrink: 0;
+    margin-right: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50rem;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+@keyframes skills-scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Reduced motion: no scroll — show the real (non-duplicated) pills as a
+   static centered wrap so all skills stay visible and accessible. */
+@media (prefers-reduced-motion: reduce) {
+    .skills-ticker {
+        max-width: 100%;
+        overflow: visible;
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+
+    .skills-track {
+        width: auto;
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: var(--space-2);
+        animation: none;
+    }
+
+    .skills-track .skill[aria-hidden="true"] {
+        display: none;
+    }
 }
 
 /* Navigation */
