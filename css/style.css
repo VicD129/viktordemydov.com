@@ -549,21 +549,13 @@ footer[id] {
     align-items: center;
     gap: var(--space-2);
     font-weight: 500;
-    padding: var(--space-2);
+    padding: var(--space-2) var(--space-4);
 }
 
 .site-nav__links {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-}
-
-.site-nav__avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
 }
 
 .site-nav__brand {
@@ -584,12 +576,6 @@ footer[id] {
 .site-nav__icon-link:hover,
 .site-nav__icon-link:focus {
     border-radius: var(--radius-pill);
-}
-
-@media (max-width: 575px) {
-    .site-nav__brand {
-        display: none;
-    }
 }
 
 /* Cards */
