@@ -33,7 +33,7 @@
 
 /* CSS Variables */
 :root {
-    --brand-color: #e5c100;
+    --brand-color: #E8A820;
     --abi-color: #f26d1f;
     --mvr-color: #f6de41;
     --pegasus-color: #9b3831;
@@ -60,6 +60,11 @@
     --header-gradient-end: #171717;
     --card-bg: #101010;
     --status-color: #4ade80;
+    --text-secondary: #6c757d; /* muted text — ticker separators, .text-secondary util */
+
+    /* Corner radius */
+    --radius-pill: 50rem; /* fully rounded capsule — buttons & skills ticker */
+    --radius-lg: 1.25rem; /* 20px — iOS-style soft corners for cards & glass panels */
 }
 
 /* Reset and base styles */
@@ -228,7 +233,7 @@ h6 {
 }
 
 .text-secondary {
-    color: #6c757d;
+    color: var(--text-secondary);
 }
 
 .small {
@@ -500,27 +505,10 @@ a.no-hover:hover {
     margin-top: var(--space-2);
 }
 
-/* "Download CV" button in the hero, below the skills ticker.
-   Pair with .bg-glass in markup for the surface (same as the cards);
-   radius matches .card (0.25rem). The gap above it is owned by the
-   ticker's margin-bottom, so this element carries no margin-top. */
-.hero-cv {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-radius: 0.25rem;
-}
-
-.hero-cv:hover,
-.hero-cv:focus {
-    background-color: var(--brand-color) !important;
-    border-color: var(--brand-color);
-    color: var(--link-hover-color);
-    border-radius: 0.25rem;
-}
+/* The hero "Download CV" button (.hero-cv) shares the shared button look
+   defined in the Buttons section (.btn, .hero-cv). Pair with .bg-glass in
+   markup for the surface. The gap above it is owned by the ticker's
+   margin-bottom, so it carries no margin-top. */
 
 /* Anchor targets need to clear the fixed nav on jump */
 h2[id],
@@ -589,6 +577,15 @@ footer[id] {
     color: var(--text-color);
 }
 
+/* Round the brand-yellow hover chip on nav items (override the global
+   a:hover 0.125rem) so the fixed header reads as soft pills */
+.site-nav__home:hover,
+.site-nav__home:focus,
+.site-nav__icon-link:hover,
+.site-nav__icon-link:focus {
+    border-radius: var(--radius-pill);
+}
+
 @media (max-width: 575px) {
     .site-nav__brand {
         display: none;
@@ -617,7 +614,8 @@ footer[id] {
     word-wrap: break-word;
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.25rem;
+    border-radius: var(--radius-lg);
+    overflow: hidden; /* clip the flush top image & body to the rounded shape */
 }
 
 .card a {
@@ -643,8 +641,7 @@ footer[id] {
 
 .card-img-top {
     width: 100%;
-    border-top-left-radius: calc(0.25rem - 1px);
-    border-top-right-radius: calc(0.25rem - 1px);
+    /* corners clip to the card's pill shape via .card { overflow: hidden } */
 }
 
 .card-title {
@@ -740,18 +737,22 @@ footer[id] {
     margin-right: var(--space-2);
 }
 
-/* Buttons */
-.btn {
-    display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
+/* Buttons — glass pill with a brand-yellow hover fill. Pair with .bg-glass
+   in markup for the surface. Shared by the hero "Download CV" button
+   (.hero-cv), the project "Back" links, and the footer "Follow me" links. */
+.btn,
+.hero-cv {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.5;
     user-select: none;
     border: 1px solid transparent;
-    padding: var(--space-2) var(--space-3);
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: 0.25rem;
+    border-radius: var(--radius-pill);
     transition:
         color 0.15s ease-in-out,
         background-color 0.15s ease-in-out,
@@ -759,11 +760,21 @@ footer[id] {
         box-shadow 0.15s ease-in-out;
 }
 
+.btn:hover,
+.btn:focus,
+.hero-cv:hover,
+.hero-cv:focus {
+    background-color: var(--brand-color) !important;
+    border-color: var(--brand-color);
+    color: var(--link-hover-color);
+    border-radius: var(--radius-pill);
+}
+
 .btn-lg {
     padding: var(--space-2) var(--space-3);
     font-size: 1.25rem;
     line-height: 1.5;
-    border-radius: 0.3rem;
+    border-radius: var(--radius-pill);
 }
 
 .btn-danger {
@@ -801,21 +812,36 @@ footer[id] {
     margin-top: var(--space-2);
 }
 
-/* Skills ticker — animated scrolling pill marquee in the hero
+/* Padded glass text panels in project pages (.text-white.bg-glass.p-3) —
+   iOS-style soft corners. The .p-3 qualifier scopes this to those panels
+   and leaves the pill hero-cv/ticker and the self-clipping cards alone. */
+.bg-glass.p-3 {
+    border-radius: var(--radius-lg);
+}
+
+/* Skills ticker — animated scrolling single-line marquee in the hero
    (between the "Open to work" badge and the "Download CV" button).
-   The track holds two identical copies of the skill list; it scrolls by
-   exactly -50% so the loop is seamless. Edges fade via a mask gradient.
-   Deliberately NOT .bg-glass: a moving marquee of ~36 backdrop-filter
-   blurs re-blurs every frame over the animated starfield and janks, so
-   .skill carries a matching translucent surface (same fill/border/color
-   as .bg-glass) without the live blur. */
+   The skills render as one text line separated by muted "·" dots on a
+   single frosted-glass strip (.skills-ticker.bg-glass). The track
+   holds two identical copies of the skill list and scrolls by exactly
+   -50% so the loop is seamless. The .skills-ticker itself owns the
+   edge-fade mask so the whole glass panel — fill, blur AND border —
+   dissolves at the left/right ends (no hard side borders, no corners);
+   the .skills-viewport just clips the scrolling overflow.
+   .bg-glass is now SAFE here (unlike the old pill design): there is a
+   single STATIC glass panel — one backdrop-filter blur, not ~36 moving
+   ones — so the starfield no longer re-blurs per pill every frame. */
 .skills-ticker {
     width: 100%;
     max-width: 600px;
     margin: var(--space-3) auto var(--space-5);
-    overflow: hidden;
+    padding: var(--space-2) var(--space-3);
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent);
     mask-image: linear-gradient(90deg, transparent, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent);
+}
+
+.skills-viewport {
+    overflow: hidden;
 }
 
 .skills-track {
@@ -834,15 +860,21 @@ footer[id] {
 
 .skill {
     flex-shrink: 0;
-    margin-right: var(--space-2);
-    padding: var(--space-1) var(--space-3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50rem;
-    background-color: rgba(255, 255, 255, 0.06);
     color: #fff;
     font-size: 0.9rem;
     font-weight: 500;
     white-space: nowrap;
+}
+
+/* Muted dot separator between skills (also bridges the loop seam) */
+.skill::after {
+    content: "\00B7";
+    color: var(--text-secondary);
+    margin: 0 var(--space-3);
+}
+
+.skill:last-child::after {
+    content: none;
 }
 
 @keyframes skills-scroll {
@@ -859,9 +891,12 @@ footer[id] {
 @media (prefers-reduced-motion: reduce) {
     .skills-ticker {
         max-width: 100%;
-        overflow: visible;
         -webkit-mask-image: none;
         mask-image: none;
+    }
+
+    .skills-viewport {
+        overflow: visible;
     }
 
     .skills-track {
@@ -874,6 +909,13 @@ footer[id] {
 
     .skills-track .skill[aria-hidden="true"] {
         display: none;
+    }
+
+    /* With the duplicate copy hidden, :last-child no longer lands on the
+       last *visible* skill — suppress its trailing dot via the visible
+       skill that sits immediately before the first hidden duplicate. */
+    .skills-track .skill:has(+ .skill[aria-hidden="true"])::after {
+        content: none;
     }
 }
 
@@ -922,6 +964,7 @@ footer[id] {
 .chat-avatar {
     width: 32px;
     height: 32px;
+    border-radius: 50%;
     background-color: var(--brand-color);
     color: #1a1a1a;
     display: flex;
@@ -952,6 +995,7 @@ footer[id] {
     position: relative;
     color: #e9e9e9;
     padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
     max-width: 85%;
     font-size: 0.95rem;
     line-height: 1.45;

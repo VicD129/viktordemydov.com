@@ -92,11 +92,13 @@ title: Viktor Demydov
       </h1>
       <p class="hero-status text-center">Open to work (Remote)</p>
       {% assign skills = "Product Design,UI/UX,Design Systems,Figma,Prototyping,Wireframing,Interaction Design,Responsive Design,Accessibility,Design Tokens,HTML,CSS / Sass,Git,UX Strategy,Product-led Growth,User Research,Analytics,AI Interfaces,Claude Code" | split: "," %}
-      <div class="skills-ticker">
-        <ul class="skills-track">
-          {%- for skill in skills -%}<li class="skill">{{ skill }}</li>{%- endfor -%}
-          {%- for skill in skills -%}<li class="skill" aria-hidden="true">{{ skill }}</li>{%- endfor -%}
-        </ul>
+      <div class="skills-ticker bg-glass">
+        <div class="skills-viewport">
+          <ul class="skills-track">
+            {%- for skill in skills -%}<li class="skill">{{ skill }}</li>{%- endfor -%}
+            {%- for skill in skills -%}<li class="skill" aria-hidden="true">{{ skill }}</li>{%- endfor -%}
+          </ul>
+        </div>
       </div>
       <p class="text-center mb-0">
         <a href="/Viktor-Demydov-CV.pdf" class="hero-cv bg-glass" download
@@ -113,19 +115,21 @@ title: Viktor Demydov
     <footer class="footer">
       <div class="contacts ms-3">
         <h2>Follow me</h2>
-        <h3>
+        <h3 class="mt-3">
           <a
             href="https://www.linkedin.com/in/vicd129"
+            class="btn bg-glass"
             target="_blank"
             rel="noreferrer noopener"
-            >LinkedIn
+            >{% include "icon-linkedin.html" %}LinkedIn
             {% include "icon-arrow-up-right.html" %}
           </a>
           <a
             href="https://github.com/VicD129"
+            class="btn bg-glass"
             target="_blank"
             rel="noreferrer noopener"
-            >GitHub
+            >{% include "icon-github.html" %}GitHub
             {% include "icon-arrow-up-right.html" %}
           </a>
         </h3>

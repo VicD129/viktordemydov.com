@@ -174,7 +174,7 @@ Defined at `:root` — always use variables, never hardcode values:
 --space-10: 15rem;   /* 240px — used for inter-section gaps on the home page */
 
 /* brand colors */
---brand-color: #e5c100;         /* site-wide brand yellow */
+--brand-color: #E8A820;         /* site-wide brand yellow (mirror in cv/cv.html --brand + --rule) */
 
 /* project accent colors */
 --pegasus-color: #9b3831;       /* Clockworx accent (class: pegasus-bg) */
@@ -191,6 +191,11 @@ Defined at `:root` — always use variables, never hardcode values:
 --header-gradient-end: #171717;
 --card-bg: #101010;             /* card / tab-content surface */
 --status-color: #4ade80;        /* "Open to work" green */
+--text-secondary: #6c757d;      /* muted text — ticker dot separators, .text-secondary util */
+
+/* corner radius */
+--radius-pill: 50rem;           /* fully rounded capsule — buttons (.btn/.hero-cv) & nav hover chips */
+--radius-lg: 1.25rem;           /* 20px — iOS-style soft corners for cards, glass panels, chat bubbles */
 ```
 
 ### Spacing
@@ -201,6 +206,22 @@ Use the **8-point grid system**. Spacing values must be multiples of 8px. Use CS
 
 - **Dark mode only.** The site renders a single dark palette regardless of OS preference. Use the named theme variables — `--bg-color` (`#171717`), `--text-color` (`#e9e9e9`), `--link-color`, `--link-hover-color`, `--card-bg`, `--header-gradient-start`/`--header-gradient-end` — rather than hardcoding hex values. They live in `:root` in `css/style.css`.
 - Do **not** add `@media (prefers-color-scheme: ...)` blocks or a light theme — light mode was intentionally removed. Use the `:root` theme variables for all colors.
+
+### Corner radius
+
+Two radius tokens drive all rounding — never hardcode a `border-radius`:
+
+- **`--radius-pill` (`50rem`)** — fully rounded capsule. Used by the shared button
+  rule (`.btn, .hero-cv`), `.btn-lg`, and the brand-yellow nav hover chips
+  (`.site-nav__home` / `.site-nav__icon-link` hover override). The skills ticker is **not**
+  a pill — its glass strip is squared and edge-faded (see Skills ticker below).
+- **`--radius-lg` (`1.25rem` / 20px)** — iOS-style soft corners. Used by `.card`
+  (with `overflow: hidden` so the flush top image clips to the shape), the padded
+  project glass panels (`.bg-glass.p-3`), and `.chat-bubble`. `.chat-avatar` is a full
+  circle (`border-radius: 50%`).
+
+The global `a:hover`/`a:focus` keeps its own small `0.125rem` chip — only the nav links
+override it to `--radius-pill`. Don't pill-round inline content images.
 
 ### Class Naming
 
@@ -224,11 +245,12 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 - **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`
 - **Spacing utilities:** `.mb-0`–`.mb-8`, `.mt-3`–`.mt-10`, `.ms-3`, `.p-0` / `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.side-projects`, `.contacts`
-- **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: just the home link), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`, hover via global `a:hover`)
-- **Hero:** `.hero-status` — "Open to work" badge below the hero subtitle (color `var(--status-color)`); `.hero-cv` — the "Download CV" button below it (carries layout/typography only — **pair with `.bg-glass`** for the surface; `0.25rem` radius matching `.card`; fills brand-yellow on hover)
-- **Skills ticker:** `.skills-ticker` — an animated scrolling pill marquee in the **hero** (in `layout.html`, between the `.hero-status` badge and the `.hero-cv` button, so it shows on **every page**); `.skills-track` — the flex track that scrolls; `.skill` — a single pill (`50rem` radius). The skill list is a single Liquid `{% assign skills = "…" | split: "," %}` array in `layout.html`, looped **twice** into the track (the second copy `aria-hidden="true"`) so the `skills-scroll` keyframe can translate `-50%` for a seamless loop. **Deliberate `.bg-glass` exception:** `.skill` carries its own translucent surface (same `rgba(255,255,255,0.06)` fill / `0.1` border / `#fff` as `.bg-glass`) **without** `backdrop-filter`, because a marquee of ~36 moving blurs re-blurs every frame over the starfield and janks. Pauses on hover; under `prefers-reduced-motion` the duplicate pills hide and the track becomes a static centered wrap. Scroll speed = the `40s` duration on `.skills-track`. Keep the list in sync with the CV skills in `cv/cv.html` (see the CV section). (Remote availability is signalled by the hero `.hero-status` badge — "Open to work (Remote)".)
+- **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: just the home link), `.site-nav__home` (avatar+brand link), `.site-nav__avatar`, `.site-nav__brand`, `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`). The home + icon links override the global `a:hover` to `--radius-pill` so the brand-yellow hover chip reads as a soft pill.
+- **Buttons:** `.btn` and `.hero-cv` share **one** rule (`inline-flex`, `gap: var(--space-2)`, `--radius-pill`, brand-yellow `:hover/:focus` fill). **Pair with `.bg-glass`** in markup for the surface. Reused by the hero "Download CV" button, the project page "Back" links (`.btn.bg-glass` wrapping the `icon-arrow-left` partial), and the footer "Follow me" links (`.btn.bg-glass` with the `icon-linkedin`/`icon-github` brand glyph before the label + the `icon-arrow-up-right` after). `.btn-lg` / `.btn-danger` are size/color modifiers. Don't re-add a standalone `.hero-cv` block — edit the shared rule.
+- **Hero:** `.hero-status` — "Open to work" badge below the hero subtitle (color `var(--status-color)`); `.hero-cv` — the "Download CV" button below it (see Buttons above).
+- **Skills ticker:** an animated scrolling single-line marquee in the **hero** (in `layout.html`, between the `.hero-status` badge and the `.hero-cv` button, so it shows on **every page**). Markup nests three elements: `.skills-ticker.bg-glass` (the glass strip — **squared, not pilled**; owns the left/right edge-fade `mask-image` so the panel's fill, blur **and** border dissolve at the ends, no hard side borders/corners) > `.skills-viewport` (clips the scrolling overflow) > `.skills-track` (the flex track that scrolls). `.skill` is now **plain text** (no pill surface); skills are joined by a muted `·` dot via `.skill::after` (`content: "\00B7"`, color `var(--text-secondary)`) — the dot also bridges the loop seam, and `.skill:last-child::after { content: none }` drops the trailing dot. The skill list is a single Liquid `{% assign skills = "…" | split: "," %}` array in `layout.html`, looped **twice** into the track (the second copy `aria-hidden="true"`) so the `skills-scroll` keyframe can translate `-50%` for a seamless loop. **`.bg-glass` is now safe here** (unlike the old per-pill design): one **static** glass panel = a single `backdrop-filter` blur, not ~36 moving ones, so the starfield no longer re-blurs every frame. Pauses on hover; under `prefers-reduced-motion` the duplicate pills hide, the mask/overflow reset, the track becomes a static centered wrap, and a `:has(+ .skill[aria-hidden="true"])::after { content: none }` rule suppresses the now-dangling trailing dot. Scroll speed = the `40s` duration on `.skills-track`. Keep the list in sync with the CV skills in `cv/cv.html` (see the CV section). (Remote availability is signalled by the hero `.hero-status` badge — "Open to work (Remote)".)
 - **Nav / tabs:** `.nav-tabs`, `.nav-link` (`.active`), `.tab-content`
-- **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar`, `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (pair with `.bg-glass` for the surface — see below)
+- **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar` (full circle, `border-radius: 50%`), `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (`--radius-lg` soft corners; pair with `.bg-glass` for the surface — see below)
 - **Card brand modifiers:** `.abi-bg`, `.pegasus-bg`, `.mvr-bg`, `.tourhunter-bg`, `.brand-bg`
 
 ### Project / Certification grid (`.projects-grid`)
@@ -308,7 +330,7 @@ The master layout handles:
 - Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name (home link); right side: icon-only links (LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
 - Site-wide header (hero subtitle + "Open to work (Remote)" status badge + the animated `.skills-ticker` skills marquee + a "Download CV" button — `.hero-cv.bg-glass`, linking to `/Viktor-Demydov-CV.pdf` with the `download` attribute)
 - `{{ content }}` Liquid placeholder for page-specific content
-- Footer ("Follow me" — LinkedIn and GitHub links) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial)
+- Footer ("Follow me" — LinkedIn and GitHub links styled as `.btn.bg-glass` pill buttons, each with its brand glyph before the label; the `<h3>` of buttons gets `mt-3` for the title→content gap matching the home-page sections) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial)
 - Starfield background canvas (`<canvas id="bg-canvas">`) and its IIFE script
 
 **Do not duplicate** any of the above in individual page files — put it in the layout only.
