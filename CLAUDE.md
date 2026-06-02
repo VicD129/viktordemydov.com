@@ -183,7 +183,7 @@ Defined at `:root` — always use variables, never hardcode values:
 --tourhunter-color: #5095e8;
 
 /* theme (dark-mode only) */
---bg-color: #171717;            /* page background */
+--bg-color: #0d0d0d;            /* page background */
 --text-color: #e9e9e9;          /* body text */
 --link-color: #e9e9e9;
 --link-hover-color: #242424;
@@ -201,7 +201,7 @@ Use the **8-point grid system**. Spacing values must be multiples of 8px. Use CS
 
 ### Theming
 
-- **Dark mode only.** The site renders a single dark palette regardless of OS preference. Use the named theme variables — `--bg-color` (`#171717`), `--text-color` (`#e9e9e9`), `--link-color`, `--link-hover-color`, `--status-color`, `--text-secondary` — rather than hardcoding hex values. They live in `:root` in `css/style.css`.
+- **Dark mode only.** The site renders a single dark palette regardless of OS preference. Use the named theme variables — `--bg-color` (`#0d0d0d`), `--text-color` (`#e9e9e9`), `--link-color`, `--link-hover-color`, `--status-color`, `--text-secondary` — rather than hardcoding hex values. They live in `:root` in `css/style.css`.
 - Do **not** add `@media (prefers-color-scheme: ...)` blocks or a light theme — light mode was intentionally removed. Use the `:root` theme variables for all colors.
 
 ### Corner radius
@@ -268,7 +268,7 @@ Pins a `.card-body`'s content to the bottom by overriding `justify-content` to `
 
 Any `<h2 id="…">` used as an anchor target must have `scroll-margin-top: var(--space-7)` so the heading clears the fixed bar when jumped to. This is handled by the rule `h2[id], footer[id] { scroll-margin-top: var(--space-7) }` in `style.css` — extend it if new anchor targets are added at other element types.
 
-The `.site-nav` uses its own dark glass styles (`rgba(23,23,23,0.85)` + blur) directly rather than the `.bg-glass` utility, so its surface can be tuned independently.
+The `.site-nav` uses its own dark glass styles (`rgba(13,13,13,0.85)` + blur) directly rather than the `.bg-glass` utility, so its surface can be tuned independently.
 
 ### Frosted-glass surface (`.bg-glass`)
 

@@ -226,7 +226,7 @@ title: Viktor Demydov
             r: r,
             vx: (Math.random() - 0.5) * 0.06,
             vy: (Math.random() - 0.5) * 0.04,
-            spr: makeBlob(r, 0.045)
+            spr: makeBlob(r, 0.035)
           });
         }
       }
@@ -257,8 +257,8 @@ title: Viktor Demydov
 
         // atmosphere rim — radial glow peaking at the limb, occluded by body
         var ag = x.createRadialGradient(cx, cy, R, cx, cy, R + ATMO);
-        ag.addColorStop(0, 'rgba(' + GLOW + ',0.16)');
-        ag.addColorStop(0.5, 'rgba(' + GLOW + ',0.06)');
+        ag.addColorStop(0, 'rgba(' + GLOW + ',0.12)');
+        ag.addColorStop(0.5, 'rgba(' + GLOW + ',0.04)');
         ag.addColorStop(1, 'rgba(' + GLOW + ',0)');
         x.fillStyle = ag;
         x.fillRect(0, planetH - HORIZON - ATMO, w, ATMO + HORIZON + 1);
