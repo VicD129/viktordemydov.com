@@ -549,7 +549,7 @@ footer[id] {
     align-items: center;
     gap: var(--space-2);
     font-weight: 500;
-    padding: var(--space-2) var(--space-4);
+    color: var(--text-color);
 }
 
 .site-nav__links {
@@ -569,13 +569,15 @@ footer[id] {
     color: var(--text-color);
 }
 
-/* Round the brand-yellow hover chip on nav items (override the global
-   a:hover 0.125rem) so the fixed header reads as soft pills */
+/* Nav links read as plain text — white by default, brand-yellow on hover.
+   Override the global a:hover so there's no fill, no chip radius. */
 .site-nav__home:hover,
 .site-nav__home:focus,
 .site-nav__icon-link:hover,
 .site-nav__icon-link:focus {
-    border-radius: var(--radius-pill);
+    background-color: transparent;
+    color: var(--brand-color);
+    border-radius: 0;
 }
 
 /* Cards */
