@@ -330,7 +330,7 @@ The master layout handles:
 - Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name (home link); right side: icon-only links (LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
 - Site-wide header (hero subtitle + "Open to work (Remote)" status badge + the animated `.skills-ticker` skills marquee + a "Download CV" button — `.hero-cv.bg-glass`, linking to `/Viktor-Demydov-CV.pdf` with the `download` attribute)
 - `{{ content }}` Liquid placeholder for page-specific content
-- Footer ("Follow me" — LinkedIn and GitHub links styled as `.btn.bg-glass` pill buttons, each with its brand glyph before the label; the `<h3>` of buttons gets `mt-3` for the title→content gap matching the home-page sections) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial), a `.privacy` line ("This site uses no cookies, no analytics, and collects no personal data." — true because the site self-hosts fonts and ships zero trackers/cookies/storage; update or remove it if that ever changes) and, at the very bottom, a `.copyright` line (`© {year} Viktor Demydov`) where the year is rendered at build time via Liquid `{{ "now" | date: "%Y" }}` so it never goes stale. `.colophon`, `.privacy`, and `.copyright` are all utility-only hooks (no dedicated CSS rule — they lean on `.small` / `.text-secondary` / `.ms-3` / `.mt-3`); the copyright text is intentionally minimal (no "all rights reserved").
+- Footer ("Follow me" — LinkedIn and GitHub links styled as `.btn.bg-glass` pill buttons, each with its brand glyph before the label; the `<h3>` of buttons gets `mt-3` for the title→content gap matching the home-page sections) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial), a `.privacy` line ("This site sets no cookies of its own and uses no analytics or tracking." — scoped to the site's own code, which self-hosts fonts and ships zero trackers/cookies/storage; wording is deliberately scoped because the Cloudflare Pages edge can set strictly-necessary security cookies and offers an optional Web Analytics beacon — keep that toggle off, or revise this line, if either changes) and, at the very bottom, a `.copyright` line (`© {year} Viktor Demydov`) where the year is rendered at build time via Liquid `{{ "now" | date: "%Y" }}` so it never goes stale. `.colophon`, `.privacy`, and `.copyright` are all utility-only hooks (no dedicated CSS rule — they lean on `.small` / `.text-secondary` / `.ms-3` / `.mt-3`); the copyright text is intentionally minimal (no "all rights reserved").
 - Starfield background canvas (`<canvas id="bg-canvas">`) and its IIFE script
 
 **Do not duplicate** any of the above in individual page files — put it in the layout only.
@@ -425,7 +425,7 @@ automatically. The `*.pdf` Eleventy passthrough then copies it into `_site/`.
 
 - Edit copy/layout in `cv/cv.html`, then **always re-run `npm run build:cv`** and **commit
   both** the source and the regenerated `Viktor-Demydov-CV.pdf` (the PDF is a committed
-  artifact, since GitHub Pages serves it).
+  artifact, since the host serves it directly).
 - **Keep it one page.** The left "Experience" column is the height limiter — bumping the
   base font/spacing overflows to a 2nd page fast. Verify after each change:
   `pdfinfo Viktor-Demydov-CV.pdf` → `Pages: 1`; `pdftotext Viktor-Demydov-CV.pdf -` →
@@ -512,8 +512,10 @@ The site **must not** serve stale HTML/CSS after a deploy.
   mtime. `layout.html` references the stylesheet as `/css/style.css?v={{ assets.cssVersion }}`
   (both the `preload` and the `stylesheet` link). The token changes only when
   `style.css` actually changes — keep both references in sync and do not hardcode it.
-- Host is GitHub Pages (no custom HTTP headers), so the query-string version is the
-  cache-busting mechanism. Do not reintroduce SW caching as a substitute.
+- Source lives on GitHub; the site is served via **Cloudflare Pages**. Cloudflare Pages
+  *can* set custom HTTP headers (via a `_headers` file), but the project deliberately
+  relies on the query-string `?v=` token as its cache-busting mechanism rather than
+  header tuning. Do not reintroduce SW caching as a substitute.
 
 ## Build Output (`_site/`)
 
