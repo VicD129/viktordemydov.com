@@ -280,7 +280,7 @@ border) layered over the starfield. There is no `.bg-dark` — it was replaced b
 
 The SVG glyphs live in `_includes/`: the arrows `icon-arrow-up-right.html`,
 `icon-arrow-right.html`, `icon-arrow-left.html`; `icon-download.html` (the hero
-"Download CV" button); and the social glyphs `icon-email.html`, `icon-linkedin.html`,
+"Download CV" button); and the social glyphs `icon-linkedin.html` and
 `icon-github.html`. Insert them with `{% include "icon-arrow-up-right.html" %}` (etc.).
 **Never paste raw `<svg>` markup into a page** — reuse the partial so a single edit
 propagates everywhere.
@@ -305,10 +305,10 @@ The master layout handles:
 - `<head>` meta tags (SEO, Open Graph, Twitter Card, viewport)
 - JSON-LD structured data (schema.org `Person`)
 - CSS and font preloads for performance
-- Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name (home link); right side: icon-only links (email, LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
+- Fixed site-wide nav bar (`<nav class="site-nav">`) — left side: avatar + name (home link); right side: icon-only links (LinkedIn, GitHub); constrained to 900px via `.site-nav__inner`
 - Site-wide header (hero subtitle + "Open to work (Remote)" status badge + the animated `.skills-ticker` skills marquee + a "Download CV" button — `.hero-cv.bg-glass`, linking to `/Viktor-Demydov-CV.pdf` with the `download` attribute)
 - `{{ content }}` Liquid placeholder for page-specific content
-- Footer (LinkedIn link, email) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial)
+- Footer ("Follow me" — LinkedIn and GitHub links) plus a `.colophon` credit line ("This website is designed and coded by me — view the source on GitHub", linking to the repo with the up-right arrow partial)
 - Starfield background canvas (`<canvas id="bg-canvas">`) and its IIFE script
 
 **Do not duplicate** any of the above in individual page files — put it in the layout only.
