@@ -570,6 +570,53 @@ footer[id] {
     margin-bottom: var(--space-3);
 }
 
+/* Project tags — dot-separated quick-scan labels (Domain · Audience · Type).
+   Mirrors the .skill dot pattern; static text only (no ticker semantics). */
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.tag {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.tag::after {
+    content: "\00B7";
+    color: var(--text-secondary);
+    margin: 0 var(--space-2);
+}
+
+.tag:last-child::after {
+    content: none;
+}
+
+/* On project pages the tags sit in the centered .work-header — center the
+   flex row to match (home-card tags stay left-aligned in the card body), sit
+   tight under the title (--space-2), and carry the larger gap (--space-6, the
+   distance the title's old mb-5 used to give) down to the next block. */
+.work-header h1 {
+    margin-bottom: var(--space-2);
+}
+
+.work-header .project-tags {
+    justify-content: center;
+    margin-bottom: var(--space-6);
+}
+
+/* On project pages the tags read as white labels (muted dot separators stay,
+   mirroring the skills ticker) — vs the muted grey used on the home cards.
+   The margin-left/font-weight reset neutralizes the `.work-header span` rule
+   (meant for the h1 accent + metadata label spans) so the tag row matches the
+   home cards: no stray leading indent, normal weight, dot-only separation. */
+.work-header .tag {
+    color: var(--text-color);
+    margin-left: 0;
+    font-weight: 400;
+}
+
 /* Project-specific styles */
 .brand-color {
     color: var(--brand-color) !important;
@@ -605,6 +652,16 @@ footer[id] {
     background-color: var(--mvr-color) !important;
     color: #333;
     text-decoration: none;
+}
+
+/* On card hover the link recolors (white on dark-accent cards, dark on the
+   light mvr card) — make tags + their dot separators follow that color so they
+   stay legible against the hover fill instead of staying muted grey. */
+.card a:hover .tag,
+.card a:focus .tag,
+.card a:hover .tag::after,
+.card a:focus .tag::after {
+    color: inherit;
 }
 
 .work > h3,
