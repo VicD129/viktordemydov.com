@@ -283,6 +283,28 @@ border) layered over the starfield. There is no `.bg-dark` — it was replaced b
   put surface/background styles back on `.chat-bubble`.
 - Keep `backdrop-filter` and `-webkit-backdrop-filter` together so Safari renders the blur.
 
+### Custom cursor
+
+The site replaces the OS pointer with a custom SVG arrow, defined as two static
+`cursor: url(...)` data-URI rules in `css/style.css`:
+
+- `html { cursor: ... default }` — near-white (`#e9e9e9`) arrow, black stroke (the idle/default state).
+- `a, button, [role="button"], label[for], select, summary { cursor: ... pointer }` — black arrow, white stroke (links/controls).
+
+**Animated gradient wave:** the **default** arrow plays a brand-yellow (`#E8A820`)
+gradient wave sweeping across its fill every **5s** (~1.6s sweep, then idle). Because a CSS
+`cursor` image is a frozen raster (CSS/SVG animation inside the data-URI does **not**
+run), this is driven by a small **inline IIFE in `layout.html`** (after the starfield
+script) that rebuilds the arrow's SVG data-URI frame-by-frame (`requestAnimationFrame`,
+~30fps-throttled) and assigns it to `document.documentElement.style.cursor`, resetting to
+`''` after each sweep so the stylesheet rule takes back over. Only the **default** state
+animates — the link/button `pointer` rule wins on those elements, so the wave shows only
+over non-link areas. The IIFE is gated off under `prefers-reduced-motion: reduce`, on
+non-fine/hover pointers (touch), and while the tab is hidden. The brand hex `#E8A820` is
+**hardcoded** in the JS-built SVG (a cursor data-URI can't read `var(--brand-color)`) —
+keep it in sync with `--brand-color` if the brand color changes. Like the starfield, this
+JS is **inline-only** by design; don't split it into a `.js` file.
+
 ---
 
 ## HTML / Templating Conventions
