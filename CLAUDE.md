@@ -67,7 +67,7 @@ viktordemydov.com/
 ├── projects/                   # One .html file per portfolio project
 │   ├── clockworx-comeback.html
 │   ├── clockworx.html
-│   ├── mvr.html
+│   ├── mvr.html                # "Motor Vehicle Services" project — the mvr slug/file/--mvr-color/.mvr-bg keep the legacy abbreviation (orig. "Motor Vehicle Registration"); don't rename them (URL/SEO stability). The internal "Motor Vehicle Registration" sub-service in the page log is a distinct service name — leave it.
 │   ├── myabiportal.html
 │   └── tourhunter.html
 │
