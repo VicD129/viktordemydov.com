@@ -193,6 +193,9 @@ Defined at `:root` — always use variables, never hardcode values:
 /* corner radius */
 --radius-pill: 50rem;           /* fully rounded capsule — buttons (.btn/.hero-cv) */
 --radius-lg: 1.25rem;           /* 20px — iOS-style soft corners for cards, glass panels, chat bubbles */
+
+/* layout */
+--content-wide: 1200px;         /* wide cap for the .section-wide popout helper (see Layout below) */
 ```
 
 ### Spacing
@@ -240,7 +243,7 @@ A quick map of the class families in `style.css` so existing classes get reused 
 of reinvented (not an exhaustive per-rule reference — read the file for specifics):
 
 - **Typography:** `.display-1`, `.display-hero`, `.section-label`, `.fw-bold` (the single weight-600 helper — `.fw-semibold`/`.text-bold`/`.font-weight-bold` aliases were removed; markup uses `.fw-bold`) / `.fw-medium` / `.fw-normal` / `.fw-extralight`, `.text-center` / `.text-right` / `.text-italic` / `.text-secondary`, `.small`
-- **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`
+- **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`, `.section-wide` (the **only** width-popout helper — lets one block break out of the 900px reading column up to `--content-wide` (1200px), capped at `94vw` and auto-centered via a negative `margin-left`; collapses to a normal in-column block on narrow screens. Relies on no ancestor — `.content`/`.work`/`.work-item` — clipping overflow; first used on the OVERVIEW panel in `projects/clockworx-comeback.html`)
 - **Spacing utilities:** a **sparse** subset of `.mb-*` / `.mt-*` (only the steps actually used — e.g. `.mb-6`, `.mt-7`, `.mt-9`, `.p-0` were dropped as unused), plus `.ms-3`, `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale. (Note: `.mb-5` maps to `--space-6`, an intentional off-by-one kept for back-compat — add new steps by their `--space-N` value, not by index.)
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.contacts`
 - **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: just the home link), `.site-nav__home` (text-only brand link — "Viktor Demydov", `color: var(--text-color)`, no padding), `.site-nav__brand`, `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`). The home + icon links read as plain text: white by default, and on hover they override the global `a:hover` to brand-yellow text with no background fill and no chip radius (no btn-like padding). There is **no** avatar image in the nav (and no `@media (max-width: 575px)` brand-hiding rule) — the brand text shows at every breakpoint.

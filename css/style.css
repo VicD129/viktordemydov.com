@@ -62,6 +62,9 @@
     /* Corner radius */
     --radius-pill: 50rem; /* fully rounded capsule — buttons & skills ticker */
     --radius-lg: 1.25rem; /* 20px — iOS-style soft corners for cards & glass panels */
+
+    /* Layout */
+    --content-wide: 1200px; /* wide cap for .section-wide popout blocks (8pt: 1200/8=150) */
 }
 
 /* Reset and base styles */
@@ -734,6 +737,16 @@ footer[id] {
 .img-fluid {
     max-width: 100%;
     height: auto;
+}
+
+/* Pops a block out of the 900px reading column up to --content-wide, centered.
+   width caps at 94vw so a scrollbar can't force horizontal overflow; the negative
+   margin = half the overflow over the parent column, so it stays viewport-centered
+   and collapses to a normal in-column block on narrow screens. Relies on no ancestor
+   (.content/.work/.work-item) clipping overflow. */
+.section-wide {
+    width: min(var(--content-wide), 94vw);
+    margin-left: calc((100% - min(var(--content-wide), 94vw)) / 2);
 }
 
 /* Utilities */
