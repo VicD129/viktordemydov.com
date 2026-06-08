@@ -243,7 +243,7 @@ A quick map of the class families in `style.css` so existing classes get reused 
 of reinvented (not an exhaustive per-rule reference — read the file for specifics):
 
 - **Typography:** `.display-1`, `.display-hero`, `.section-label`, `.fw-bold` (the single weight-600 helper — `.fw-semibold`/`.text-bold`/`.font-weight-bold` aliases were removed; markup uses `.fw-bold`) / `.fw-medium` / `.fw-normal` / `.fw-extralight`, `.text-center` / `.text-right` / `.text-italic` / `.text-secondary`, `.small`
-- **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`, `.section-wide` (the **only** width-popout helper — lets one block break out of the 900px reading column up to `--content-wide` (1200px), capped at `94vw` and auto-centered via a negative `margin-left`; collapses to a normal in-column block on narrow screens. Relies on no ancestor — `.content`/`.work`/`.work-item` — clipping overflow; first used on the OVERVIEW panel in `projects/clockworx-comeback.html`)
+- **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`, `.section-wide` (the **only** width-popout helper — lets one block break out of the 900px reading column up to `--content-wide` (1200px), capped at `94vw` and auto-centered via a negative `margin-left`; collapses to a normal in-column block on narrow screens. Relies on no ancestor — `.content`/`.work`/`.work-item` — clipping overflow; used on the OVERVIEW screenshot panel of every project page)
 - **Spacing utilities:** a **sparse** subset of `.mb-*` / `.mt-*` (only the steps actually used — e.g. `.mb-6`, `.mt-7`, `.mt-9`, `.p-0` were dropped as unused), plus `.ms-3`, `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale. (Note: `.mb-5` maps to `--space-6`, an intentional off-by-one kept for back-compat — add new steps by their `--space-N` value, not by index.)
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.contacts`
 - **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: just the home link), `.site-nav__home` (text-only brand link — "Viktor Demydov", `color: var(--text-color)`, no padding), `.site-nav__brand`, `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`). The home + icon links read as plain text: white by default, and on hover they override the global `a:hover` to brand-yellow text with no background fill and no chip radius (no btn-like padding). There is **no** avatar image in the nav (and no `@media (max-width: 575px)` brand-hiding rule) — the brand text shows at every breakpoint.
@@ -286,15 +286,18 @@ border) layered over the starfield. There is no `.bg-dark` — it was replaced b
   surface, add `bg-glass` alongside it: `class="chat-bubble bg-glass"`. Do **not**
   put surface/background styles back on `.chat-bubble`.
 - Keep `backdrop-filter` and `-webkit-backdrop-filter` together so Safari renders the blur.
-- **Bullet lists inside a padded panel** use a scoped rule: `.bg-glass.p-3 ul`
+- **Bullet lists inside a padded panel** use scoped rules: `.bg-glass.p-3 ul`
   restores a `padding-left: var(--space-4)` gutter (the global `* { padding: 0 }`
   reset strips the default list indent, otherwise the disc markers hang into
-  negative space left of the text) plus a `--space-2` top gap, and
-  `.bg-glass.p-3 li + li` spaces items by `--space-2`. The `.p-3` qualifier is
-  deliberate — it keeps the rule off the `.skills-ticker` `ul` (which is
-  `.bg-glass` but **not** `.p-3`). First used by the OUTCOME panel in
-  `projects/clockworx-comeback.html`. Plain disc markers (no `list-style`
-  override) inherit the white panel text color.
+  negative space left of the text) plus a `--space-3` top gap, and
+  `.bg-glass.p-3 li + li` spaces items by `--space-3`. A bold lead-in
+  (`.bg-glass.p-3 li .fw-bold`) renders `display: block` at `1.25rem` (the
+  h5/`.section-label` modular-scale step) with a `--space-1` gap to its
+  description, so each item reads as a sub-label + payoff. The `.p-3` qualifier
+  is deliberate — it keeps the rules off the `.skills-ticker` `ul` (which is
+  `.bg-glass` but **not** `.p-3`). Drives the OUTCOME panels on every project
+  page. Plain disc markers (no `list-style` override) inherit the white panel
+  text color.
 
 ### Custom cursor
 
@@ -371,26 +374,50 @@ The master layout handles:
 
 ## Project Page Structure
 
-Each project page follows a consistent pattern:
+Each project page follows a consistent pattern. Pages lead with an **OUTCOME**
+bullet panel followed by an **OVERVIEW** screenshot — there is **no** `CHALLENGE`,
+`PROJECT DESCRIPTION`, or `DESIGN PROCESS` section (these were removed across all
+project pages; don't re-add them). The header is **clean** (title + tags +
+metadata only) — the hero screenshot lives in the OVERVIEW panel, not the header.
 
 ```html
 <!-- Work section -->
 <section class="work">
   <div class="work-item">
-    <!-- Header: title + metadata + hero image -->
+    <!-- Header: title + tags + metadata only (NO hero image) -->
     <div class="work-header">
       <h1>Title with <span style="color: var(--project-color)">accent</span></h1>
+      <p class="project-tags"> … three .tag spans … </p>
       <!-- Right-aligned metadata: role, skills, period, links -->
-      <img src="/img/..." alt="..." fetchpriority="high">
     </div>
 
-    <!-- Challenge section -->
-    <h2 class="section-label">Challenge</h2>
+    <!-- OUTCOME: lead line + claim/payoff bullet list (see .bg-glass.p-3 ul) -->
+    <h2 class="section-label brand-color text-center fw-bold">OUTCOME</h2>
+    <div class="text-white bg-glass p-3 mt-6">
+      <p>One-line summary.</p>
+      <ul>
+        <li><span class="fw-bold">Claim.</span> Short payoff.</li>
+        <!-- … last bullet is the product/company impact … -->
+      </ul>
+    </div>
 
-    <!-- Year-by-year log with dark panels and recommendation bubbles -->
+    <!-- OVERVIEW: the hero screenshot, popped out via .section-wide -->
+    <h2 class="section-label brand-color text-center fw-bold mt-5">OVERVIEW</h2>
+    <div class="text-white bg-glass p-3 mt-6 section-wide text-center">
+      <img class="img-fluid" src="/img/..." alt="..." loading="lazy">
+      <p class="text-center mt-2">Caption</p>
+    </div>
+
+    <!-- Year-by-year log with glass panels and recommendation bubbles -->
   </div>
 </section>
 ```
+
+**OUTCOME copy convention:** first-person, scannable **claim → short payoff**
+bullets; the bold lead-in (`.fw-bold`) sits on its own line (one modular-scale
+step up — see the `.bg-glass.p-3 ul`/`li` rules). Close the list with an "Impact
+on product and company" bullet (or "Impact on the product" where company-level
+framing doesn't fit).
 
 ---
 

@@ -771,12 +771,22 @@ footer[id] {
    text — restore a gutter so the markers align in-panel and wrapped lines hang
    under the text. Scoped to `.p-3` so it never touches the .skills-ticker ul. */
 .bg-glass.p-3 ul {
-    margin-top: var(--space-2);
+    margin-top: var(--space-3);
     padding-left: var(--space-4);
 }
 
 .bg-glass.p-3 li + li {
-    margin-top: var(--space-2);
+    margin-top: var(--space-3);
+}
+
+/* Bold lead-in sits on its own line above the item's description, one
+   modular-scale step up from body text (the h5 / .section-label step). */
+.bg-glass.p-3 li .fw-bold {
+    display: block;
+    font-size: 1.25rem;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-1);
 }
 
 /* Padded glass text panels in project pages (.text-white.bg-glass.p-3) —
