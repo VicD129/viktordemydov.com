@@ -852,14 +852,26 @@ footer[id] {
     color: #fff;
 }
 
-/* Bullet list inside a padded glass panel. The global `* { padding: 0 }` reset
-   strips the default list gutter, leaving the disc markers hanging left of the
-   text — restore a gutter so the markers align in-panel and wrapped lines hang
-   under the text. Scoped to `.p-3` so it never touches the .skills-ticker ul. */
+/* Bullet list inside a padded glass panel. Scoped to `.p-3` so it never touches
+   the .skills-ticker ul — and the only `ul` inside these panels is the OUTCOMES
+   list. `list-style: none` + `padding-left: 0` drop the default disc markers and
+   gutter (each `li` is its own card and carries its own left pad for the icon).
+   Laid out as a responsive two-column card grid: two columns on desktop, the
+   `gap` providing the inter-card spacing (no `li + li` margin), collapsing to
+   one column on phones. */
 .bg-glass.p-3 ul {
     margin-top: var(--space-3);
     padding-left: 0;
     list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+}
+
+@media (max-width: 575px) {
+    .bg-glass.p-3 ul {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* OUTCOMES statement block — each li is its own non-glass dark card (var(--bg-overlay))
@@ -871,10 +883,6 @@ footer[id] {
     background: var(--bg-overlay);
     border-radius: var(--radius-lg);
     padding: var(--space-4) var(--space-4) var(--space-4) var(--space-7);
-}
-
-.bg-glass.p-3 li + li {
-    margin-top: var(--space-4);
 }
 
 .outcome-icon {

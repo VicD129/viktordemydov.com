@@ -298,10 +298,12 @@ mirrored by the OUTCOMES statement blocks (which set the same fill/radius inline
   put surface/background styles back on `.chat-bubble`.
 - Keep `backdrop-filter` and `-webkit-backdrop-filter` together so Safari renders the blur.
 - **Bullet lists inside a padded panel** use scoped rules: `.bg-glass.p-3 ul`
-  restores a `padding-left: var(--space-5)` gutter (the global `* { padding: 0 }`
-  reset strips the default list indent; the gutter holds the per-bullet icon — see
-  below) plus a `--space-3` top gap, sets `list-style: none` (the disc marker is
-  replaced by an icon), and `.bg-glass.p-3 li + li` spaces items by `--space-3`. A
+  sets `list-style: none`, no gutter (`padding-left: 0`; the per-bullet icon sits
+  in each card's own left pad — see below) plus a `--space-3` top gap, and lays the
+  items out as a **responsive two-column card grid** — `display: grid;
+  grid-template-columns: repeat(2, 1fr); gap: var(--space-4)` on desktop, collapsing
+  to one column under `575px` (mirroring `.projects-grid`). The `gap` provides the
+  inter-card spacing, so there is **no** `li + li` margin rule. A
   bold lead-in (`.bg-glass.p-3 li .fw-bold`) renders `display: block` at `1.25rem`
   (the h5/`.section-label` modular-scale step) with a `--space-1` gap to its
   description, so each item reads as a sub-label + payoff. The `.p-3` qualifier
@@ -312,8 +314,9 @@ mirrored by the OUTCOMES statement blocks (which set the same fill/radius inline
   **non-glass dark card** — `background: var(--bg-overlay)` (the same
   `rgba(13,13,13,0.85)` fill as the fixed nav, but with no blur),
   `--radius-lg` soft corners, `padding: var(--space-4) var(--space-4) var(--space-4)
-  var(--space-7)` (the wide left pad is the icon gutter) — and blocks are spaced by
-  `.bg-glass.p-3 li + li { margin-top: var(--space-4) }`. Every `<li>` opens with
+  var(--space-7)` (the wide left pad is the icon gutter). The cards are arranged in a
+  two-column grid (one column on phones) via the parent `.bg-glass.p-3 ul` rule, and
+  spaced by its `gap: var(--space-4)` (no per-`li` margin). Every `<li>` opens with
   `<span class="outcome-icon">{% include "icon-X.html" %}</span>` before the
   `.fw-bold` lead-in, giving each statement a **distinct** Bootstrap Icon. The icon
   is `position: absolute; left: var(--space-4); top: 0; bottom: 0; display: flex;
@@ -452,9 +455,11 @@ metadata only) — the hero screenshot lives in the OVERVIEW panel, not the head
 
 **OUTCOMES copy convention:** first-person, scannable **claim → short payoff**
 bullets; the bold lead-in (`.fw-bold`) sits on its own line (one modular-scale
-step up — see the `.bg-glass.p-3 ul`/`li` rules). Close the list with an "Impact
-on product and company" bullet (or "Impact on the product" where company-level
-framing doesn't fit).
+step up — see the `.bg-glass.p-3 ul`/`li` rules) and is **at most three words**
+(hyphenated/slashed terms like `UI/UX` count as one word). Close the list with a
+short product/company impact bullet — e.g. "Product, company impact." or "Real
+product impact." (the old longer "Impact on product and company" wording was
+trimmed to fit the 3-word cap).
 
 ---
 
