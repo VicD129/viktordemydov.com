@@ -286,6 +286,15 @@ border) layered over the starfield. There is no `.bg-dark` — it was replaced b
   surface, add `bg-glass` alongside it: `class="chat-bubble bg-glass"`. Do **not**
   put surface/background styles back on `.chat-bubble`.
 - Keep `backdrop-filter` and `-webkit-backdrop-filter` together so Safari renders the blur.
+- **Bullet lists inside a padded panel** use a scoped rule: `.bg-glass.p-3 ul`
+  restores a `padding-left: var(--space-4)` gutter (the global `* { padding: 0 }`
+  reset strips the default list indent, otherwise the disc markers hang into
+  negative space left of the text) plus a `--space-2` top gap, and
+  `.bg-glass.p-3 li + li` spaces items by `--space-2`. The `.p-3` qualifier is
+  deliberate — it keeps the rule off the `.skills-ticker` `ul` (which is
+  `.bg-glass` but **not** `.p-3`). First used by the OUTCOME panel in
+  `projects/clockworx-comeback.html`. Plain disc markers (no `list-style`
+  override) inherit the white panel text color.
 
 ### Custom cursor
 
