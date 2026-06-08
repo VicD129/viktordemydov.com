@@ -689,6 +689,24 @@ footer[id] {
     margin-left: var(--space-3);
 }
 
+/* Project metadata card (Role/Skills/Period/…): a left-aligned bg-overlay card.
+   Each row is a label/value pair — the label column is a fixed width so every
+   value starts at the same x, and overrides the centered .work-header default
+   plus the .work-header span margin-left. */
+.work-meta {
+    text-align: left;
+}
+
+.work-meta p {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.work-meta .text-secondary {
+    flex: 0 0 6rem; /* equal-width label column; fits the longest label, "Contractor:" */
+    margin-left: 0; /* neutralize .work-header span */
+}
+
 .work-item p {
     margin: 0;
 }
@@ -843,7 +861,7 @@ footer[id] {
    ones — so the starfield no longer re-blurs per pill every frame. */
 .skills-ticker {
     width: 100%;
-    max-width: 600px;
+    max-width: 900px;
     margin: var(--space-3) auto var(--space-5);
     padding: var(--space-2) var(--space-3);
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--space-6), #000 calc(100% - var(--space-6)), transparent);
