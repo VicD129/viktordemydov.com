@@ -53,6 +53,7 @@
 
     /* Theme variables */
     --bg-color: #0d0d0d;
+    --bg-overlay: rgba(13, 13, 13, 0.85); /* translucent dark surface — shared by the fixed nav and the non-glass OUTCOMES statement blocks */
     --text-color: #e9e9e9;
     --link-color: #e9e9e9;
     --link-hover-color: #242424;
@@ -455,7 +456,7 @@ footer[id] {
     z-index: 100;
     padding: var(--space-2) var(--space-4);
     font-size: 1rem;
-    background-color: rgba(13, 13, 13, 0.85);
+    background-color: var(--bg-overlay);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -766,17 +767,49 @@ footer[id] {
     margin-top: var(--space-2);
 }
 
+/* Non-glass dark surface utility — the fixed nav's dark fill (var(--bg-overlay))
+   without the blur, with soft corners. Sibling to .bg-glass; pair with .p-3 for
+   padding. Used by the OUTCOMES statement blocks and the project stat cards. */
+.bg-overlay {
+    background-color: var(--bg-overlay);
+    border-radius: var(--radius-lg);
+    color: #fff;
+}
+
 /* Bullet list inside a padded glass panel. The global `* { padding: 0 }` reset
    strips the default list gutter, leaving the disc markers hanging left of the
    text — restore a gutter so the markers align in-panel and wrapped lines hang
    under the text. Scoped to `.p-3` so it never touches the .skills-ticker ul. */
 .bg-glass.p-3 ul {
     margin-top: var(--space-3);
-    padding-left: var(--space-4);
+    padding-left: 0;
+    list-style: none;
+}
+
+/* OUTCOMES statement block — each li is its own non-glass dark card (var(--bg-overlay))
+   with soft corners, generously spaced from the next. The bullet icon sits in a left
+   gutter, vertically centered against the full card height. Scoped via .p-3 so the
+   skills ticker is untouched. */
+.bg-glass.p-3 li {
+    position: relative;
+    background: var(--bg-overlay);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-7);
 }
 
 .bg-glass.p-3 li + li {
-    margin-top: var(--space-3);
+    margin-top: var(--space-4);
+}
+
+.outcome-icon {
+    position: absolute;
+    left: var(--space-4);
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    color: var(--brand-color);
 }
 
 /* Bold lead-in sits on its own line above the item's description, one

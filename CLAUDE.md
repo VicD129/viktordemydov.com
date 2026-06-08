@@ -184,6 +184,7 @@ Defined at `:root` — always use variables, never hardcode values:
 
 /* theme (dark-mode only) */
 --bg-color: #0d0d0d;            /* page background */
+--bg-overlay: rgba(13,13,13,0.85); /* translucent dark surface — shared by the fixed nav and the non-glass OUTCOMES statement blocks */
 --text-color: #e9e9e9;          /* body text */
 --link-color: #e9e9e9;
 --link-hover-color: #242424;
@@ -272,7 +273,7 @@ Pins a `.card-body`'s content to the bottom by overriding `justify-content` to `
 
 Any `<h2 id="…">` used as an anchor target must have `scroll-margin-top: var(--space-7)` so the heading clears the fixed bar when jumped to. This is handled by the rule `h2[id], footer[id] { scroll-margin-top: var(--space-7) }` in `style.css` — extend it if new anchor targets are added at other element types.
 
-The `.site-nav` uses its own dark glass styles (`rgba(13,13,13,0.85)` + blur) directly rather than the `.bg-glass` utility, so its surface can be tuned independently.
+The `.site-nav` uses its own dark glass styles (`var(--bg-overlay)` — `rgba(13,13,13,0.85)` — + blur) rather than the `.bg-glass` utility, so its surface can be tuned independently. The OUTCOMES statement blocks reuse the same `--bg-overlay` fill (without the blur, so they stay non-glass).
 
 ### Frosted-glass surface (`.bg-glass`)
 
@@ -281,23 +282,45 @@ The `.site-nav` uses its own dark glass styles (`rgba(13,13,13,0.85)` + blur) di
 border) layered over the starfield. There is no `.bg-dark` — it was replaced by
 `.bg-glass`.
 
+Its **non-glass sibling is `.bg-overlay`** — a solid-reading dark surface that paints
+`var(--bg-overlay)` (the fixed nav's `rgba(13,13,13,0.85)` fill) with `--radius-lg`
+corners and white text, but **no blur**. Use it for cards that should sit opaque over
+the starfield rather than frosted. Pair with `.p-3` for padding. Used by the project
+stat cards (e.g. the "AB InBev #1 / SoftServe #2" blocks on `myabiportal.html`) and
+mirrored by the OUTCOMES statement blocks (which set the same fill/radius inline on
+`.bg-glass.p-3 li`).
+
 - Add `bg-glass` in markup to any block that should read as a glass panel.
 - `.chat-bubble` carries **only** layout/typography. To give a chat bubble the glass
   surface, add `bg-glass` alongside it: `class="chat-bubble bg-glass"`. Do **not**
   put surface/background styles back on `.chat-bubble`.
 - Keep `backdrop-filter` and `-webkit-backdrop-filter` together so Safari renders the blur.
 - **Bullet lists inside a padded panel** use scoped rules: `.bg-glass.p-3 ul`
-  restores a `padding-left: var(--space-4)` gutter (the global `* { padding: 0 }`
-  reset strips the default list indent, otherwise the disc markers hang into
-  negative space left of the text) plus a `--space-3` top gap, and
-  `.bg-glass.p-3 li + li` spaces items by `--space-3`. A bold lead-in
-  (`.bg-glass.p-3 li .fw-bold`) renders `display: block` at `1.25rem` (the
-  h5/`.section-label` modular-scale step) with a `--space-1` gap to its
+  restores a `padding-left: var(--space-5)` gutter (the global `* { padding: 0 }`
+  reset strips the default list indent; the gutter holds the per-bullet icon — see
+  below) plus a `--space-3` top gap, sets `list-style: none` (the disc marker is
+  replaced by an icon), and `.bg-glass.p-3 li + li` spaces items by `--space-3`. A
+  bold lead-in (`.bg-glass.p-3 li .fw-bold`) renders `display: block` at `1.25rem`
+  (the h5/`.section-label` modular-scale step) with a `--space-1` gap to its
   description, so each item reads as a sub-label + payoff. The `.p-3` qualifier
   is deliberate — it keeps the rules off the `.skills-ticker` `ul` (which is
-  `.bg-glass` but **not** `.p-3`). Drives the OUTCOME panels on every project
-  page. Plain disc markers (no `list-style` override) inherit the white panel
-  text color.
+  `.bg-glass` but **not** `.p-3`). Drives the OUTCOMES panels on every project page.
+- **OUTCOMES statement blocks + bullet icons** — inside the glass panel the `ul`
+  has `list-style: none` and no gutter (`padding-left: 0`); each `<li>` is its own
+  **non-glass dark card** — `background: var(--bg-overlay)` (the same
+  `rgba(13,13,13,0.85)` fill as the fixed nav, but with no blur),
+  `--radius-lg` soft corners, `padding: var(--space-4) var(--space-4) var(--space-4)
+  var(--space-7)` (the wide left pad is the icon gutter) — and blocks are spaced by
+  `.bg-glass.p-3 li + li { margin-top: var(--space-4) }`. Every `<li>` opens with
+  `<span class="outcome-icon">{% include "icon-X.html" %}</span>` before the
+  `.fw-bold` lead-in, giving each statement a **distinct** Bootstrap Icon. The icon
+  is `position: absolute; left: var(--space-4); top: 0; bottom: 0; display: flex;
+  align-items: center` so it sits in the gutter **vertically centered** against the
+  full card height, `font-size: 1.5rem`, `color: var(--brand-color)` (brand-yellow).
+  The partials are `bi`-style (16×16, `currentColor`) like the rest of `_includes/`;
+  the closing "Impact" bullet on every page reuses `icon-graph-up-arrow.html`. When
+  adding a new OUTCOMES bullet, pick (or add) a fitting `icon-*` partial — never an
+  inline `<svg>`.
 
 ### Custom cursor
 
@@ -337,10 +360,15 @@ JS is **inline-only** by design; don't split it into a `.js` file.
 
 The SVG glyphs live in `_includes/`: the arrows `icon-arrow-up-right.html`,
 `icon-arrow-right.html`, `icon-arrow-left.html`; `icon-download.html` (the hero
-"Download CV" button); and the social glyphs `icon-linkedin.html` and
-`icon-github.html`. Insert them with `{% include "icon-arrow-up-right.html" %}` (etc.).
-**Never paste raw `<svg>` markup into a page** — reuse the partial so a single edit
-propagates everywhere.
+"Download CV" button); the social glyphs `icon-linkedin.html` and `icon-github.html`;
+and the **OUTCOMES bullet icons** (`icon-magic`, `icon-person-workspace`,
+`icon-grid-3x3-gap`, `icon-cpu`, `icon-signpost-split`, `icon-lightning-charge`,
+`icon-palette`, `icon-arrow-repeat`, `icon-rocket-takeoff`, `icon-box-seam`,
+`icon-emoji-smile`, `icon-search`, `icon-layers`, `icon-code-slash`,
+`icon-bounding-box`, `icon-graph-up-arrow` — see `.outcome-icon` in CSS Conventions).
+All are Bootstrap Icons (`bi`, 16×16, `fill="currentColor"`, `1em` sized). Insert them
+with `{% include "icon-arrow-up-right.html" %}` (etc.). **Never paste raw `<svg>` markup
+into a page** — reuse the partial so a single edit propagates everywhere.
 
 ### Front Matter Fields
 
@@ -374,7 +402,7 @@ The master layout handles:
 
 ## Project Page Structure
 
-Each project page follows a consistent pattern. Pages lead with an **OUTCOME**
+Each project page follows a consistent pattern. Pages lead with an **OUTCOMES**
 bullet panel followed by an **OVERVIEW** screenshot — there is **no** `CHALLENGE`,
 `PROJECT DESCRIPTION`, or `DESIGN PROCESS` section (these were removed across all
 project pages; don't re-add them). The header is **clean** (title + tags +
@@ -391,13 +419,16 @@ metadata only) — the hero screenshot lives in the OVERVIEW panel, not the head
       <!-- Right-aligned metadata: role, skills, period, links -->
     </div>
 
-    <!-- OUTCOME: lead line + claim/payoff bullet list (see .bg-glass.p-3 ul) -->
-    <h2 class="section-label brand-color text-center fw-bold">OUTCOME</h2>
+    <!-- OUTCOMES: lead line + claim/payoff bullet list (see .bg-glass.p-3 ul) -->
+    <h2 class="section-label brand-color text-center fw-bold">OUTCOMES</h2>
     <div class="text-white bg-glass p-3 mt-6">
       <p>One-line summary.</p>
       <ul>
-        <li><span class="fw-bold">Claim.</span> Short payoff.</li>
-        <!-- … last bullet is the product/company impact … -->
+        <li>
+          <span class="outcome-icon">{% include "icon-X.html" %}</span>
+          <span class="fw-bold">Claim.</span> Short payoff.
+        </li>
+        <!-- … last bullet is the product/company impact (icon-graph-up-arrow) … -->
       </ul>
     </div>
 
@@ -413,7 +444,7 @@ metadata only) — the hero screenshot lives in the OVERVIEW panel, not the head
 </section>
 ```
 
-**OUTCOME copy convention:** first-person, scannable **claim → short payoff**
+**OUTCOMES copy convention:** first-person, scannable **claim → short payoff**
 bullets; the bold lead-in (`.fw-bold`) sits on its own line (one modular-scale
 step up — see the `.bg-glass.p-3 ul`/`li` rules). Close the list with an "Impact
 on product and company" bullet (or "Impact on the product" where company-level
