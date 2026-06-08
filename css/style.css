@@ -410,6 +410,19 @@ a:focus {
     margin: var(--space-7) var(--space-2);
 }
 
+/* Project pages have no hero, so .content's top margin (sized to clear the
+   hero) plus .work-item's top margin leave a large dead gap below the fixed
+   nav. Collapse the content gap and tighten the work-item lead-in so the
+   back link / header sit a comfortable distance under the nav. The body
+   already reserves padding-top: var(--space-7) for the fixed bar. */
+body.page-project .content {
+    margin-top: 0;
+}
+
+body.page-project .work-item {
+    margin-top: var(--space-4);
+}
+
 .footer {
     display: grid;
     grid-template-columns: minmax(auto, 900px);
@@ -511,6 +524,25 @@ footer[id] {
     border-radius: 0;
 }
 
+/* "Open to work" availability badge — rendered in the nav on project pages only
+   (the hero, which carries it elsewhere, is hidden there). Mirrors .hero-status. */
+.site-nav__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-left: var(--space-3);
+    font-size: 0.85rem;
+    color: var(--status-color);
+}
+
+.site-nav__status-dot {
+    flex-shrink: 0;
+    width: var(--space-2);
+    height: var(--space-2);
+    border-radius: 50%;
+    background-color: var(--status-color);
+}
+
 /* Cards */
 .projects-grid {
     display: grid;
@@ -521,6 +553,13 @@ footer[id] {
 @media (max-width: 575px) {
     .projects-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Trim nav padding so "Viktor Demydov  ● Open to work  [in][gh]" fits on
+       small phones. */
+    .site-nav {
+        padding-left: var(--space-3);
+        padding-right: var(--space-3);
     }
 }
 
@@ -750,6 +789,25 @@ footer[id] {
     border-color: var(--brand-color);
     color: var(--link-hover-color);
     border-radius: var(--radius-pill);
+}
+
+/* Icon-only round button — the .btn pill sized into a fixed square so a single
+   glyph (no text) reads as a circle (--radius-pill). Pair with .bg-glass.
+   Used by the project-page top-left "Back" link (.work-back). */
+.btn-icon {
+    width: var(--space-6);
+    height: var(--space-6);
+    padding: 0;
+    gap: 0;
+    font-size: 1.25rem;
+}
+
+/* Top-left back link on project pages — sits at the start of .work-item,
+   left-aligned above the centered .work-header. Block-level flex (overriding
+   .btn's inline-flex) so it owns its own row and margin-bottom resolves cleanly. */
+.work-back {
+    display: flex;
+    margin-bottom: var(--space-4);
 }
 
 /* Images */

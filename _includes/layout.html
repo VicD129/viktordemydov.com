@@ -67,7 +67,7 @@ title: Viktor Demydov
     <link rel="preload" href="/fonts/DMSans-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/style.css?v={{ assets.cssVersion }}" />
   </head>
-  <body>
+  <body{% if page.url contains "/projects/" %} class="page-project"{% endif %}>
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <nav class="site-nav" aria-label="Site navigation">
       <div class="site-nav__inner">
@@ -75,6 +75,12 @@ title: Viktor Demydov
           <a href="/" class="site-nav__home">
             <span class="site-nav__brand">Viktor Demydov</span>
           </a>
+          {% if page.url contains "/projects/" %}
+          <span class="site-nav__status">
+            <span class="site-nav__status-dot" aria-hidden="true"></span>
+            Open to work
+          </span>
+          {% endif %}
         </div>
         <div class="site-nav__links">
           <a href="https://www.linkedin.com/in/vicd129" class="site-nav__icon-link" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">{% include "icon-linkedin.html" %}</a>
@@ -82,6 +88,7 @@ title: Viktor Demydov
         </div>
       </div>
     </nav>
+    {% unless page.url contains "/projects/" %}
     <header class="header">
       <h1 class="text-center mb-1 display-hero">
         <small>Senior Product Designer <br>& Design Engineer</small>
@@ -103,6 +110,7 @@ title: Viktor Demydov
         </a>
       </p>
     </header>
+    {% endunless %}
     <main class="content">
 
       {{ content }}
