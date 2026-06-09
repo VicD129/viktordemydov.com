@@ -793,10 +793,12 @@ footer[id] {
 
 /* Icon-only round button — the .btn pill sized into a fixed square so a single
    glyph (no text) reads as a circle (--radius-pill). Pair with .bg-glass.
-   Used by the project-page top-left "Back" link (.work-back). */
+   Used by the project-page top-left "Back" link (.work-back). The 40px square
+   (--space-5 + --space-2) matches the natural height of the text .btn so both
+   back affordances line up. */
 .btn-icon {
-    width: var(--space-6);
-    height: var(--space-6);
+    width: calc(var(--space-5) + var(--space-2));
+    height: calc(var(--space-5) + var(--space-2));
     padding: 0;
     gap: 0;
     font-size: 1.25rem;
