@@ -413,6 +413,14 @@ bullet panel followed by an **OVERVIEW** screenshot — there is **no** `CHALLEN
 project pages; don't re-add them). The header is **clean** (title + tags +
 metadata only) — the hero screenshot lives in the OVERVIEW panel, not the header.
 
+**OVERVIEW currently hidden.** On all five project pages the OVERVIEW block
+(heading + `.section-wide` screenshot panel) is wrapped in an HTML comment —
+`<!-- OVERVIEW (hidden until screenshot is ready) … -->` — so pages flow straight
+from OUTCOMES into the year-by-year log. The original markup (real screenshot
+`src`/`alt`/caption) is preserved inside the comment; to restore, just remove the
+`<!-- … -->` wrapper. The structure below documents the intended (uncommented)
+shape — keep it for when the screenshots are added back.
+
 ```html
 <!-- Work section -->
 <section class="work">
