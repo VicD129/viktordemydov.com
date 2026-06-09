@@ -280,10 +280,6 @@ h6 {
     margin-bottom: var(--space-4) !important;
 }
 
-.mb-5 {
-    margin-bottom: var(--space-6) !important;
-}
-
 .mb-7 {
     margin-bottom: var(--space-7) !important;
 }
@@ -314,6 +310,10 @@ h6 {
 
 .p-3 {
     padding: var(--space-3) !important;
+}
+
+.p-4 {
+    padding: var(--space-4) !important;
 }
 
 .px-4 {
@@ -716,6 +716,32 @@ footer[id] {
     margin: var(--space-6) 0;
 }
 
+/* Project-page vertical rhythm — centralized here (not as per-page mt-* utilities)
+   so every project page shares one consistent cadence. Hierarchy:
+   80px (--space-7) between major sections ≫ 24px (--space-4) from a section label
+   to its content ≫ 8px between subsection label and its panel ≫ 8px between lines.
+   Major-section labels (OUTCOMES / WHAT'S BEEN DONE / RECOMMENDATIONS) sit far from
+   the previous section but hug their own content below — fixing the old inverted
+   proximity. Scoped to .work-item so the home-page section headings are untouched. */
+.work-item h2.section-label {
+    margin-top: var(--space-7);
+    margin-bottom: var(--space-4);
+}
+
+.work-item h3.section-label {
+    margin-top: var(--space-4);
+}
+
+/* When a project-page .row wraps (its .col-md-6 cards stack full-width below 768px —
+   the myabiportal stat cards, the clockworx before/after images), this supplies the
+   vertical gap between the stacked cards. On desktop the row is a single flex line, so
+   row-gap has no effect and the horizontal gutters stay owned by the col padding. This
+   replaces the cards' old per-col mb-5, which (in a flex row) stacked ON TOP of the
+   section margin below and bloated the row→next-section gap. */
+.work-item .row {
+    row-gap: var(--space-4);
+}
+
 .work-header {
     display: flex;
     flex-direction: column;
@@ -854,14 +880,15 @@ footer[id] {
     color: #fff;
 }
 
-/* Bullet list inside a padded glass panel. Scoped to `.p-3` so it never touches
-   the .skills-ticker ul — and the only `ul` inside these panels is the OUTCOMES
-   list. `list-style: none` + `padding-left: 0` drop the default disc markers and
+/* Bullet list inside a padded glass panel. Scoped to `.p-4` (the reading-panel
+   padding) so it never touches the .skills-ticker ul (which is `.bg-glass` but not
+   `.p-4`) — and the only `ul` inside these panels is the OUTCOMES list.
+   `list-style: none` + `padding-left: 0` drop the default disc markers and
    gutter (each `li` is its own card and carries its own left pad for the icon).
    Laid out as a responsive two-column card grid: two columns on desktop, the
    `gap` providing the inter-card spacing (no `li + li` margin), collapsing to
    one column on phones. */
-.bg-glass.p-3 ul {
+.bg-glass.p-4 ul {
     margin-top: var(--space-3);
     padding-left: 0;
     list-style: none;
@@ -871,16 +898,16 @@ footer[id] {
 }
 
 @media (max-width: 575px) {
-    .bg-glass.p-3 ul {
+    .bg-glass.p-4 ul {
         grid-template-columns: 1fr;
     }
 }
 
 /* OUTCOMES statement block — each li is its own non-glass dark card (var(--bg-overlay))
    with soft corners, generously spaced from the next. The bullet icon sits in a left
-   gutter, vertically centered against the full card height. Scoped via .p-3 so the
+   gutter, vertically centered against the full card height. Scoped via .p-4 so the
    skills ticker is untouched. */
-.bg-glass.p-3 li {
+.bg-glass.p-4 li {
     position: relative;
     background: var(--bg-overlay);
     border-radius: var(--radius-lg);
@@ -900,7 +927,7 @@ footer[id] {
 
 /* Bold lead-in sits on its own line above the item's description, one
    modular-scale step up from body text (the h5 / .section-label step). */
-.bg-glass.p-3 li .fw-bold {
+.bg-glass.p-4 li .fw-bold {
     display: block;
     font-size: 1.25rem;
     line-height: 1.35;
@@ -908,10 +935,10 @@ footer[id] {
     margin-bottom: var(--space-1);
 }
 
-/* Padded glass text panels in project pages (.text-white.bg-glass.p-3) —
-   iOS-style soft corners. The .p-3 qualifier scopes this to those panels
+/* Padded glass text panels in project pages (.text-white.bg-glass.p-4) —
+   iOS-style soft corners. The .p-4 qualifier scopes this to those panels
    and leaves the pill hero-cv/ticker and the self-clipping cards alone. */
-.bg-glass.p-3 {
+.bg-glass.p-4 {
     border-radius: var(--radius-lg);
 }
 
@@ -1029,6 +1056,15 @@ footer[id] {
     gap: var(--space-2);
     margin-bottom: var(--space-1);
     margin-top: var(--space-4);
+}
+
+/* Only the FIRST thread (the one directly after the RECOMMENDATIONS label) zeros its
+   lead sender's margin-top: the thread is a flex column, so that margin would otherwise
+   stack on top of the label's margin-bottom and bloat the label→first-bubble gap past
+   the standard --space-4 (24px). Subsequent threads keep their sender's --space-4 so
+   each new recommender stays separated from the previous bubble. */
+.section-label + .chat-thread > .chat-sender:first-child {
+    margin-top: 0;
 }
 
 .chat-avatar {

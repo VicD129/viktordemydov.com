@@ -218,7 +218,7 @@ Two radius tokens drive all rounding — never hardcode a `border-radius`:
   either — its glass strip is squared and edge-faded (see Skills ticker below).
 - **`--radius-lg` (`1.25rem` / 20px)** — iOS-style soft corners. Used by `.card`
   (with `overflow: hidden` so the flush top image clips to the shape), the padded
-  project glass panels (`.bg-glass.p-3`), and `.chat-bubble`. `.chat-avatar` is a full
+  project glass panels (`.bg-glass.p-4`), and `.chat-bubble`. `.chat-avatar` is a full
   circle (`border-radius: 50%`).
 
 The global `a:hover`/`a:focus` keeps its own small `0.125rem` brand-yellow fill chip — the
@@ -245,13 +245,14 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 
 - **Typography:** `.display-1`, `.display-hero`, `.section-label`, `.fw-bold` (the single weight-600 helper — `.fw-semibold`/`.text-bold`/`.font-weight-bold` aliases were removed; markup uses `.fw-bold`) / `.fw-medium` / `.fw-normal` / `.fw-extralight`, `.text-center` / `.text-right` / `.text-italic` / `.text-secondary`, `.small`
 - **Layout:** `.container-fluid`, `.row`, `.col` / `.col-sm-6` / `.col-md-6` / `.col-md-12`, `.content`, `.footer`, `.section-wide` (the **only** width-popout helper — lets one block break out of the 900px reading column up to `--content-wide` (1200px), capped at `94vw` and auto-centered via a negative `margin-left`; collapses to a normal in-column block on narrow screens. Relies on no ancestor — `.content`/`.work`/`.work-item` — clipping overflow; used on the OVERVIEW screenshot panel of every project page)
-- **Spacing utilities:** a **sparse** subset of `.mb-*` / `.mt-*` (only the steps actually used — e.g. `.mb-6`, `.mt-7`, `.mt-9`, `.p-0` were dropped as unused), plus `.ms-3`, `.p-3`, `.px-4`, `.pr-4` — all map to the `--space-*` scale. (Note: `.mb-5` maps to `--space-6`, an intentional off-by-one kept for back-compat — add new steps by their `--space-N` value, not by index.)
+- **Spacing utilities:** a **sparse** subset of `.mb-*` / `.mt-*` (only the steps actually used — e.g. `.mb-5`, `.mb-6`, `.mt-7`, `.mt-9`, `.p-0` were dropped as unused; `.mb-5` went when the spacing refactor centralized project-page rhythm in CSS), plus `.ms-3`, `.p-3`, `.p-4`, `.px-4`, `.pr-4` — all map to the `--space-*` scale by index (e.g. `.mt-6` = `--space-6`). (`.p-4` = `--space-4` (24px) is the roomier padding for the project-page reading panels — see Project-page vertical rhythm below.)
+- **Project-page vertical rhythm (CSS-owned, not inline utilities):** the cadence down a project page is centralized in `style.css`, **not** hand-placed as per-page `mt-*` utilities (which had drifted into three different section gaps). Two rules scoped to `.work-item` drive it: `.work-item h2.section-label { margin-top: var(--space-7); margin-bottom: var(--space-4) }` — every major section label (OUTCOMES / WHAT'S BEEN DONE / RECOMMENDATIONS) sits a uniform **80px** below the previous section and **24px** above its own content (fixing the old inverted proximity where a label hugged the *previous* section); `.work-item h3.section-label { margin-top: var(--space-4) }` — the "Year ####" subheadings sit **24px** down and keep their default 8px to their panel. The hierarchy is **80 ≫ 24 (label→content) ≫ 8 (lines)**. Scoped to `.work-item`, so home-page headings are untouched. **Do not** re-add `mt-5`/`mt-6` on the `h2.section-label`s or `mt-3` on the `h3` year labels — the markup carries none; only the heading-less stacked panels (clockworx "sneak peek", tourhunter's two image panels) keep an explicit `mt-6` for the gap between two consecutive panels with no heading between them. The final closing "Back" `<h3 class="text-center mt-6">` is **not** a `.section-label` and keeps its inline `mt-6`. Relatedly, `.work-item .row { row-gap: var(--space-4) }` supplies the **vertical** gap when a project `.row`'s `.col-md-6` cards stack full-width below 768px (the myabiportal stat cards, the clockworx before/after images) — it replaced the stat cards' old per-col `.mb-5`, which in a flex row stacked on top of the section margin below and bloated the row→OUTCOMES gap to ~128px; on desktop the row is a single flex line so `row-gap` is inert and the horizontal gutters stay owned by the col padding.
 - **Sections:** `.work`, `.work-item`, `.work-header`, `.contacts`, `.work-meta` (the project-page metadata block — Role/Skills/Period/Contractor/Website — inside `.work-header`. Authored as `<div class="bg-overlay p-3 work-meta">` so it reads as a solid dark `.bg-overlay` card. `.work-meta` left-aligns it (overriding `.work-header`'s centered default), makes each `<p>` a `display:flex` label/value row, and gives the `.text-secondary` label span a fixed `flex: 0 0 6rem` column — `6rem` fits the longest label, "Contractor:" — so every value starts at the same x and long values hang-indent under the value column; it also resets the `margin-left` the broader `.work-header span` rule would add. No `mb-5` on the inner rows — `.work-header`'s own `margin-bottom` spaces the card from the next section.)
 - **Site nav:** `.site-nav` (fixed bar), `.site-nav__inner` (constrained inner row), `.site-nav__left` (left flex group: the home link, plus the availability badge on project pages — see below), `.site-nav__home` (text-only brand link — "Viktor Demydov", `color: var(--text-color)`, no padding), `.site-nav__brand`, `.site-nav__links` (right-side icon group), `.site-nav__icon-link` (icon-only nav link, `color: var(--text-color)`). The home + icon links read as plain text: white by default, and on hover they override the global `a:hover` to brand-yellow text with no background fill and no chip radius (no btn-like padding). There is **no** avatar image in the nav (and no `@media (max-width: 575px)` brand-hiding rule) — the brand text shows at every breakpoint. **Availability badge:** `.site-nav__status` (the green "● Open to work" badge — `inline-flex`, `0.85rem`, `color: var(--status-color)`, mirroring the hero's `.hero-status`) holds a `.site-nav__status-dot` (an 8px `var(--space-2)` green circle) + the plain text "Open to work" (**no** "(Remote)" suffix — the parenthetical is only on the home hero's `.hero-status`). It is rendered in `layout.html` **only on project pages** (`{% if page.url contains "/projects/" %}`), where the hero — which carries this badge elsewhere — is hidden (see Project Page Structure / Layout Template). Under the existing `@media (max-width: 575px)` block the nav's horizontal padding trims to `var(--space-3)` so the one-row nav (`Viktor Demydov · ● Open to work · [in][gh]`) fits small phones.
 - **Buttons:** `.btn` and `.hero-cv` share **one** rule (`inline-flex`, `gap: var(--space-2)`, `--radius-pill`, brand-yellow `:hover/:focus` fill). **Pair with `.bg-glass`** in markup for the surface. Reused by the hero "Download CV" button, the project page bottom "Back" link (`.btn.bg-glass` wrapping the `icon-arrow-left` partial + "Back" text), and the footer "Follow me" links (`.btn.bg-glass` with the `icon-linkedin`/`icon-github` brand glyph before the label + the `icon-arrow-up-right` after). Don't re-add a standalone `.hero-cv` block — edit the shared rule. **Icon-only round variant:** `.btn-icon` sizes the pill into a fixed `calc(var(--space-5) + var(--space-2))` (40px) square so a single glyph with **no text** reads as a circle (`--radius-pill`), `font-size: 1.25rem`, `padding: 0`. The 40px height matches the natural height of the text `.btn` so both back affordances line up. Used by the **project-page top-left back link** — `<a class="btn btn-icon bg-glass work-back" aria-label="Back to home">` (icon-only, so it carries an `aria-label`) placed as the first child of `.work-item`, before `.work-header`. `.work-back` makes it block-level `display: flex` (overriding `.btn`'s inline-flex) so it owns its own row at the top-left, with `margin-bottom: var(--space-4)` down to the centered header. Every project page thus has **two** back affordances: this top-left icon button and the original text "Back" button after the content.
 - **Hero:** the whole `<header class="header">` block (subtitle + `.hero-status` + skills ticker + Download CV) renders on **every page except project pages** — in `layout.html` it is wrapped in `{% unless page.url contains "/projects/" %}` (project pages lead with their own `.work-header` instead and surface availability via the nav `.site-nav__status` badge). `.hero-status` — "Open to work (Remote)" badge below the hero subtitle (color `var(--status-color)`); `.hero-cv` — the "Download CV" button below it (see Buttons above).
 - **Skills ticker:** an animated scrolling single-line marquee in the **hero** (in `layout.html`, between the `.hero-status` badge and the `.hero-cv` button, so it shows on **every page except project pages** — the hero block is hidden on `/projects/*`). Markup nests three elements: `.skills-ticker.bg-glass` (the glass strip — **squared, not pilled**; owns the left/right edge-fade `mask-image` so the panel's fill, blur **and** border dissolve at the ends, no hard side borders/corners) > `.skills-viewport` (clips the scrolling overflow) > `.skills-track` (the flex track that scrolls). `.skill` is now **plain text** (no pill surface); skills are joined by a muted `·` dot via `.skill::after` (`content: "\00B7"`, color `var(--text-secondary)`) — the dot also bridges the loop seam, and `.skill:last-child::after { content: none }` drops the trailing dot. The skill list is a single Liquid `{% assign skills = "…" | split: "," %}` array in `layout.html`, looped **twice** into the track (the second copy `aria-hidden="true"`) so the `skills-scroll` keyframe can translate `-50%` for a seamless loop. **`.bg-glass` is now safe here** (unlike the old per-pill design): one **static** glass panel = a single `backdrop-filter` blur, not ~36 moving ones, so the starfield no longer re-blurs every frame. Pauses on hover; under `prefers-reduced-motion` the duplicate pills hide, the mask/overflow reset, the track becomes a static centered wrap, and a `:has(+ .skill[aria-hidden="true"])::after { content: none }` rule suppresses the now-dangling trailing dot. Scroll speed = the `40s` duration on `.skills-track`. The strip caps at `max-width: 900px` (the layout width — matching `.content` and `.site-nav__inner`), centered via `margin: … auto`. Keep the list in sync with the CV skills in `cv/cv.html` (see the CV section). (Remote availability is signalled by the hero `.hero-status` badge — "Open to work (Remote)".)
-- **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar` (full circle, `border-radius: 50%`), `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (`--radius-lg` soft corners; pair with `.bg-glass` for the surface — see below)
+- **Chat recommendations:** `.chat-thread`, `.chat-sender`, `.chat-avatar` (full circle, `border-radius: 50%`), `.chat-sender-info` / `.chat-sender-name` / `.chat-sender-role`, `.chat-bubble` (`--radius-lg` soft corners; pair with `.bg-glass` for the surface — see below). `.chat-sender` carries `margin-top: var(--space-4)` so stacked recommender blocks (a page can have several `.chat-thread`s) stay separated — but the **first** thread after the RECOMMENDATIONS label zeroes that via `.section-label + .chat-thread > .chat-sender:first-child { margin-top: 0 }`: the thread is a flex column (margins don't collapse into the label), so without this the label→first-bubble gap would double past the standard `--space-4`.
 - **Card brand modifiers:** `.abi-bg`, `.pegasus-bg`, `.mvr-bg`, `.tourhunter-bg`, `.brand-bg`
 - **Project tags:** `.project-tags` (flex/wrap row) > `.tag` (muted quick-scan labels — three per project: Domain · Audience · Type). Plain dot-separated text reusing the `.skill` pattern (`.tag::after` is a `·` in `var(--text-secondary)`; `.tag:last-child::after { content: none }`) — **not** pills, no JS. Authored inline on the 5 home-grid project cards (after `.card-title`) **and** on each project page (after the `<h1>` in `.work-header`). Not on the LinkedIn CTA or certification cards. Do **not** reuse the `.skill` class itself (it is white + carries ticker semantics). On **cards** the tags inherit the link's hover color (`.card a:hover .tag`) so they stay legible on the colored hover fill (white on dark-accent cards, dark on the light `mvr-bg`). On **project pages** the tags read as white labels (`.work-header .tag` sets `color: var(--text-color)` plus a `margin-left: 0` / `font-weight: 400` reset that neutralizes the broader `.work-header span` rule — `font-weight: 300; margin-left: var(--space-3)`, meant for the h1 accent + metadata label spans — which would otherwise leak a stray indent and extra-light weight onto the tags; the muted `·` dot separators stay, mirroring the skills ticker) rather than the muted grey used on cards, and the spacing is CSS-owned, not utility-class-owned: the work-header `<h1>` carries **no** `mb-5` — `.work-header h1` gives a tight `--space-2` gap to the tags and `.work-header .project-tags` (centered) carries the `--space-6` gap down to the next block (the distance the title's old `mb-5` used to provide).
 
@@ -290,32 +291,36 @@ corners and white text, but **no blur**. Use it for cards that should sit opaque
 the starfield rather than frosted. Pair with `.p-3` for padding. Used by the project
 stat cards (e.g. the "AB InBev #1 / SoftServe #2" blocks on `myabiportal.html`) and
 mirrored by the OUTCOMES statement blocks (which set the same fill/radius inline on
-`.bg-glass.p-3 li`).
+`.bg-glass.p-4 li`).
 
 - Add `bg-glass` in markup to any block that should read as a glass panel.
 - `.chat-bubble` carries **only** layout/typography. To give a chat bubble the glass
   surface, add `bg-glass` alongside it: `class="chat-bubble bg-glass"`. Do **not**
   put surface/background styles back on `.chat-bubble`.
 - Keep `backdrop-filter` and `-webkit-backdrop-filter` together so Safari renders the blur.
-- **Bullet lists inside a padded panel** use scoped rules: `.bg-glass.p-3 ul`
-  sets `list-style: none`, no gutter (`padding-left: 0`; the per-bullet icon sits
-  in each card's own left pad — see below) plus a `--space-3` top gap, and lays the
-  items out as a **responsive two-column card grid** — `display: grid;
-  grid-template-columns: repeat(2, 1fr); gap: var(--space-4)` on desktop, collapsing
-  to one column under `575px` (mirroring `.projects-grid`). The `gap` provides the
-  inter-card spacing, so there is **no** `li + li` margin rule. A
-  bold lead-in (`.bg-glass.p-3 li .fw-bold`) renders `display: block` at `1.25rem`
-  (the h5/`.section-label` modular-scale step) with a `--space-1` gap to its
-  description, so each item reads as a sub-label + payoff. The `.p-3` qualifier
-  is deliberate — it keeps the rules off the `.skills-ticker` `ul` (which is
-  `.bg-glass` but **not** `.p-3`). Drives the OUTCOMES panels on every project page.
+- **Bullet lists inside a padded panel** use rules scoped to `.bg-glass.p-4 ul` (the
+  reading-panel padding — the OUTCOMES panel is `.p-4`). The rule sets `list-style:
+  none`, no gutter (`padding-left: 0`; the per-bullet icon sits in each card's own left
+  pad — see below) plus a `--space-3` top gap, and lays the items out as a **responsive
+  two-column card grid** — `display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4)` on desktop, collapsing to one column under `575px` (mirroring
+  `.projects-grid`). The `gap` provides the inter-card spacing, so there is **no**
+  `li + li` margin rule. A bold lead-in (`.bg-glass.p-4 li .fw-bold`) renders
+  `display: block` at `1.25rem` (the h5/`.section-label` modular-scale step) with a
+  `--space-1` gap to its description, so each item reads as a sub-label + payoff. The
+  `.p-4` qualifier is deliberate — it keeps the rules off the `.skills-ticker`
+  `ul` (which is `.bg-glass` but **not** `.p-4`). Drives the OUTCOMES
+  panels on every project page. (The reading panels — OUTCOMES, year logs, image
+  showcases — are all `.bg-glass.p-4` (24px); the compact `.bg-overlay` stat/meta
+  cards stay `.p-3` (16px) — note `.bg-overlay.p-3`, **not** `.bg-glass.p-3`, so the
+  card-grid rules above don't touch them.)
 - **OUTCOMES statement blocks + bullet icons** — inside the glass panel the `ul`
   has `list-style: none` and no gutter (`padding-left: 0`); each `<li>` is its own
   **non-glass dark card** — `background: var(--bg-overlay)` (the same
   `rgba(13,13,13,0.85)` fill as the fixed nav, but with no blur),
   `--radius-lg` soft corners, `padding: var(--space-4) var(--space-4) var(--space-4)
   var(--space-7)` (the wide left pad is the icon gutter). The cards are arranged in a
-  two-column grid (one column on phones) via the parent `.bg-glass.p-3 ul` rule, and
+  two-column grid (one column on phones) via the parent `.bg-glass.p-4 ul` rule, and
   spaced by its `gap: var(--space-4)` (no per-`li` margin). Every `<li>` opens with
   `<span class="outcome-icon">{% include "icon-X.html" %}</span>` before the
   `.fw-bold` lead-in, giving each statement a **distinct** Bootstrap Icon. The icon
@@ -436,9 +441,11 @@ shape — keep it for when the screenshots are added back.
       <!-- Right-aligned metadata: role, skills, period, links -->
     </div>
 
-    <!-- OUTCOMES: lead line + claim/payoff bullet list (see .bg-glass.p-3 ul) -->
+    <!-- OUTCOMES: lead line + claim/payoff bullet list (see .bg-glass.p-4 ul).
+         Section labels carry NO mt-* / the panel NO mt-* — the gap is owned by the
+         CSS `.work-item h2.section-label` rule (see Project-page vertical rhythm). -->
     <h2 class="section-label brand-color text-center fw-bold">OUTCOMES</h2>
-    <div class="text-white bg-glass p-3 mt-6">
+    <div class="text-white bg-glass p-4">
       <p>One-line summary.</p>
       <ul>
         <li>
@@ -450,8 +457,8 @@ shape — keep it for when the screenshots are added back.
     </div>
 
     <!-- OVERVIEW: the hero screenshot, popped out via .section-wide -->
-    <h2 class="section-label brand-color text-center fw-bold mt-5">OVERVIEW</h2>
-    <div class="text-white bg-glass p-3 mt-6 section-wide text-center">
+    <h2 class="section-label brand-color text-center fw-bold">OVERVIEW</h2>
+    <div class="text-white bg-glass p-4 section-wide text-center">
       <img class="img-fluid" src="/img/..." alt="..." loading="lazy">
       <p class="text-center mt-2">Caption</p>
     </div>
@@ -463,7 +470,7 @@ shape — keep it for when the screenshots are added back.
 
 **OUTCOMES copy convention:** first-person, scannable **claim → short payoff**
 bullets; the bold lead-in (`.fw-bold`) sits on its own line (one modular-scale
-step up — see the `.bg-glass.p-3 ul`/`li` rules) and is **at most three words**
+step up — see the `.bg-glass.p-4 ul`/`li` rules) and is **at most three words**
 (hyphenated/slashed terms like `UI/UX` count as one word). Close the list with a
 short product/company impact bullet — e.g. "Product, company impact." or "Real
 product impact." (the old longer "Impact on product and company" wording was
