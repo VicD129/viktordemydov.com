@@ -300,11 +300,11 @@ mirrored by the OUTCOMES statement blocks (which set the same fill/radius inline
 - Keep `backdrop-filter` and `-webkit-backdrop-filter` together so Safari renders the blur.
 - **Bullet lists inside a padded panel** use rules scoped to `.bg-glass.p-4 ul` (the
   reading-panel padding — the OUTCOMES panel is `.p-4`). The rule sets `list-style:
-  none`, no gutter (`padding-left: 0`; the per-bullet icon sits in each card's own left
-  pad — see below) plus a `--space-3` top gap, and lays the items out as a **responsive
-  two-column card grid** — `display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-4)` on desktop, collapsing to one column under `575px` (mirroring
-  `.projects-grid`). The `gap` provides the inter-card spacing, so there is **no**
+  none`, no gutter (`padding-left: 0`) plus a `--space-3` top gap, and lays the items
+  out as a **responsive two-column card grid** — `display: grid; grid-template-columns:
+  repeat(2, 1fr); gap: var(--space-4)` on desktop, collapsing to one column under
+  `575px` (mirroring `.projects-grid`); each card has its icon stacked on top (see
+  below). The `gap` provides the inter-card spacing, so there is **no**
   `li + li` margin rule. A bold lead-in (`.bg-glass.p-4 li .fw-bold`) renders
   `display: block` at `1.25rem` (the h5/`.section-label` modular-scale step) with a
   `--space-1` gap to its description, so each item reads as a sub-label + payoff. The
@@ -318,15 +318,21 @@ mirrored by the OUTCOMES statement blocks (which set the same fill/radius inline
   has `list-style: none` and no gutter (`padding-left: 0`); each `<li>` is its own
   **non-glass dark card** — `background: var(--bg-overlay)` (the same
   `rgba(13,13,13,0.85)` fill as the fixed nav, but with no blur),
-  `--radius-lg` soft corners, `padding: var(--space-4) var(--space-4) var(--space-4)
-  var(--space-7)` (the wide left pad is the icon gutter). The cards are arranged in a
-  two-column grid (one column on phones) via the parent `.bg-glass.p-4 ul` rule, and
-  spaced by its `gap: var(--space-4)` (no per-`li` margin). Every `<li>` opens with
-  `<span class="outcome-icon">{% include "icon-X.html" %}</span>` before the
+  `--radius-lg` soft corners, and **uniform** `padding: var(--space-4)`. The cards are
+  arranged in a two-column grid (one column on phones) via the parent `.bg-glass.p-4 ul`
+  rule, and spaced by its `gap: var(--space-4)` (no per-`li` margin). Every `<li>` opens with
+  `<span class="outcome-icon bg-glass">{% include "icon-X.html" %}</span>` before the
   `.fw-bold` lead-in, giving each statement a **distinct** Bootstrap Icon. The icon
-  is `position: absolute; left: var(--space-4); top: 0; bottom: 0; display: flex;
-  align-items: center` so it sits in the gutter **vertically centered** against the
-  full card height, `font-size: 1.5rem`, `color: var(--brand-color)` (brand-yellow).
+  span reads as a **square "app-icon" tile stacked on top** of the text: it carries
+  the `.bg-glass` utility in markup (frosted fill + blur + border — reused, *not*
+  re-declared on `.outcome-icon`), and `.outcome-icon` adds only the shape/size — a
+  fixed `var(--space-6)` (48px) `width`/`height`, `border-radius: var(--radius-lg)`
+  (iOS-style squircle), `display: flex; align-items: center; justify-content: center`
+  to center its `font-size: 1.5rem` glyph, and `margin-bottom: var(--space-3)` for the
+  gap down to the lead-in. `display: flex` makes the span block-level, so the tile sits
+  on its own line at the top of the card (normal flow, **no** absolute positioning).
+  `color: var(--brand-color)` (brand-yellow) — the rule sits later in source than
+  `.bg-glass`, so the glyph color wins over `.bg-glass`'s `#fff`.
   The partials are `bi`-style (16×16, `currentColor`) like the rest of `_includes/`;
   the closing "Impact" bullet on every page reuses `icon-graph-up-arrow.html`. When
   adding a new OUTCOMES bullet, pick (or add) a fitting `icon-*` partial — never an
@@ -449,7 +455,7 @@ shape — keep it for when the screenshots are added back.
       <p>One-line summary.</p>
       <ul>
         <li>
-          <span class="outcome-icon">{% include "icon-X.html" %}</span>
+          <span class="outcome-icon bg-glass">{% include "icon-X.html" %}</span>
           <span class="fw-bold">Claim.</span> Short payoff.
         </li>
         <!-- … last bullet is the product/company impact (icon-graph-up-arrow) … -->

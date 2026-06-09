@@ -883,11 +883,10 @@ footer[id] {
 /* Bullet list inside a padded glass panel. Scoped to `.p-4` (the reading-panel
    padding) so it never touches the .skills-ticker ul (which is `.bg-glass` but not
    `.p-4`) — and the only `ul` inside these panels is the OUTCOMES list.
-   `list-style: none` + `padding-left: 0` drop the default disc markers and
-   gutter (each `li` is its own card and carries its own left pad for the icon).
-   Laid out as a responsive two-column card grid: two columns on desktop, the
-   `gap` providing the inter-card spacing (no `li + li` margin), collapsing to
-   one column on phones. */
+   `list-style: none` + `padding-left: 0` drop the default disc markers and gutter
+   (each `li` is its own card, icon stacked on top). Laid out as a responsive
+   two-column card grid: two columns on desktop, the `gap` providing the inter-card
+   spacing (no `li + li` margin), collapsing to one column on phones. */
 .bg-glass.p-4 ul {
     margin-top: var(--space-3);
     padding-left: 0;
@@ -904,23 +903,28 @@ footer[id] {
 }
 
 /* OUTCOMES statement block — each li is its own non-glass dark card (var(--bg-overlay))
-   with soft corners, generously spaced from the next. The bullet icon sits in a left
-   gutter, vertically centered against the full card height. Scoped via .p-4 so the
-   skills ticker is untouched. */
+   with soft corners. The bullet icon stacks on top of the text (normal flow), so the
+   card uses uniform padding. Scoped via .p-4 so the skills ticker is untouched. */
 .bg-glass.p-4 li {
-    position: relative;
     background: var(--bg-overlay);
     border-radius: var(--radius-lg);
-    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-7);
+    padding: var(--space-4);
 }
 
+/* Square "app-icon" tile — reuses the .bg-glass utility (frosted fill + blur +
+   border, added in markup) and only adds the shape/size here. A fixed
+   var(--space-6) (48px) square with iOS-style --radius-lg corners that sits on its
+   own line at the top of the card (block-level flex), centering its 1em glyph, with
+   a gap down to the lead-in. This rule sits later in source than .bg-glass, so its
+   brand-yellow color wins over .bg-glass's #fff for the glyph. */
 .outcome-icon {
-    position: absolute;
-    left: var(--space-4);
-    top: 0;
-    bottom: 0;
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: var(--space-6);
+    height: var(--space-6);
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-lg);
     font-size: 1.5rem;
     color: var(--brand-color);
 }
