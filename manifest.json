@@ -3,9 +3,9 @@
     "name": "Viktor Demydov - Senior Product Designer & Design Engineer",
     "description": "Portfolio of Viktor Demydov, Senior Product Designer & Design Engineer",
     "start_url": "/",
-    "background_color": "#171717",
+    "background_color": "#0d0d0d",
     "display": "standalone",
-    "theme_color": "#777777",
+    "theme_color": "#0d0d0d",
     "categories": ["portfolio", "ux/ui design", "ui developer"],
     "lang": "en"
 }

@@ -599,6 +599,10 @@ footer[id] {
 
 .card-img-top {
     width: 100%;
+    /* keep the intrinsic width/height attrs (CLS reservation) from fixing the
+       rendered height — without this the attr height stays in effect once CSS
+       overrides the width, distorting the image */
+    height: auto;
     /* corners clip to the card's pill shape via .card { overflow: hidden } */
 }
 

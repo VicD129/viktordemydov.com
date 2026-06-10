@@ -262,7 +262,7 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 
 - Use `.projects-grid` as the direct parent of `.card` elements — do **not** wrap cards in `col-sm-6` or any other column div.
 - The 6th card in the projects grid is the LinkedIn CTA. Its `.card-body` carries `.card-body--end` to pin the text to the card bottom.
-- The certifications section follows the same structure: `h2` as a direct `<main>` child, then `div.container-fluid > div.projects-grid > cards`.
+- The certifications section follows the same structure: `h2` as a direct child of the page's `div.work` wrapper, then `div.container-fluid > div.projects-grid > cards`.
 
 ### `.card-body--end` modifier
 
@@ -368,9 +368,17 @@ JS is **inline-only** by design; don't split it into a `.js` file.
 - Templating engine: **Liquid** (default for `.html` files)
 - Use **semantic HTML5** — proper heading hierarchy (h1 → h2 → h3)
 - All images must have descriptive `alt` text
+- Every `<img>` carries intrinsic `width`/`height` attributes (the file's real pixel
+  dimensions) so the browser reserves space and avoids layout shift (CLS) — the
+  `.img-fluid`/`.card-img-top` CSS keeps them responsive. Get dims via
+  `sips -g pixelWidth -g pixelHeight img/<file>`
 - Use `loading="lazy"` on non-hero images
-- Use `fetchpriority="high"` on hero/LCP images
+- Use `fetchpriority="high"` on the **single** LCP image only (the first home-page
+  card) — multiple `high` hints dilute the signal; don't add it to other images
 - Prefer WebP or AVIF for all images
+- The home page's content wrapper is `<div class="work">`, **not** `<main>` — the
+  layout already wraps `{{ content }}` in `<main class="content">`, and nested
+  `<main>` elements are invalid HTML
 
 ### Icon partials
 
@@ -494,8 +502,8 @@ When adding or updating pages:
 - [ ] Twitter Card tags
 - [ ] JSON-LD Person schema (managed in `layout.html` — update if personal info changes)
 - [ ] Add URL to `sitemap.xml` with `<lastmod>` and `<priority>`
-- [ ] All images in WebP or AVIF format with meaningful `alt` text
-- [ ] Hero image has `fetchpriority="high"`; secondary images have `loading="lazy"`
+- [ ] All images in WebP or AVIF format with meaningful `alt` text and intrinsic `width`/`height` attributes
+- [ ] Only the single LCP image has `fetchpriority="high"`; secondary images have `loading="lazy"`
 
 ---
 
@@ -505,7 +513,9 @@ When adding or updating pages:
 
 - Format: **WebP or AVIF**
 - Location: `img/`
-- Naming: descriptive kebab-case (e.g., `photo_me.webp`, `certificate-1.webp`)
+- Naming: descriptive kebab-case (e.g., `clockworx-dashboard.webp`, `certificate-1.webp`) —
+  **no spaces** in filenames (they ship as unencoded URLs); the old `Screenshot … at ….webp`
+  files were renamed accordingly
 - Every `src="/img/..."` must reference a file that actually exists in `img/`.
   Broken references ship silently — verify the file is present (or produce it)
   before pointing markup at it; prefer AVIF/WebP rather than leaving a stray PNG.
