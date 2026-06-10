@@ -389,7 +389,8 @@ and the **OUTCOMES bullet icons** (`icon-magic`, `icon-person-workspace`,
 `icon-grid-3x3-gap`, `icon-cpu`, `icon-signpost-split`, `icon-lightning-charge`,
 `icon-palette`, `icon-arrow-repeat`, `icon-rocket-takeoff`, `icon-box-seam`,
 `icon-emoji-smile`, `icon-search`, `icon-layers`, `icon-code-slash`,
-`icon-bounding-box`, `icon-graph-up-arrow` — see `.outcome-icon` in CSS Conventions).
+`icon-bounding-box`, `icon-calendar-check`, `icon-graph-up-arrow` — see
+`.outcome-icon` in CSS Conventions).
 All are Bootstrap Icons (`bi`, 16×16, `fill="currentColor"`, `1em` sized). Insert them
 with `{% include "icon-arrow-up-right.html" %}` (etc.). **Never paste raw `<svg>` markup
 into a page** — reuse the partial so a single edit propagates everywhere.
