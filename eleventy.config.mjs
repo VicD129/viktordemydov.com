@@ -10,6 +10,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy('fonts');
   eleventyConfig.addPassthroughCopy('css');
   eleventyConfig.addPassthroughCopy('img');
+  eleventyConfig.addPassthroughCopy('vid');
   eleventyConfig.addPassthroughCopy('manifest.json');
   eleventyConfig.addPassthroughCopy('sw.js');
   eleventyConfig.addPassthroughCopy('robots.txt');

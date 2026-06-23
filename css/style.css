@@ -848,6 +848,19 @@ footer[id] {
     height: auto;
 }
 
+/* Inline demo video inside a project-log panel (e.g. the Clockworx Focus
+   extension clip). Centered and capped so the portrait capture doesn't tower
+   over the text; --radius-lg soft corners match the glass panels. Intrinsic
+   width/height attrs reserve space (no CLS). */
+.work-video {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    margin: var(--space-3) auto;
+    border-radius: var(--radius-lg);
+}
+
 /* Pops a block out of the 900px reading column up to --content-wide, centered.
    width caps at 94vw so a scrollbar can't force horizontal overflow; the negative
    margin = half the overflow over the parent column, so it stays viewport-centered
