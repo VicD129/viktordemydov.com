@@ -262,7 +262,7 @@ of reinvented (not an exhaustive per-rule reference — read the file for specif
 `.projects-grid` is a CSS Grid class used on the home page for both the "Top Projects" cards and the "Latest Certifications" cards. It produces a two-column layout with equal horizontal and vertical gap (`var(--space-3)`), collapsing to a single full-width column below 576px.
 
 - Use `.projects-grid` as the direct parent of `.card` elements — do **not** wrap cards in `col-sm-6` or any other column div.
-- The 6th card in the projects grid is the LinkedIn CTA. Its `.card-body` carries `.card-body--end` to pin the text to the card bottom.
+- The 6th card in the projects grid is the LinkedIn CTA. Its `.card-body` carries `.card-body--end` to pin the text to the card bottom. Copy: "Read my posts and see my 11+ years of experience on LinkedIn" — covers both the content angle (posts) and the recruiter-facing experience hook; the `aria-label` on the wrapping `<a>` mirrors the visible `.card-title` text exactly, so update both together if this copy changes.
 - The certifications section follows the same structure: `h2` as a direct child of the page's `div.work` wrapper, then `div.container-fluid > div.projects-grid > cards`.
 
 ### `.card-body--end` modifier
