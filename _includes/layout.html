@@ -73,12 +73,14 @@ title: Viktor Demydov
           <a href="/" class="site-nav__home">
             <span class="site-nav__brand">Viktor Demydov</span>
           </a>
+          {% comment %} Availability badge (hidden while not open to work — restore by removing this wrapper)
           {% if page.url contains "/projects/" %}
           <span class="site-nav__status">
             <span class="site-nav__status-dot" aria-hidden="true"></span>
             Open to work
           </span>
           {% endif %}
+          {% endcomment %}
         </div>
         <div class="site-nav__links">
           <a href="https://www.linkedin.com/in/vicd129" class="site-nav__icon-link" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">{% include "icon-linkedin.html" %}</a>
@@ -91,7 +93,9 @@ title: Viktor Demydov
       <h1 class="text-center mb-1 display-hero">
         <small>Senior Product Designer <br>& Design Engineer</small>
       </h1>
+      {% comment %} Availability badge (hidden while not open to work — restore by removing this wrapper)
       <p class="hero-status text-center">Open to work (Remote)</p>
+      {% endcomment %}
       {% assign skills = "Product Design,UI/UX,Design Systems,Figma,Prototyping,Wireframing,Interaction Design,Responsive Design,Accessibility,Design Tokens,HTML,CSS / Sass,Git,UX Strategy,Product-led Growth,User Research,Analytics,AI Interfaces,Claude Code" | split: "," %}
       <div class="skills-ticker bg-glass">
         <div class="skills-viewport">
