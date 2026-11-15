@@ -612,6 +612,16 @@ footer[id] {
     gap: var(--space-3);
 }
 
+/* Wide 3-up variant for the home "Top Projects" grid — paired with the
+   .section-wide popout (1200px) in markup, so the 6 cards (5 projects + the
+   LinkedIn CTA) read as two even rows. Below 1024px it falls back to the base
+   2-up / 1-up grid. Certifications keep the plain 2-up grid. */
+@media (min-width: 1024px) {
+    .projects-grid--3up {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 @media (max-width: 575px) {
     .projects-grid {
         grid-template-columns: 1fr;
@@ -682,6 +692,8 @@ footer[id] {
 
 .card-desc {
     display: flex;
+    flex-wrap: wrap; /* role/date wrap cleanly in the narrower 3-up cards */
+    column-gap: var(--space-2);
     justify-content: space-between;
     margin-bottom: var(--space-3);
 }
@@ -910,6 +922,15 @@ footer[id] {
     font-size: 1.25rem;
 }
 
+/* Keep the glyph optically centered in the fixed circle — the global arrow
+   nudge would push it off-center against the hover fill. Feedback here is the
+   eased fill + :active dip; the nudge stays on text buttons, where the arrow
+   has room to move. */
+.btn-icon:hover .bi,
+.btn-icon:focus-visible .bi {
+    transform: none;
+}
+
 /* Top-left back link on project pages — sits at the start of .work-item,
    left-aligned above the centered .work-header. Block-level flex (overriding
    .btn's inline-flex) so it owns its own row and margin-bottom resolves cleanly. */
@@ -943,8 +964,10 @@ footer[id] {
    and collapses to a normal in-column block on narrow screens. Relies on no ancestor
    (.content/.work/.work-item) clipping overflow. */
 .section-wide {
-    width: min(var(--content-wide), 94vw);
-    margin-left: calc((100% - min(var(--content-wide), 94vw)) / 2);
+    /* max(100%, …) — never narrower than the column (94vw would otherwise inset
+       it below ~957px), and the % keeps grid track sizing from forcing overflow */
+    width: max(100%, min(var(--content-wide), 94vw));
+    margin-left: calc((100% - max(100%, min(var(--content-wide), 94vw))) / 2);
 }
 
 /* Utilities */
