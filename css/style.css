@@ -58,7 +58,15 @@
     --link-color: #e9e9e9;
     --link-hover-color: #242424;
     --status-color: #4ade80;
-    --text-secondary: #6c757d; /* muted text — ticker separators, .text-secondary util */
+    --text-secondary: #868e96; /* muted text — ticker separators, .text-secondary util (~5.9:1 on --bg-color, AA for small text) */
+    --glass-solid: #1b1b1b; /* opaque stand-in for .bg-glass under prefers-reduced-transparency (≈ 6% white over --bg-color) */
+
+    /* Motion — critically damped feel: responds instantly, settles with no overshoot */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --duration-press: 100ms; /* :active dip — feedback on pointer-down */
+    --duration-hover: 200ms; /* hover/focus fills, arrow nudges */
+    --press-scale: 0.97; /* buttons */
+    --press-scale-lg: 0.99; /* large surfaces (cards) dip less */
 
     /* Corner radius */
     --radius-pill: 50rem; /* fully rounded capsule — buttons & skills ticker */
@@ -120,6 +128,7 @@ summary {
 
 p {
     margin-bottom: 0.75em;
+    text-wrap: pretty; /* avoid single-word orphan last lines */
 }
 
 p:last-child {
@@ -135,6 +144,7 @@ h5,
 h6 {
     margin-bottom: var(--space-2);
     line-height: 1.15;
+    text-wrap: balance; /* even line lengths on wrapped headings */
 }
 
 h1 {
@@ -181,7 +191,7 @@ h6 {
     font-size: 1.25rem;
     font-weight: 500;
     line-height: 1.35;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.04em; /* all-caps needs positive tracking (size/case-specific, never one value) */
     text-transform: uppercase;
 }
 
@@ -235,6 +245,7 @@ h6 {
     font-size: 0.8rem;
     font-weight: 400;
     line-height: 1.5;
+    letter-spacing: 0.01em; /* small text wants slightly positive tracking */
 }
 
 /* Responsive typography */
@@ -329,10 +340,50 @@ h6 {
 a {
     color: var(--link-color);
     text-decoration: none;
+    /* hover/focus fills ease in rather than hard-cutting */
+    transition:
+        color var(--duration-hover) var(--ease-out),
+        background-color var(--duration-hover) var(--ease-out);
+}
+
+/* Remove any double-tap-zoom delay on the input path. The native iOS tap flash
+   is deliberately KEPT: iOS Safari only fires :active on tap when a touch
+   listener exists (none here, by design), so the flash is the tap feedback there. */
+a,
+button {
+    touch-action: manipulation;
+}
+
+/* Hint in the direction of travel — link arrows nudge toward where they lead. */
+.bi-arrow-right,
+.bi-arrow-left,
+.bi-arrow-up-right,
+.bi-download {
+    transition: transform var(--duration-hover) var(--ease-out);
+}
+
+a:hover .bi-arrow-right,
+a:focus-visible .bi-arrow-right {
+    transform: translateX(var(--space-1));
+}
+
+a:hover .bi-arrow-left,
+a:focus-visible .bi-arrow-left {
+    transform: translateX(calc(-1 * var(--space-1)));
+}
+
+a:hover .bi-arrow-up-right,
+a:focus-visible .bi-arrow-up-right {
+    transform: translate(calc(var(--space-1) / 2), calc(var(--space-1) / -2));
+}
+
+a:hover .bi-download,
+a:focus-visible .bi-download {
+    transform: translateY(calc(var(--space-1) / 2));
 }
 
 a:hover,
-a:focus {
+a:focus-visible {
     text-decoration: none;
     background-color: var(--brand-color);
     color: var(--link-hover-color, var(--link-color));
@@ -445,6 +496,7 @@ body.page-project .work-item {
 .hero-status {
     font-size: 0.85rem;
     font-weight: 400;
+    letter-spacing: 0.01em;
     color: var(--status-color);
     margin-top: var(--space-2);
 }
@@ -470,8 +522,9 @@ footer[id] {
     padding: var(--space-2) var(--space-4);
     font-size: 1rem;
     background-color: var(--bg-overlay);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* biggest surface = thickest material: stronger blur than the 12px glass panels */
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -516,9 +569,9 @@ footer[id] {
 /* Nav links read as plain text — white by default, brand-yellow on hover.
    Override the global a:hover so there's no fill, no chip radius. */
 .site-nav__home:hover,
-.site-nav__home:focus,
+.site-nav__home:focus-visible,
 .site-nav__icon-link:hover,
-.site-nav__icon-link:focus {
+.site-nav__icon-link:focus-visible {
     background-color: transparent;
     color: var(--brand-color);
     border-radius: 0;
@@ -532,6 +585,7 @@ footer[id] {
     gap: var(--space-1);
     margin-left: var(--space-3);
     font-size: 0.85rem;
+    letter-spacing: 0.01em;
     color: var(--status-color);
 }
 
@@ -574,6 +628,13 @@ footer[id] {
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: var(--radius-lg);
     overflow: hidden; /* clip the flush top image & body to the rounded shape */
+    isolation: isolate; /* keeps the rounded clip intact while :active scales (Safari) */
+    transition: transform var(--duration-press) var(--ease-out);
+}
+
+/* Press feedback on pointer-down — large surfaces dip less than buttons */
+.card:active {
+    transform: scale(var(--press-scale-lg));
 }
 
 .card a {
@@ -628,6 +689,7 @@ footer[id] {
 .tag {
     color: var(--text-secondary);
     font-size: 0.85rem;
+    letter-spacing: 0.01em;
 }
 
 .tag::after {
@@ -674,28 +736,28 @@ footer[id] {
 }
 
 .card.abi-bg a:hover,
-.card.abi-bg a:focus {
+.card.abi-bg a:focus-visible {
     background-color: var(--abi-color) !important;
     color: #fff;
     text-decoration: none;
 }
 
 .card.pegasus-bg a:hover,
-.card.pegasus-bg a:focus {
+.card.pegasus-bg a:focus-visible {
     background-color: var(--pegasus-color) !important;
     color: #fff;
     text-decoration: none;
 }
 
 .card.tourhunter-bg a:hover,
-.card.tourhunter-bg a:focus {
+.card.tourhunter-bg a:focus-visible {
     background-color: var(--tourhunter-color) !important;
     color: #fff;
     text-decoration: none;
 }
 
 .card.mvr-bg a:hover,
-.card.mvr-bg a:focus {
+.card.mvr-bg a:focus-visible {
     background-color: var(--mvr-color) !important;
     color: #333;
     text-decoration: none;
@@ -705,9 +767,9 @@ footer[id] {
    light mvr card) — make tags + their dot separators follow that color so they
    stay legible against the hover fill instead of staying muted grey. */
 .card a:hover .tag,
-.card a:focus .tag,
+.card a:focus-visible .tag,
 .card a:hover .tag::after,
-.card a:focus .tag::after {
+.card a:focus-visible .tag::after {
     color: inherit;
 }
 
@@ -805,16 +867,22 @@ footer[id] {
     border: 1px solid transparent;
     border-radius: var(--radius-pill);
     transition:
-        color 0.15s ease-in-out,
-        background-color 0.15s ease-in-out,
-        border-color 0.15s ease-in-out,
-        box-shadow 0.15s ease-in-out;
+        color var(--duration-hover) var(--ease-out),
+        background-color var(--duration-hover) var(--ease-out),
+        border-color var(--duration-hover) var(--ease-out),
+        transform var(--duration-press) var(--ease-out);
+}
+
+/* Press feedback on pointer-down (not on release) — an instant, small dip */
+.btn:active,
+.hero-cv:active {
+    transform: scale(var(--press-scale));
 }
 
 .btn:hover,
-.btn:focus,
+.btn:focus-visible,
 .hero-cv:hover,
-.hero-cv:focus {
+.hero-cv:focus-visible {
     background-color: var(--brand-color) !important;
     border-color: var(--brand-color);
     color: var(--link-hover-color);
@@ -878,9 +946,12 @@ footer[id] {
 
 .bg-glass {
     background-color: rgba(255, 255, 255, 0.06) !important;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* saturate = vibrancy: the faint nebula colour reads through the frost */
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    /* faint bright top edge — light catching the material */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
     color: #fff;
 }
 
@@ -1115,12 +1186,13 @@ footer[id] {
 
 .chat-sender-role {
     font-size: 0.75rem;
-    color: #6c757d;
+    letter-spacing: 0.01em;
+    color: var(--text-secondary);
 }
 
 .chat-bubble {
     position: relative;
-    color: #e9e9e9;
+    color: var(--text-color);
     padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-lg);
     max-width: 85%;
@@ -1134,5 +1206,54 @@ footer[id] {
 @media (max-width: 768px) {
     .content {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Accessibility preferences — kept last so they win on equal specificity.
+   Reduced motion keeps the colour feedback but drops the press dip and the
+   arrow nudges (no movement, a gentler non-vestibular equivalent). */
+@media (prefers-reduced-motion: reduce) {
+    .btn:active,
+    .hero-cv:active,
+    .card:active,
+    a:hover .bi-arrow-right,
+    a:focus-visible .bi-arrow-right,
+    a:hover .bi-arrow-left,
+    a:focus-visible .bi-arrow-left,
+    a:hover .bi-arrow-up-right,
+    a:focus-visible .bi-arrow-up-right,
+    a:hover .bi-download,
+    a:focus-visible .bi-download {
+        transform: none;
+    }
+}
+
+/* Reduced transparency: frosted surfaces go solid, no blur */
+@media (prefers-reduced-transparency: reduce) {
+    .bg-glass {
+        background-color: var(--glass-solid) !important;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .site-nav {
+        background-color: var(--bg-color);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
+
+/* Increased contrast: defined borders and lighter muted text */
+@media (prefers-contrast: more) {
+    :root {
+        --text-secondary: #adb5bd;
+    }
+
+    .bg-glass {
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .site-nav {
+        border-bottom-color: rgba(255, 255, 255, 0.4);
     }
 }
