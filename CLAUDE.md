@@ -413,7 +413,7 @@ and the **OUTCOMES bullet icons** (`icon-magic`, `icon-person-workspace`,
 `icon-emoji-smile`, `icon-search`, `icon-layers`, `icon-code-slash`,
 `icon-bounding-box`, `icon-calendar-check`, `icon-graph-up-arrow` — see
 `.outcome-icon` in CSS Conventions).
-All are Bootstrap Icons (`bi`, 16×16, `fill="currentColor"`, `1em` sized). Insert them
+All are Bootstrap Icons (`bi`, 16×16, `fill="currentColor"`, `1em` sized). A global `.bi { vertical-align: -0.125em }` drops inline icons from the text baseline to the letters' optical middle (e.g. the card-title `→`); it's inert inside flex containers (`.btn`, nav links, `.outcome-icon`), which centre via `align-items`. Insert them
 with `{% include "icon-arrow-up-right.html" %}` (etc.). **Never paste raw `<svg>` markup
 into a page** — reuse the partial so a single edit propagates everywhere.
 

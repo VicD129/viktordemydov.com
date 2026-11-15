@@ -354,6 +354,14 @@ button {
     touch-action: manipulation;
 }
 
+/* Inline icons sit on the text baseline by default, so their 1em box rides
+   above the letters' optical middle. Drop them by 0.125em to centre the glyph
+   on the cap/x-height (e.g. the card-title arrows). Ignored inside flex
+   containers (.btn, nav links, .outcome-icon), which centre via align-items. */
+.bi {
+    vertical-align: -0.125em;
+}
+
 /* Hint in the direction of travel — link arrows nudge toward where they lead. */
 .bi-arrow-right,
 .bi-arrow-left,
